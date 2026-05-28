@@ -1,0 +1,9 @@
+{
+  "selectGif": "GIF 선택",
+  "searchPlaceholder": "GIF 검색...",
+  "loadingMore": "더 로딩 중...",
+  "noResults": "GIF를 찾을 수 없습니다",
+  "noTrending": "인기 GIF가 없습니다",
+  "addGif": "GIF 추가",
+  "apiError": "GIF를 로드할 수 없습니다. 인터넷 연결을 확인하세요."
+}

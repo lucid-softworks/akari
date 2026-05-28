@@ -1,0 +1,14 @@
+{
+  "title": "Recept",
+  "time": "Idő",
+  "servings": "Adagok",
+  "category": "Kategória",
+  "ingredients": "Hozzávalók",
+  "cuisine": "Konyha",
+  "method": "Módszer",
+  "calories": "Kalóriák",
+  "dietaryRestrictions": "Étrendi Korlátozások",
+  "instructions": "Utasítások",
+  "tags": "Címkék",
+  "source": "Forrás"
+}

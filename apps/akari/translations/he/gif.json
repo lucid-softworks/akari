@@ -1,0 +1,9 @@
+{
+  "selectGif": "בחר GIF",
+  "searchPlaceholder": "חיפוש ב- GIFs ...",
+  "loadingMore": "טוען יותר ...",
+  "noResults": "לא נמצאו GIFs",
+  "noTrending": "אין GIFs מגמה זמינים",
+  "addGif": "הוסף gif",
+  "apiError": "לא ניתן לטעון GIFs. אנא בדוק את חיבור האינטרנט שלך."
+}

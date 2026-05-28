@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "在 Bluesky 上搜尋個人資料和貼文",
+  "searching": "搜尋中...",
+  "searchFailed": "搜尋失敗",
+  "noUsersFound": "找不到使用者",
+  "noPostsFound": "找不到貼文",
+  "noResultsFound": "找不到結果",
+  "searchInputPlaceholder": "搜尋個人資料和貼文...",
+  "all": "全部",
+  "users": "使用者",
+  "posts": "貼文",
+  "loadingMoreResults": "載入更多結果...",
+  "sortTop": "熱門",
+  "sortLatest": "最新",
+  "clearSearch": "清除搜尋"
+}

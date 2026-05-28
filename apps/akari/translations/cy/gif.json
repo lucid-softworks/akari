@@ -1,0 +1,9 @@
+{
+  "selectGif": "Dewis GIF",
+  "searchPlaceholder": "Chwilio GIF...",
+  "loadingMore": "Llwytho mwy...",
+  "noResults": "Dim GIF wedi'u canfod",
+  "noTrending": "Dim GIF poblogaidd ar gael",
+  "addGif": "Ychwanegu GIF",
+  "apiError": "Methu llwytho GIF. Gwiriwch eich cysylltiad rhyngrwyd."
+}

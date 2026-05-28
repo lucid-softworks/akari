@@ -1,0 +1,23 @@
+{
+  "crashReporter": "當機回報器",
+  "crashDescription": "使用此按鈕觸發測試錯誤並確認當機回報已正確設定。確保您的Axiom憑證已設定，以便回報能夠送達。",
+  "triggerCrash": "觸發當機",
+  "crashHint": "提示：測試後重新載入應用程式，以便除錯畫面再次渲染。",
+  "queryCacheDebug": "查詢快取除錯",
+  "invalidateAll": "全部失效",
+  "clearAll": "全部清除",
+  "totalQueries": "總查詢數：{{count}}",
+  "activeQueries": "活躍查詢數：{{count}}",
+  "successfulQueries": "成功查詢數：{{count}}",
+  "failedQueries": "失敗查詢數：{{count}}",
+  "noQueriesInCache": "快取中無查詢",
+  "queryKey": "查詢鍵：",
+  "status": "狀態：",
+  "dataUpdatedAt": "資料更新時間：",
+  "errorUpdatedAt": "錯誤更新時間：",
+  "fetchCount": "取得次數：",
+  "error": "錯誤：",
+  "data": "資料：",
+  "refetch": "重新取得",
+  "remove": "刪除"
+}

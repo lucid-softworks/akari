@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Összeomlás Jelentő",
+  "crashDescription": "Használd ezt a gombot egy teszt hiba generálásához és az összeomlás jelentés megfelelő konfigurálásának megerősítéséhez. Győződj meg róla, hogy az Axiom hitelesítő adataid konfigurálva vannak a jelentés kézbesítéséhez.",
+  "triggerCrash": "Összeomlás Kiváltása",
+  "crashHint": "Tipp: töltse újra az alkalmazást a teszt után, hogy a hibakeresési képernyő újra renderelődjön.",
+  "queryCacheDebug": "Lekérdezés Cache Hibakeresés",
+  "invalidateAll": "Minden Érvénytelenítése",
+  "clearAll": "Minden Törlése",
+  "totalQueries": "Összes Lekérdezés: {{count}}",
+  "activeQueries": "Aktív Lekérdezések: {{count}}",
+  "successfulQueries": "Sikeres Lekérdezések: {{count}}",
+  "failedQueries": "Sikertelen Lekérdezések: {{count}}",
+  "noQueriesInCache": "Nincsenek lekérdezések a cache-ben",
+  "queryKey": "Lekérdezés Kulcs:",
+  "status": "Állapot:",
+  "dataUpdatedAt": "Adatok Frissítve:",
+  "errorUpdatedAt": "Hiba Frissítve:",
+  "fetchCount": "Lekérések Száma:",
+  "error": "Hiba:",
+  "data": "Adatok:",
+  "refetch": "Újra Lekérés",
+  "remove": "Eltávolítás"
+}

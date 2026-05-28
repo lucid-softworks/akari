@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "חפש פרופילים ופוסטים בבלוזקי",
+  "searching": "מחפש ...",
+  "searchFailed": "החיפוש נכשל",
+  "noUsersFound": "לא נמצאו משתמשים",
+  "noPostsFound": "לא נמצאו פוסטים",
+  "noResultsFound": "לא נמצאו תוצאות",
+  "searchInputPlaceholder": "חיפוש בפרופילים ופוסטים ...",
+  "all": "כֹּל",
+  "users": "משתמשים",
+  "posts": "פוסטים",
+  "loadingMoreResults": "טוען תוצאות נוספות ...",
+  "sortTop": "פופולרי",
+  "sortLatest": "אחרון",
+  "clearSearch": "נקה חיפוש"
+}

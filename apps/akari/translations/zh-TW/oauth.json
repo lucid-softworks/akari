@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "以 @{{handle}} 登入",
+    "subtitle": "選擇 akari 可以在你的帳號中做什麼。必要權限無法取消勾選，因為應用程式需要它們才能讓你登入並執行核心流程。",
+    "continue": "繼續",
+    "required": "必要",
+    "action": {
+      "create": "建立",
+      "update": "更新",
+      "delete": "刪除"
+    },
+    "atproto": {
+      "label": "身分",
+      "description": "確認你在 atproto 上的身分。永遠必要。"
+    },
+    "chat": {
+      "label": "私訊",
+      "description": "代你讀取和發送聊天訊息。"
+    },
+    "profile": {
+      "label": "個人資料",
+      "description": "編輯你的顯示名稱、簡介、頭像和橫幅。"
+    },
+    "post": {
+      "label": "貼文",
+      "description": "發布新貼文、編輯貼文，並刪除你自己的貼文。"
+    },
+    "threadgate": {
+      "label": "回覆控制",
+      "description": "設定誰可以在你發起的討論串中回覆。"
+    },
+    "postgate": {
+      "label": "引用控制",
+      "description": "設定誰可以引用你發布的貼文。"
+    },
+    "like": {
+      "label": "喜歡",
+      "description": "喜歡與取消喜歡貼文。"
+    },
+    "repost": {
+      "label": "轉發",
+      "description": "轉發和撤銷轉發。"
+    },
+    "follow": {
+      "label": "追蹤",
+      "description": "追蹤和取消追蹤帳號。"
+    },
+    "block": {
+      "label": "封鎖",
+      "description": "封鎖和解除封鎖帳號。"
+    },
+    "list": {
+      "label": "清單",
+      "description": "建立、重新命名和刪除審核或精選清單。"
+    },
+    "listitem": {
+      "label": "清單成員",
+      "description": "在你的清單中新增和移除帳號。"
+    },
+    "leafletPublication": {
+      "label": "Leaflet 出版物",
+      "description": "管理 leaflet.pub 上的長篇出版物。"
+    },
+    "leafletDocument": {
+      "label": "Leaflet 文件",
+      "description": "在 leaflet.pub 上發布與編輯長篇文件。"
+    },
+    "aiPreference": {
+      "label": "AI 偏好",
+      "description": "儲存你的 community-lexicon AI 訓練偏好。"
+    },
+    "popfeedReview": {
+      "label": "Popfeed 評論",
+      "description": "在 Popfeed 媒體評論網路上發布評論。"
+    },
+    "recipe": {
+      "label": "食譜",
+      "description": "透過開放的 exchange.recipe 詞典儲存食譜。"
+    },
+    "linkatBoard": {
+      "label": "Linkat 頁面",
+      "description": "管理你的 Linkat link-in-bio 頁面。"
+    }
+  }
+}

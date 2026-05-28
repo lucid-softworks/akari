@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Etsi profiileja ja viestejä Blueskylle",
+  "searching": "Etsitkö ...",
+  "searchFailed": "Haku epäonnistui",
+  "noUsersFound": "Ei käyttäjiä löydetty",
+  "noPostsFound": "Ei löydy viestejä",
+  "noResultsFound": "Tuloksia ei löydy",
+  "searchInputPlaceholder": "Hakuprofiilit ja viestit ...",
+  "all": "Kaikki",
+  "users": "Käyttäjät",
+  "posts": "Viestit",
+  "loadingMoreResults": "Lataamalla lisää tuloksia ...",
+  "sortTop": "Suosituimmat",
+  "sortLatest": "Uusimmat",
+  "clearSearch": "Tyhjennä haku"
+}

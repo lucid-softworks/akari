@@ -1,0 +1,14 @@
+{
+  "title": "Przepis",
+  "time": "Czas",
+  "servings": "Porcje",
+  "category": "Kategoria",
+  "ingredients": "Składniki",
+  "cuisine": "Kuchnia",
+  "method": "Metoda",
+  "calories": "Kalorie",
+  "dietaryRestrictions": "Ograniczenia Dietetyczne",
+  "instructions": "Instrukcje",
+  "tags": "Tagi",
+  "source": "Źródło"
+}

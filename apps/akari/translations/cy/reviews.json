@@ -1,0 +1,12 @@
+{
+  "newReview": "Adolygiad newydd",
+  "type": "Math",
+  "movie": "Ffilm",
+  "tvShow": "Cyfres deledu",
+  "change": "Newid",
+  "rating": "Sgôr",
+  "ratingWithValue": "Sgôr ({{rating}}/{{max}})",
+  "review": "Adolygiad",
+  "thisIsRevisit": "Mae hwn yn ail ymweliad",
+  "containsSpoilers": "Yn cynnwys datgeliadau"
+}

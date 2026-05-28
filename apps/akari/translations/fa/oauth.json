@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "ورود به عنوان @{{handle}}",
+    "subtitle": "انتخاب کنید akari چه کارهایی می‌تواند روی حساب شما انجام دهد. مجوزهای اجباری را نمی‌توان لغو کرد چون برنامه برای ورود شما و اجرای جریان‌های اصلی به آن‌ها نیاز دارد.",
+    "continue": "ادامه",
+    "required": "اجباری",
+    "action": {
+      "create": "ایجاد",
+      "update": "به‌روزرسانی",
+      "delete": "حذف"
+    },
+    "atproto": {
+      "label": "هویت",
+      "description": "تأیید کنید چه کسی هستید در atproto. همیشه اجباری است."
+    },
+    "chat": {
+      "label": "پیام‌های مستقیم",
+      "description": "خواندن و ارسال پیام‌های گفتگو از طرف شما."
+    },
+    "profile": {
+      "label": "نمایه",
+      "description": "نام نمایشی، بیوگرافی، آواتار و بنر خود را ویرایش کنید."
+    },
+    "post": {
+      "label": "پست‌ها",
+      "description": "انتشار پست‌های جدید، ویرایش آن‌ها و حذف پست‌های خود."
+    },
+    "threadgate": {
+      "label": "کنترل پاسخ‌ها",
+      "description": "تعیین کنید چه کسی می‌تواند به موضوعی که شروع کرده‌اید پاسخ دهد."
+    },
+    "postgate": {
+      "label": "کنترل نقل قول‌ها",
+      "description": "تعیین کنید چه کسی می‌تواند پستی که نوشته‌اید را نقل قول کند."
+    },
+    "like": {
+      "label": "پسندها",
+      "description": "پسندیدن و لغو پسندیدن پست‌ها."
+    },
+    "repost": {
+      "label": "بازنشرها",
+      "description": "بازنشر و لغو بازنشر."
+    },
+    "follow": {
+      "label": "دنبال‌کردن‌ها",
+      "description": "دنبال کردن و لغو دنبال کردن حساب‌ها."
+    },
+    "block": {
+      "label": "مسدودسازی‌ها",
+      "description": "مسدود کردن و رفع مسدودیت حساب‌ها."
+    },
+    "list": {
+      "label": "فهرست‌ها",
+      "description": "ایجاد، تغییر نام و حذف فهرست‌های مدیریت یا گزینش."
+    },
+    "listitem": {
+      "label": "عضویت در فهرست",
+      "description": "افزودن و حذف حساب‌ها از فهرست‌های شما."
+    },
+    "leafletPublication": {
+      "label": "نشریات Leaflet",
+      "description": "مدیریت نشریات بلند در leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "اسناد Leaflet",
+      "description": "انتشار و ویرایش اسناد بلند در leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "تنظیمات هوش مصنوعی",
+      "description": "ترجیحات آموزش هوش مصنوعی community-lexicon خود را ذخیره کنید."
+    },
+    "popfeedReview": {
+      "label": "نقدهای Popfeed",
+      "description": "ارسال نقد در شبکه نقد رسانه‌ای Popfeed."
+    },
+    "recipe": {
+      "label": "دستورهای آشپزی",
+      "description": "ذخیره دستورهای آشپزی از طریق فرهنگ‌نامه باز exchange.recipe."
+    },
+    "linkatBoard": {
+      "label": "تابلو Linkat",
+      "description": "مدیریت تابلو link-in-bio خود در Linkat."
+    }
+  }
+}

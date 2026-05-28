@@ -1,0 +1,14 @@
+{
+  "title": "Recept",
+  "time": "Čas",
+  "servings": "Porcije",
+  "category": "Kategorija",
+  "ingredients": "Sestavine",
+  "cuisine": "Kuhinja",
+  "method": "Metoda",
+  "calories": "Kalorije",
+  "dietaryRestrictions": "Dietne Omejitve",
+  "instructions": "Navodila",
+  "tags": "Oznake",
+  "source": "Vir"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Recette",
+  "time": "Temps",
+  "servings": "Portions",
+  "category": "Catégorie",
+  "ingredients": "Ingrédients",
+  "cuisine": "Cuisine",
+  "method": "Méthode",
+  "calories": "Calories",
+  "dietaryRestrictions": "Restrictions Alimentaires",
+  "instructions": "Instructions",
+  "tags": "Étiquettes",
+  "source": "Source"
+}

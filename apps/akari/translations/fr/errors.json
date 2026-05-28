@@ -1,0 +1,6 @@
+{
+  "screenNotFound": "Cet écran n'existe pas.",
+  "pathname": "Chemin : {{pathname}}",
+  "goToHome": "Aller à l'écran d'accueil !",
+  "goToSitemap": "Aller au plan du site !"
+}

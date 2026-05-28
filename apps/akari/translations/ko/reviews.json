@@ -1,0 +1,12 @@
+{
+  "newReview": "새 리뷰",
+  "type": "유형",
+  "movie": "영화",
+  "tvShow": "TV 프로그램",
+  "change": "변경",
+  "rating": "평점",
+  "ratingWithValue": "평점 ({{rating}}/{{max}})",
+  "review": "리뷰",
+  "thisIsRevisit": "다시 보기입니다",
+  "containsSpoilers": "스포일러가 포함되어 있습니다"
+}

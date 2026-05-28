@@ -1,0 +1,9 @@
+{
+  "selectGif": "GIF चुनें",
+  "searchPlaceholder": "GIF खोजें...",
+  "loadingMore": "और लोड हो रहा है...",
+  "noResults": "कोई GIF नहीं मिला",
+  "noTrending": "कोई लोकप्रिय GIF नहीं",
+  "addGif": "GIF जोड़ें",
+  "apiError": "GIF लोड नहीं किया जा सका। कृपया अपना इंटरनेट कनेक्शन जांचें।"
+}

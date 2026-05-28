@@ -1,0 +1,9 @@
+{
+  "selectGif": "Vyberte GIF",
+  "searchPlaceholder": "Vyhľadajte GIF ...",
+  "loadingMore": "Načítanie viac ...",
+  "noResults": "Nenašli sa žiadne gify",
+  "noTrending": "Žiadne trendy GIF k dispozícii",
+  "addGif": "Pridať gif",
+  "apiError": "Nie je možné načítať GIF. Skontrolujte svoje pripojenie na internet."
+}

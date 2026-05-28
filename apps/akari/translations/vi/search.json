@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Tìm kiếm hồ sơ và bài đăng trên Bluesky",
+  "searching": "Đang tìm kiếm...",
+  "searchFailed": "Tìm kiếm thất bại",
+  "noUsersFound": "Không tìm thấy người dùng",
+  "noPostsFound": "Không tìm thấy bài đăng",
+  "noResultsFound": "Không tìm thấy kết quả",
+  "searchInputPlaceholder": "Tìm kiếm hồ sơ và bài đăng...",
+  "all": "Tất cả",
+  "users": "Người dùng",
+  "posts": "Bài đăng",
+  "loadingMoreResults": "Đang tải thêm kết quả...",
+  "sortTop": "Nổi bật",
+  "sortLatest": "Mới nhất",
+  "clearSearch": "Xóa tìm kiếm"
+}

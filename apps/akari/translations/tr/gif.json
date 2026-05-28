@@ -1,0 +1,9 @@
+{
+  "selectGif": "GIF Seç",
+  "searchPlaceholder": "GIF Ara...",
+  "loadingMore": "Daha fazla yükleniyor...",
+  "noResults": "GIF bulunamadı",
+  "noTrending": "Popüler GIF yok",
+  "addGif": "GIF Ekle",
+  "apiError": "GIF yüklenemedi. İnternet bağlantınızı kontrol edin."
+}

@@ -1,0 +1,12 @@
+{
+  "newReview": "Yeni İnceleme",
+  "type": "Tür",
+  "movie": "Film",
+  "tvShow": "TV Dizisi",
+  "change": "Değiştir",
+  "rating": "Puan",
+  "ratingWithValue": "Puan ({{rating}}/{{max}})",
+  "review": "İnceleme",
+  "thisIsRevisit": "Bu bir tekrar izleme",
+  "containsSpoilers": "Spoiler içerir"
+}

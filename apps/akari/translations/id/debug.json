@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Pelapor Crash",
+  "crashDescription": "Gunakan tombol ini untuk menghasilkan error pengujian dan mengonfirmasi bahwa pelaporan crash dikonfigurasi dengan benar. Pastikan kredensial Axiom Anda dikonfigurasi untuk mengirimkan laporan.",
+  "triggerCrash": "Picu Crash",
+  "crashHint": "Tip: muat ulang aplikasi setelah pengujian agar layar debug di-render lagi.",
+  "queryCacheDebug": "Debug Cache Kueri",
+  "invalidateAll": "Batalkan Semua",
+  "clearAll": "Hapus Semua",
+  "totalQueries": "Total Kueri: {{count}}",
+  "activeQueries": "Kueri Aktif: {{count}}",
+  "successfulQueries": "Kueri Berhasil: {{count}}",
+  "failedQueries": "Kueri Gagal: {{count}}",
+  "noQueriesInCache": "Tidak ada kueri dalam cache",
+  "queryKey": "Kunci Kueri:",
+  "status": "Status:",
+  "dataUpdatedAt": "Data Diperbarui:",
+  "errorUpdatedAt": "Error Diperbarui:",
+  "fetchCount": "Jumlah Ambil:",
+  "error": "Error:",
+  "data": "Data:",
+  "refetch": "Ambil Ulang",
+  "remove": "Hapus"
+}

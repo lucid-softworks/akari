@@ -1,0 +1,9 @@
+{
+  "selectGif": "Chọn GIF",
+  "searchPlaceholder": "Tìm kiếm GIF...",
+  "loadingMore": "Đang tải thêm...",
+  "noResults": "Không tìm thấy GIF",
+  "noTrending": "Không có GIF phổ biến",
+  "addGif": "Thêm GIF",
+  "apiError": "Không thể tải GIF. Vui lòng kiểm tra kết nối internet."
+}

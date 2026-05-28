@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "以 @{{handle}} 登录",
+    "subtitle": "选择 akari 可以在你的账号里做什么。必需权限无法取消勾选，因为应用需要它们才能让你登录并运行核心流程。",
+    "continue": "继续",
+    "required": "必需",
+    "action": {
+      "create": "创建",
+      "update": "更新",
+      "delete": "删除"
+    },
+    "atproto": {
+      "label": "身份",
+      "description": "确认你在 atproto 上的身份。始终必需。"
+    },
+    "chat": {
+      "label": "私信",
+      "description": "代表你读取和发送聊天消息。"
+    },
+    "profile": {
+      "label": "个人资料",
+      "description": "编辑你的显示名、简介、头像和横幅。"
+    },
+    "post": {
+      "label": "帖子",
+      "description": "发布新帖子、编辑帖子，并删除你自己的帖子。"
+    },
+    "threadgate": {
+      "label": "回复控制",
+      "description": "设置谁可以在你发起的话题串中回复。"
+    },
+    "postgate": {
+      "label": "引用控制",
+      "description": "设置谁可以引用你发布的帖子。"
+    },
+    "like": {
+      "label": "点赞",
+      "description": "点赞和取消点赞帖子。"
+    },
+    "repost": {
+      "label": "转发",
+      "description": "转发和撤销转发。"
+    },
+    "follow": {
+      "label": "关注",
+      "description": "关注和取消关注账号。"
+    },
+    "block": {
+      "label": "屏蔽",
+      "description": "屏蔽和解除屏蔽账号。"
+    },
+    "list": {
+      "label": "列表",
+      "description": "创建、重命名和删除审核或精选列表。"
+    },
+    "listitem": {
+      "label": "列表成员",
+      "description": "向你的列表添加和移除账号。"
+    },
+    "leafletPublication": {
+      "label": "Leaflet 出版物",
+      "description": "管理 leaflet.pub 上的长篇出版物。"
+    },
+    "leafletDocument": {
+      "label": "Leaflet 文档",
+      "description": "在 leaflet.pub 上发布和编辑长篇文档。"
+    },
+    "aiPreference": {
+      "label": "AI 偏好",
+      "description": "存储你的 community-lexicon AI 训练偏好。"
+    },
+    "popfeedReview": {
+      "label": "Popfeed 评论",
+      "description": "在 Popfeed 媒体评论网络上发布评论。"
+    },
+    "recipe": {
+      "label": "食谱",
+      "description": "通过开放的 exchange.recipe 词典保存食谱。"
+    },
+    "linkatBoard": {
+      "label": "Linkat 页面",
+      "description": "管理你的 Linkat link-in-bio 页面。"
+    }
+  }
+}

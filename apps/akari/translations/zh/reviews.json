@@ -1,0 +1,12 @@
+{
+  "newReview": "新影评",
+  "type": "类型",
+  "movie": "电影",
+  "tvShow": "电视剧",
+  "change": "更改",
+  "rating": "评分",
+  "ratingWithValue": "评分 ({{rating}}/{{max}})",
+  "review": "影评",
+  "thisIsRevisit": "这是重温",
+  "containsSpoilers": "包含剧透"
+}

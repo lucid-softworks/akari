@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Absturz-Reporter",
+  "crashDescription": "Verwende diese Schaltfläche, um einen Testfehler auszulösen und zu bestätigen, dass die Absturzberichterstattung korrekt eingerichtet ist. Stelle sicher, dass deine Axiom-Anmeldedaten konfiguriert sind, damit der Bericht geliefert wird.",
+  "triggerCrash": "Absturz auslösen",
+  "crashHint": "Tipp: Lade die App nach dem Test neu, damit der Debug-Bildschirm wieder gerendert wird.",
+  "queryCacheDebug": "Abfrage-Cache-Debug",
+  "invalidateAll": "Alle invalidieren",
+  "clearAll": "Alle löschen",
+  "totalQueries": "Gesamte Abfragen: {{count}}",
+  "activeQueries": "Aktive Abfragen: {{count}}",
+  "successfulQueries": "Erfolgreiche Abfragen: {{count}}",
+  "failedQueries": "Fehlgeschlagene Abfragen: {{count}}",
+  "noQueriesInCache": "Keine Abfragen im Cache",
+  "queryKey": "Abfrage-Schlüssel:",
+  "status": "Status:",
+  "dataUpdatedAt": "Daten aktualisiert am:",
+  "errorUpdatedAt": "Fehler aktualisiert am:",
+  "fetchCount": "Abruf-Anzahl:",
+  "error": "Fehler:",
+  "data": "Daten:",
+  "refetch": "Neu abrufen",
+  "remove": "Entfernen"
+}

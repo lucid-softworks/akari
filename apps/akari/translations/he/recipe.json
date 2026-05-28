@@ -1,0 +1,14 @@
+{
+  "title": "מתכון",
+  "time": "זמן",
+  "servings": "מנות",
+  "category": "קטגוריה",
+  "ingredients": "מרכיבים",
+  "cuisine": "מטבח",
+  "method": "שיטה",
+  "calories": "קלוריות",
+  "dietaryRestrictions": "הגבלות תזונתיות",
+  "instructions": "הוראות",
+  "tags": "תגיות",
+  "source": "מקור"
+}

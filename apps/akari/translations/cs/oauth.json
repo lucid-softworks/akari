@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "Přihlásit se jako @{{handle}}",
+    "subtitle": "Vyberte, co může akari dělat na vašem účtu. Povinná oprávnění nelze odškrtnout, protože je aplikace potřebuje k vašemu přihlášení a k základním funkcím.",
+    "continue": "Pokračovat",
+    "required": "Povinné",
+    "action": {
+      "create": "Vytvořit",
+      "update": "Aktualizovat",
+      "delete": "Smazat"
+    },
+    "atproto": {
+      "label": "Identita",
+      "description": "Potvrďte, kdo jste na atproto. Vždy povinné."
+    },
+    "chat": {
+      "label": "Přímé zprávy",
+      "description": "Čtení a odesílání chatových zpráv vaším jménem."
+    },
+    "profile": {
+      "label": "Profil",
+      "description": "Upravujte své zobrazované jméno, životopis, avatar a banner."
+    },
+    "post": {
+      "label": "Příspěvky",
+      "description": "Publikování nových příspěvků, jejich úpravy a mazání vlastních."
+    },
+    "threadgate": {
+      "label": "Ovládání odpovědí",
+      "description": "Nastavte, kdo může odpovídat ve vlákně, které jste začali."
+    },
+    "postgate": {
+      "label": "Ovládání citací",
+      "description": "Nastavte, kdo může citovat příspěvek, který jste vytvořili."
+    },
+    "like": {
+      "label": "To se mi líbí",
+      "description": "Označení a zrušení označení příspěvků jako líbí se mi."
+    },
+    "repost": {
+      "label": "Sdílení",
+      "description": "Sdílení a zrušení sdílení."
+    },
+    "follow": {
+      "label": "Sledování",
+      "description": "Sledování a přestat sledovat účty."
+    },
+    "block": {
+      "label": "Blokování",
+      "description": "Blokování a odblokování účtů."
+    },
+    "list": {
+      "label": "Seznamy",
+      "description": "Vytvářejte, přejmenovávejte a mažte moderátorské nebo kurátorské seznamy."
+    },
+    "listitem": {
+      "label": "Členství v seznamu",
+      "description": "Přidávejte a odebírejte účty ze svých seznamů."
+    },
+    "leafletPublication": {
+      "label": "Publikace Leaflet",
+      "description": "Spravujte dlouhé publikace na leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "Dokumenty Leaflet",
+      "description": "Publikujte a upravujte dlouhé dokumenty na leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "Předvolby AI",
+      "description": "Ukládejte své předvolby tréninku AI podle community-lexicon."
+    },
+    "popfeedReview": {
+      "label": "Recenze Popfeed",
+      "description": "Publikujte recenze v síti pro recenze médií Popfeed."
+    },
+    "recipe": {
+      "label": "Recepty",
+      "description": "Ukládejte recepty pomocí otevřeného slovníku exchange.recipe."
+    },
+    "linkatBoard": {
+      "label": "Tabule Linkat",
+      "description": "Spravujte svou tabuli odkazů Linkat link-in-bio."
+    }
+  }
+}

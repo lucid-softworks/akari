@@ -1,0 +1,14 @@
+{
+  "title": "Opskrift",
+  "time": "Tid",
+  "servings": "Portioner",
+  "category": "Kategori",
+  "ingredients": "Ingredienser",
+  "cuisine": "Køkken",
+  "method": "Metode",
+  "calories": "Kalorier",
+  "dietaryRestrictions": "Diætrestriktioner",
+  "instructions": "Instruktioner",
+  "tags": "Tags",
+  "source": "Kilde"
+}

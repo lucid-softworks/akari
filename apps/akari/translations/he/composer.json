@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "שפת הפוסט",
+  "postLanguageHint": "בחרו עד {{max}} שפות לפוסט שלכם.",
+  "postLanguageSearch": "חפש שפות",
+  "postLanguageA11y": "שפת הפוסט: {{value}}"
+}

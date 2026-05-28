@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "ลงชื่อเข้าใช้เป็น @{{handle}}",
+    "subtitle": "เลือกสิ่งที่ akari สามารถทำได้กับบัญชีของคุณ สิทธิ์ที่จำเป็นจะถูกติ๊กออกไม่ได้ เพราะแอปต้องใช้สิทธิ์เหล่านี้ในการลงชื่อเข้าใช้และทำงานหลัก",
+    "continue": "ดำเนินการต่อ",
+    "required": "จำเป็น",
+    "action": {
+      "create": "สร้าง",
+      "update": "อัปเดต",
+      "delete": "ลบ"
+    },
+    "atproto": {
+      "label": "ตัวตน",
+      "description": "ยืนยันว่าคุณเป็นใครบน atproto จำเป็นเสมอ"
+    },
+    "chat": {
+      "label": "ข้อความส่วนตัว",
+      "description": "อ่านและส่งข้อความสนทนาในนามของคุณ"
+    },
+    "profile": {
+      "label": "โปรไฟล์",
+      "description": "แก้ไขชื่อที่แสดง ประวัติย่อ รูปโปรไฟล์ และแบนเนอร์"
+    },
+    "post": {
+      "label": "โพสต์",
+      "description": "เผยแพร่โพสต์ใหม่ แก้ไข และลบโพสต์ของคุณ"
+    },
+    "threadgate": {
+      "label": "ควบคุมการตอบกลับ",
+      "description": "กำหนดว่าใครสามารถตอบกลับในกระทู้ที่คุณเริ่มได้"
+    },
+    "postgate": {
+      "label": "ควบคุมการอ้างอิง",
+      "description": "กำหนดว่าใครสามารถอ้างอิงโพสต์ที่คุณสร้างได้"
+    },
+    "like": {
+      "label": "ถูกใจ",
+      "description": "กดถูกใจและยกเลิกถูกใจโพสต์"
+    },
+    "repost": {
+      "label": "รีโพสต์",
+      "description": "รีโพสต์และยกเลิกการรีโพสต์"
+    },
+    "follow": {
+      "label": "ติดตาม",
+      "description": "ติดตามและเลิกติดตามบัญชี"
+    },
+    "block": {
+      "label": "บล็อก",
+      "description": "บล็อกและยกเลิกการบล็อกบัญชี"
+    },
+    "list": {
+      "label": "รายการ",
+      "description": "สร้าง เปลี่ยนชื่อ และลบรายการการดูแลหรือการคัดสรร"
+    },
+    "listitem": {
+      "label": "การเป็นสมาชิกรายการ",
+      "description": "เพิ่มและลบบัญชีออกจากรายการของคุณ"
+    },
+    "leafletPublication": {
+      "label": "สิ่งพิมพ์ Leaflet",
+      "description": "จัดการสิ่งพิมพ์รูปแบบยาวที่ leaflet.pub"
+    },
+    "leafletDocument": {
+      "label": "เอกสาร Leaflet",
+      "description": "เผยแพร่และแก้ไขเอกสารรูปแบบยาวที่ leaflet.pub"
+    },
+    "aiPreference": {
+      "label": "การตั้งค่า AI",
+      "description": "เก็บการตั้งค่าการฝึก AI ของคุณตาม community-lexicon"
+    },
+    "popfeedReview": {
+      "label": "บทวิจารณ์ Popfeed",
+      "description": "โพสต์บทวิจารณ์บนเครือข่ายบทวิจารณ์สื่อ Popfeed"
+    },
+    "recipe": {
+      "label": "สูตรอาหาร",
+      "description": "บันทึกสูตรอาหารผ่านศัพท์มูลเปิด exchange.recipe"
+    },
+    "linkatBoard": {
+      "label": "บอร์ด Linkat",
+      "description": "จัดการบอร์ด link-in-bio Linkat ของคุณ"
+    }
+  }
+}

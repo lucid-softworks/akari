@@ -1,0 +1,14 @@
+{
+  "title": "Resep",
+  "time": "Waktu",
+  "servings": "Porsi",
+  "category": "Kategori",
+  "ingredients": "Bahan",
+  "cuisine": "Masakan",
+  "method": "Metode",
+  "calories": "Kalori",
+  "dietaryRestrictions": "Pembatasan Diet",
+  "instructions": "Instruksi",
+  "tags": "Tag",
+  "source": "Sumber"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "食譜",
+  "time": "時間",
+  "servings": "份數",
+  "category": "類別",
+  "ingredients": "食材",
+  "cuisine": "菜系",
+  "method": "方法",
+  "calories": "卡路里",
+  "dietaryRestrictions": "飲食限制",
+  "instructions": "說明",
+  "tags": "標籤",
+  "source": "來源"
+}

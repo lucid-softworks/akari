@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Crash Reporter",
+  "crashDescription": "Gebruik deze knop om een testfout te genereren en te bevestigen dat crash reporting correct is ingesteld. Zorg ervoor dat je Axiom-referenties zijn geconfigureerd zodat het rapport wordt afgeleverd.",
+  "triggerCrash": "Crash Triggeren",
+  "crashHint": "Tip: herlaad de app na het testen zodat het debug-scherm opnieuw wordt weergegeven.",
+  "queryCacheDebug": "Query Cache Debug",
+  "invalidateAll": "Alles Ongeldig Maken",
+  "clearAll": "Alles Wissen",
+  "totalQueries": "Totale Queries: {{count}}",
+  "activeQueries": "Actieve Queries: {{count}}",
+  "successfulQueries": "Succesvolle Queries: {{count}}",
+  "failedQueries": "Mislukte Queries: {{count}}",
+  "noQueriesInCache": "Geen queries in cache",
+  "queryKey": "Query Sleutel:",
+  "status": "Status:",
+  "dataUpdatedAt": "Gegevens Bijgewerkt Op:",
+  "errorUpdatedAt": "Fout Bijgewerkt Op:",
+  "fetchCount": "Ophaal Aantal:",
+  "error": "Fout:",
+  "data": "Gegevens:",
+  "refetch": "Opnieuw Ophalen",
+  "remove": "Verwijderen"
+}

@@ -1,0 +1,9 @@
+{
+  "selectGif": "選擇GIF",
+  "searchPlaceholder": "搜尋GIF...",
+  "loadingMore": "載入更多...",
+  "noResults": "找不到GIF",
+  "noTrending": "沒有熱門GIF",
+  "addGif": "新增GIF",
+  "apiError": "無法載入GIF。請檢查您的網路連線。"
+}

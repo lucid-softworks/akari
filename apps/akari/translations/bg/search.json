@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Потърсете профили и публикации на Bluesky",
+  "searching": "Търсене ...",
+  "searchFailed": "Търсенето не успя",
+  "noUsersFound": "Не са намерени потребители",
+  "noPostsFound": "Не са намерени публикации",
+  "noResultsFound": "Не са намерени резултати",
+  "searchInputPlaceholder": "Профили на търсене и публикации ...",
+  "all": "Всички",
+  "users": "Потребители",
+  "posts": "Постове",
+  "loadingMoreResults": "Зареждане на повече резултати ...",
+  "sortTop": "Топ",
+  "sortLatest": "Последни",
+  "clearSearch": "Изчисти търсенето"
+}

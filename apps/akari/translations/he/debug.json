@@ -1,0 +1,23 @@
+{
+  "crashReporter": "מדווח קריסות",
+  "crashDescription": "השתמש בכפתור זה כדי ליצור שגיאת בדיקה ולאשר שדיווח על קריסות מוגדר נכון. ודא שהפרטים שלך ב-Axiom מוגדרים למסירת הדוח.",
+  "triggerCrash": "הפעל קריסה",
+  "crashHint": "טיפ: טען מחדש את האפליקציה לאחר הבדיקה כדי שמסך הדיבוג ירנדר שוב.",
+  "queryCacheDebug": "דיבוג מטמון שאילתות",
+  "invalidateAll": "הפוך הכל ללא תקף",
+  "clearAll": "נקה הכל",
+  "totalQueries": "סה\"כ שאילתות: {{count}}",
+  "activeQueries": "שאילתות פעילות: {{count}}",
+  "successfulQueries": "שאילתות מוצלחות: {{count}}",
+  "failedQueries": "שאילתות כושלות: {{count}}",
+  "noQueriesInCache": "אין שאילתות במטמון",
+  "queryKey": "מפתח שאילתה:",
+  "status": "סטטוס:",
+  "dataUpdatedAt": "נתונים עודכנו:",
+  "errorUpdatedAt": "שגיאה עודכנה:",
+  "fetchCount": "מספר אחזורים:",
+  "error": "שגיאה:",
+  "data": "נתונים:",
+  "refetch": "אחזר שוב",
+  "remove": "הסר"
+}

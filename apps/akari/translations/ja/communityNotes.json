@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "投稿に文脈を加えるのを手伝う",
+    "body1": "Community Notes は、補足が必要な投稿に添えられる短いメモです。投稿者が書き、互いの下書きを評価し、コミュニティが役立つと判定したメモだけが読者に表示されます。",
+    "body2": "登録すると投稿者ポータルが使えるようになります。保留中の投稿、評価キュー、自分が書いたメモのプロフィールにアクセスできます。",
+    "cta": "登録する"
+  },
+  "tabs": {
+    "pending": "保留中",
+    "rate": "評価",
+    "you": "あなた"
+  },
+  "pendingTab": {
+    "empty": "フラグが立てられた投稿はまだありません。あとでまた確認してください。",
+    "requestCountAndTime": "{count} 件のリクエスト · {time}",
+    "writeNote": "メモを書く"
+  },
+  "rateTab": {
+    "empty": "現在評価するものはありません。他の投稿者が提出した下書きはここに表示されます。",
+    "onPost": "投稿 {postId} について"
+  },
+  "profile": {
+    "notesWritten": "書いたメモ",
+    "helpfulRate": "役立つ率",
+    "ratingsGiven": "行った評価",
+    "contributorSince": "{date} から投稿者",
+    "leave": "プログラムを抜ける",
+    "recentNotes": "最近のメモ",
+    "noNotes": "まだメモを書いていません。",
+    "showPubliclyTitle": "自分のハンドルでメモを表示する",
+    "showPubliclyHint": "オフのとき、自分が書いたメモは「匿名の投稿者」として表示されます。"
+  },
+  "note": {
+    "headlineHelpful": "読者が文脈を追加しました",
+    "headlineUnderReview": "メモは審査中で、さらに評価が必要です",
+    "ratingSummary": "{count} 人の評価者のうち {percent}% がこれを役立つと判定しました",
+    "rateThisNote": "このメモを評価する",
+    "viewSources": "ソースを見る",
+    "rateModalTitle": "このメモは役立ちますか？",
+    "rateModalSubtitle": "あなたの評価が、メモを他の読者に表示するかどうかの判断に役立ちます。",
+    "helpfulness": {
+      "helpful": "役立つ",
+      "somewhat": "やや役立つ",
+      "notHelpful": "役立たない"
+    },
+    "whyNotHelpful": "役立たない理由は？",
+    "whatMakesItHelpful": "役立つ理由は？",
+    "anythingElse": "他に何かありますか？",
+    "commentPlaceholder": "評価チームへの任意のメモ",
+    "cancel": "キャンセル",
+    "submit": "送信",
+    "submitting": "送信中…",
+    "sourcesTitle": "ソース",
+    "sourcesSubtitle": "投稿者がこのメモに添付した引用元です。",
+    "noSources": "添付されたソースはありません。",
+    "close": "閉じる",
+    "helpfulReasons": {
+      "citesSources": "質の高いソースを引用している",
+      "easyToUnderstand": "理解しやすい",
+      "addressesClaim": "主張に直接対応している",
+      "providesContext": "重要な文脈を提供している",
+      "fairBalanced": "中立的な調子で書かれている"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "ソースがメモを裏付けていない",
+      "incorrectInfo": "誤った情報を含んでいる",
+      "opinion": "事実ではなく意見である",
+      "argumentative": "論争的または偏っている",
+      "irrelevant": "投稿と関係がない"
+    }
+  },
+  "contributor": {
+    "addTitle": "Community Note を追加",
+    "addSubtitle": "あなたのメモは、十分な評価者が役立つと判定するまで非公開です。検証可能な事実にとどめ、ソースを引用してください。",
+    "problemQuestion": "この投稿の何が問題ですか？",
+    "yourNote": "あなたのメモ",
+    "notePlaceholder": "何が欠けているか、または誤解を招くかを説明してください。下にソースを引用してください。",
+    "sourcesLabel": "ソース (1 行に 1 つの URL)",
+    "cancel": "キャンセル",
+    "submitNote": "メモを送信",
+    "submitting": "送信中…",
+    "requestTitle": "Community Note をリクエスト",
+    "requestSubtitle": "投稿者に確認してもらうため、この投稿にフラグを立てます。評価者プールに通知され、メモがすぐに表示されるわけではありません。",
+    "reason": "理由",
+    "anythingElseOptional": "他に何かありますか？ (任意)",
+    "commentPlaceholder": "投稿者に役立つ文脈を追加してください",
+    "sendRequest": "リクエストを送信",
+    "classification": {
+      "misleading": "誤解を招く",
+      "missingContext": "文脈が不足",
+      "outdated": "古い情報",
+      "satire": "風刺が事実として扱われている",
+      "other": "その他"
+    },
+    "requestReason": {
+      "misinformation": "誤情報",
+      "missingContext": "もっと文脈が必要",
+      "manipulation": "改ざんされたメディア",
+      "spam": "スパムまたは詐欺",
+      "other": "その他の懸念"
+    }
+  }
+}

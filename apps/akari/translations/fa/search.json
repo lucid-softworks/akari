@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "در Bluesky پروفایل و پست ها را جستجو کنید",
+  "searching": "جستجو ...",
+  "searchFailed": "جستجو شکست خورد",
+  "noUsersFound": "هیچ کاربر پیدا نکرد",
+  "noPostsFound": "هیچ پستی یافت نشد",
+  "noResultsFound": "نتیجه ای پیدا نکرد",
+  "searchInputPlaceholder": "پروفایل ها و پست ها را جستجو کنید ...",
+  "all": "همه",
+  "users": "کاربران",
+  "posts": "پست",
+  "loadingMoreResults": "بارگیری نتایج بیشتر ...",
+  "sortTop": "برتر",
+  "sortLatest": "جدیدترین",
+  "clearSearch": "پاک کردن جستجو"
+}

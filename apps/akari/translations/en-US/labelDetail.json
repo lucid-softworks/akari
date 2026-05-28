@@ -1,0 +1,10 @@
+{
+  "unknown": "No additional info on this label.",
+  "source": "Source",
+  "created": "Created",
+  "expires": "Expires",
+  "negated": "Negated",
+  "yes": "Yes",
+  "appeal": "Appeal label",
+  "appealSent": "Appeal sent"
+}

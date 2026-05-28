@@ -1,0 +1,9 @@
+{
+  "selectGif": "اختر GIF",
+  "searchPlaceholder": "البحث عن GIF...",
+  "loadingMore": "جاري التحميل أكثر...",
+  "noResults": "لم يتم العثور على GIF",
+  "noTrending": "لا توجد GIF شائعة",
+  "addGif": "إضافة GIF",
+  "apiError": "تعذر تحميل GIF. يرجى التحقق من اتصال الإنترنت."
+}

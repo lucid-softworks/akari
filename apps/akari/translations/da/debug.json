@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Crash Reporter",
+  "crashDescription": "Brug denne knap til at generere en testfejl og bekræfte, at crash-rapportering er konfigureret korrekt. Sørg for, at dine Axiom-legitimationsoplysninger er konfigureret til at levere rapporten.",
+  "triggerCrash": "Udløs Crash",
+  "crashHint": "Tip: genindlæs appen efter testen, så debug-skærmen renderes igen.",
+  "queryCacheDebug": "Forespørgselscache Debug",
+  "invalidateAll": "Ugyldiggør Alt",
+  "clearAll": "Ryd Alt",
+  "totalQueries": "Samlede Forespørgsler: {{count}}",
+  "activeQueries": "Aktive Forespørgsler: {{count}}",
+  "successfulQueries": "Vellykkede Forespørgsler: {{count}}",
+  "failedQueries": "Mislykkede Forespørgsler: {{count}}",
+  "noQueriesInCache": "Ingen forespørgsler i cache",
+  "queryKey": "Forespørgselsnøgle:",
+  "status": "Status:",
+  "dataUpdatedAt": "Data Opdateret:",
+  "errorUpdatedAt": "Fejl Opdateret:",
+  "fetchCount": "Hent Antal:",
+  "error": "Fejl:",
+  "data": "Data:",
+  "refetch": "Hent Igen",
+  "remove": "Fjern"
+}

@@ -1,0 +1,12 @@
+{
+  "newReview": "مراجعة جديدة",
+  "type": "النوع",
+  "movie": "فيلم",
+  "tvShow": "مسلسل",
+  "change": "تغيير",
+  "rating": "التقييم",
+  "ratingWithValue": "التقييم ({{rating}}/{{max}})",
+  "review": "المراجعة",
+  "thisIsRevisit": "هذه مشاهدة متكررة",
+  "containsSpoilers": "يحتوي على حرق للأحداث"
+}

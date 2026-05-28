@@ -1,0 +1,12 @@
+{
+  "newReview": "Új értékelés",
+  "type": "Típus",
+  "movie": "Film",
+  "tvShow": "Tévésorozat",
+  "change": "Módosítás",
+  "rating": "Értékelés",
+  "ratingWithValue": "Értékelés ({{rating}}/{{max}})",
+  "review": "Vélemény",
+  "thisIsRevisit": "Ez egy újranézés",
+  "containsSpoilers": "Cselekménybeli részleteket tartalmaz"
+}

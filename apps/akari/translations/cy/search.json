@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Chwilio am broffiliau a swyddi ar Bluesky",
+  "searching": "Wrthi'n chwilio...",
+  "searchFailed": "Methodd chwilio",
+  "noUsersFound": "Dim defnyddwyr wedi'u canfod",
+  "noPostsFound": "Dim swyddi wedi'u canfod",
+  "noResultsFound": "Dim canlyniadau wedi'u canfod",
+  "searchInputPlaceholder": "Chwilio proffiliau a swyddi...",
+  "all": "Pob un",
+  "users": "Defnyddwyr",
+  "posts": "Swyddi",
+  "loadingMoreResults": "Wrthi'n llwytho mwy o ganlyniadau...",
+  "sortTop": "Gorau",
+  "sortLatest": "Diweddaraf",
+  "clearSearch": "Clirio'r chwiliad"
+}

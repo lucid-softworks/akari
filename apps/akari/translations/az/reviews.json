@@ -1,0 +1,12 @@
+{
+  "newReview": "Yeni rəy",
+  "type": "Növ",
+  "movie": "Film",
+  "tvShow": "TV serialı",
+  "change": "Dəyişdir",
+  "rating": "Qiymət",
+  "ratingWithValue": "Qiymət ({{rating}}/{{max}})",
+  "review": "Rəy",
+  "thisIsRevisit": "Bu, təkrar baxışdır",
+  "containsSpoilers": "Spoyler var"
+}

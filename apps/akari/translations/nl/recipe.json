@@ -1,0 +1,14 @@
+{
+  "title": "Recept",
+  "time": "Tijd",
+  "servings": "Porties",
+  "category": "Categorie",
+  "ingredients": "Ingrediënten",
+  "cuisine": "Keuken",
+  "method": "Methode",
+  "calories": "Calorieën",
+  "dietaryRestrictions": "Dieetbeperkingen",
+  "instructions": "Instructies",
+  "tags": "Tags",
+  "source": "Bron"
+}

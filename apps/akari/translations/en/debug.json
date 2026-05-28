@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Crash Reporter",
+  "crashDescription": "Use this button to throw a test error and confirm crash reporting is wired up correctly. Make sure your Axiom credentials are configured so the report is delivered.",
+  "triggerCrash": "Trigger Crash",
+  "crashHint": "Tip: reload the app after testing so the debug screen renders again.",
+  "queryCacheDebug": "Query Cache Debug",
+  "invalidateAll": "Invalidate All",
+  "clearAll": "Clear All",
+  "totalQueries": "Total Queries: {{count}}",
+  "activeQueries": "Active Queries: {{count}}",
+  "successfulQueries": "Successful Queries: {{count}}",
+  "failedQueries": "Failed Queries: {{count}}",
+  "noQueriesInCache": "No queries in cache",
+  "queryKey": "Query Key:",
+  "status": "Status:",
+  "dataUpdatedAt": "Data Updated At:",
+  "errorUpdatedAt": "Error Updated At:",
+  "fetchCount": "Fetch Count:",
+  "error": "Error:",
+  "data": "Data:",
+  "refetch": "Refetch",
+  "remove": "Remove"
+}

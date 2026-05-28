@@ -1,0 +1,14 @@
+{
+  "title": "Tarif",
+  "time": "Zaman",
+  "servings": "Porsiyon",
+  "category": "Kategori",
+  "ingredients": "Malzemeler",
+  "cuisine": "Mutfak",
+  "method": "Yöntem",
+  "calories": "Kalori",
+  "dietaryRestrictions": "Diyet Kısıtlamaları",
+  "instructions": "Talimatlar",
+  "tags": "Etiketler",
+  "source": "Kaynak"
+}

@@ -1,5 +1,5 @@
 import type { BlueskyVerification } from '@/bluesky-api';
-import type en from '@/translations/en.json';
+import type en from '@/translations/en';
 
 export type ConvoMember = {
   did: string;
@@ -25,7 +25,7 @@ export type Conversation = {
   muted: boolean;
 };
 
-type CommonTranslationKey = keyof typeof en.translations.common;
+type CommonTranslationKey = keyof typeof en.common;
 export type CommonTranslationPath = `common.${CommonTranslationKey}`;
 
 export type PendingButtonConfig = {

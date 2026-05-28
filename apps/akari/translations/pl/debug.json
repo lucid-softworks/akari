@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Raportowanie Awarii",
+  "crashDescription": "Użyj tego przycisku, aby wygenerować błąd testowy i potwierdzić, że raportowanie awarii jest skonfigurowane poprawnie. Upewnij się, że Twoje dane uwierzytelniające Axiom są skonfigurowane do dostarczania raportu.",
+  "triggerCrash": "Wywołaj Awarię",
+  "crashHint": "Wskazówka: przeładuj aplikację po teście, aby ekran debugowania został ponownie wyrenderowany.",
+  "queryCacheDebug": "Debug Cache Zapytań",
+  "invalidateAll": "Unieważnij Wszystkie",
+  "clearAll": "Wyczyść Wszystkie",
+  "totalQueries": "Łączne Zapytania: {{count}}",
+  "activeQueries": "Aktywne Zapytania: {{count}}",
+  "successfulQueries": "Udane Zapytania: {{count}}",
+  "failedQueries": "Nieudane Zapytania: {{count}}",
+  "noQueriesInCache": "Brak zapytań w cache",
+  "queryKey": "Klucz Zapytania:",
+  "status": "Status:",
+  "dataUpdatedAt": "Dane Zaktualizowane:",
+  "errorUpdatedAt": "Błąd Zaktualizowany:",
+  "fetchCount": "Liczba Pobrań:",
+  "error": "Błąd:",
+  "data": "Dane:",
+  "refetch": "Pobierz Ponownie",
+  "remove": "Usuń"
+}

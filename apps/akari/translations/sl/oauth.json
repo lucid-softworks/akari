@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "Prijavi se kot @{{handle}}",
+    "subtitle": "Izberi, kaj lahko akari počne v tvojem računu. Obveznih dovoljenj ni mogoče odznačiti, ker jih aplikacija potrebuje za prijavo in osnovne tokove.",
+    "continue": "Nadaljuj",
+    "required": "Obvezno",
+    "action": {
+      "create": "Ustvari",
+      "update": "Posodobi",
+      "delete": "Izbriši"
+    },
+    "atproto": {
+      "label": "Identiteta",
+      "description": "Potrdi, kdo si na atproto. Vedno obvezno."
+    },
+    "chat": {
+      "label": "Neposredna sporočila",
+      "description": "Bere in pošilja klepetalna sporočila v tvojem imenu."
+    },
+    "profile": {
+      "label": "Profil",
+      "description": "Uredi svoje prikazno ime, opis, avatar in pasico."
+    },
+    "post": {
+      "label": "Objave",
+      "description": "Objavi nove objave, jih uredi in izbriši svoje."
+    },
+    "threadgate": {
+      "label": "Nadzor odgovorov",
+      "description": "Določi, kdo lahko odgovori v niti, ki si jo začel."
+    },
+    "postgate": {
+      "label": "Nadzor citatov",
+      "description": "Določi, kdo lahko citira objavo, ki si jo ustvaril."
+    },
+    "like": {
+      "label": "Všečki",
+      "description": "Všečkanje in odvšečkanje objav."
+    },
+    "repost": {
+      "label": "Ponovne objave",
+      "description": "Ponovno objavi in razveljavi ponovne objave."
+    },
+    "follow": {
+      "label": "Sledenja",
+      "description": "Sledi in preneha slediti računom."
+    },
+    "block": {
+      "label": "Blokade",
+      "description": "Blokira in odblokira račune."
+    },
+    "list": {
+      "label": "Seznami",
+      "description": "Ustvarjaj, preimenuj in izbriši moderacijske ali kuratorske sezname."
+    },
+    "listitem": {
+      "label": "Članstvo v seznamu",
+      "description": "Dodaj in odstrani račune s svojih seznamov."
+    },
+    "leafletPublication": {
+      "label": "Objave Leaflet",
+      "description": "Upravljaj daljše objave na leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "Dokumenti Leaflet",
+      "description": "Objavi in uredi daljše dokumente na leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "Nastavitve AI",
+      "description": "Shrani svoje nastavitve treniranja AI po community-lexicon."
+    },
+    "popfeedReview": {
+      "label": "Mnenja Popfeed",
+      "description": "Objavi mnenja v omrežju medijskih mnenj Popfeed."
+    },
+    "recipe": {
+      "label": "Recepti",
+      "description": "Shrani recepte prek odprtega leksikona exchange.recipe."
+    },
+    "linkatBoard": {
+      "label": "Tabla Linkat",
+      "description": "Upravljaj svojo Linkat link-in-bio tablo."
+    }
+  }
+}

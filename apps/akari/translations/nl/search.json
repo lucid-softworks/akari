@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Zoek naar profielen en berichten op Bluesky",
+  "searching": "Zoeken...",
+  "searchFailed": "Zoeken mislukt",
+  "noUsersFound": "Geen gebruikers gevonden",
+  "noPostsFound": "Geen berichten gevonden",
+  "noResultsFound": "Geen resultaten gevonden",
+  "searchInputPlaceholder": "Zoek profielen en berichten...",
+  "all": "Alles",
+  "users": "Gebruikers",
+  "posts": "Berichten",
+  "loadingMoreResults": "Meer resultaten laden...",
+  "sortTop": "Top",
+  "sortLatest": "Nieuwste",
+  "clearSearch": "Zoekopdracht wissen"
+}

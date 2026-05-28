@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "在 Bluesky 上搜索个人资料和帖子",
+  "searching": "搜索中...",
+  "searchFailed": "搜索失败",
+  "noUsersFound": "未找到用户",
+  "noPostsFound": "未找到帖子",
+  "noResultsFound": "未找到结果",
+  "searchInputPlaceholder": "搜索个人资料和帖子...",
+  "all": "全部",
+  "users": "用户",
+  "posts": "帖子",
+  "loadingMoreResults": "加载更多结果...",
+  "sortTop": "热门",
+  "sortLatest": "最新",
+  "clearSearch": "清除搜索"
+}

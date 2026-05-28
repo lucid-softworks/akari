@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "Log ind som @{{handle}}",
+    "subtitle": "Vælg, hvad akari kan gøre på din konto. Påkrævede tilladelser kan ikke fjernes, fordi appen har brug for dem for at logge dig ind og køre de centrale flows.",
+    "continue": "Fortsæt",
+    "required": "Påkrævet",
+    "action": {
+      "create": "Opret",
+      "update": "Opdater",
+      "delete": "Slet"
+    },
+    "atproto": {
+      "label": "Identitet",
+      "description": "Bekræft, hvem du er på atproto. Altid påkrævet."
+    },
+    "chat": {
+      "label": "Direkte beskeder",
+      "description": "Læs og send chatbeskeder på dine vegne."
+    },
+    "profile": {
+      "label": "Profil",
+      "description": "Rediger dit visningsnavn, bio, avatar og banner."
+    },
+    "post": {
+      "label": "Opslag",
+      "description": "Udgiv nye opslag, rediger dem og slet dine egne."
+    },
+    "threadgate": {
+      "label": "Svarstyring",
+      "description": "Bestem, hvem der må svare i en tråd, du har startet."
+    },
+    "postgate": {
+      "label": "Citatstyring",
+      "description": "Bestem, hvem der må citere et opslag, du har lavet."
+    },
+    "like": {
+      "label": "Likes",
+      "description": "Like og fjern like fra opslag."
+    },
+    "repost": {
+      "label": "Genopslag",
+      "description": "Genopslå og fortryd genopslag."
+    },
+    "follow": {
+      "label": "Følg",
+      "description": "Følg og affølg konti."
+    },
+    "block": {
+      "label": "Blokeringer",
+      "description": "Bloker og fjern blokering af konti."
+    },
+    "list": {
+      "label": "Lister",
+      "description": "Opret, omdøb og slet moderations- eller kurateringslister."
+    },
+    "listitem": {
+      "label": "Listemedlemskab",
+      "description": "Tilføj og fjern konti fra dine lister."
+    },
+    "leafletPublication": {
+      "label": "Leaflet-publikationer",
+      "description": "Administrer langformede publikationer på leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "Leaflet-dokumenter",
+      "description": "Udgiv og rediger langformede dokumenter på leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "AI-præferencer",
+      "description": "Gem dine community-lexicon AI-træningspræferencer."
+    },
+    "popfeedReview": {
+      "label": "Popfeed-anmeldelser",
+      "description": "Skriv anmeldelser på Popfeed-medieanmeldelsesnetværket."
+    },
+    "recipe": {
+      "label": "Opskrifter",
+      "description": "Gem opskrifter via det åbne exchange.recipe-leksikon."
+    },
+    "linkatBoard": {
+      "label": "Linkat-tavle",
+      "description": "Administrer din Linkat link-in-bio-tavle."
+    }
+  }
+}

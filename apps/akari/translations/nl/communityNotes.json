@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Help context aan berichten toe te voegen",
+    "body1": "Community Notes zijn korte notities die worden gekoppeld aan berichten waar meer context bij nodig is. Bijdragers schrijven ze en beoordelen elkaars concepten; alleen notities die de community als behulpzaam markeert, worden aan lezers getoond.",
+    "body2": "Door je in te schrijven krijg je toegang tot het bijdragersportaal: berichten in behandeling, de beoordelingswachtrij en je profiel met geschreven notities.",
+    "cta": "Inschrijven"
+  },
+  "tabs": {
+    "pending": "In behandeling",
+    "rate": "Beoordelen",
+    "you": "Jij"
+  },
+  "pendingTab": {
+    "empty": "Er zijn nog geen berichten gemarkeerd. Kom later terug.",
+    "requestCountAndTime": "{count} verzoeken · {time}",
+    "writeNote": "Notitie schrijven"
+  },
+  "rateTab": {
+    "empty": "Er is op dit moment niets te beoordelen. Concepten die andere bijdragers indienen, verschijnen hier.",
+    "onPost": "Bij bericht {postId}"
+  },
+  "profile": {
+    "notesWritten": "Geschreven notities",
+    "helpfulRate": "Behulpzaamheidspercentage",
+    "ratingsGiven": "Beoordelingen gegeven",
+    "contributorSince": "Bijdrager sinds {date}",
+    "leave": "Programma verlaten",
+    "recentNotes": "Je recente notities",
+    "noNotes": "Je hebt nog geen notities geschreven.",
+    "showPubliclyTitle": "Toon mijn notities onder mijn handle",
+    "showPubliclyHint": "Als dit uitstaat, worden notities die je schrijft toegeschreven aan \"anonieme bijdrager\"."
+  },
+  "note": {
+    "headlineHelpful": "Lezers hebben context toegevoegd",
+    "headlineUnderReview": "Notitie in beoordeling, heeft meer beoordelingen nodig",
+    "ratingSummary": "{percent}% van {count} beoordelaars vond dit behulpzaam",
+    "rateThisNote": "Deze notitie beoordelen",
+    "viewSources": "Bronnen bekijken",
+    "rateModalTitle": "Is deze notitie behulpzaam?",
+    "rateModalSubtitle": "Jouw beoordeling helpt bepalen of de notitie aan andere lezers wordt getoond.",
+    "helpfulness": {
+      "helpful": "Behulpzaam",
+      "somewhat": "Enigszins",
+      "notHelpful": "Niet behulpzaam"
+    },
+    "whyNotHelpful": "Waarom niet behulpzaam?",
+    "whatMakesItHelpful": "Wat maakt het behulpzaam?",
+    "anythingElse": "Nog iets anders?",
+    "commentPlaceholder": "Optionele opmerkingen voor het beoordelingsteam",
+    "cancel": "Annuleren",
+    "submit": "Indienen",
+    "submitting": "Indienen…",
+    "sourcesTitle": "Bronnen",
+    "sourcesSubtitle": "Citaten die de bijdrager aan deze notitie heeft toegevoegd.",
+    "noSources": "Geen bronnen toegevoegd.",
+    "close": "Sluiten",
+    "helpfulReasons": {
+      "citesSources": "Verwijst naar betrouwbare bronnen",
+      "easyToUnderstand": "Makkelijk te begrijpen",
+      "addressesClaim": "Gaat direct in op de bewering",
+      "providesContext": "Biedt belangrijke context",
+      "fairBalanced": "Geschreven in een neutrale toon"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Bronnen ondersteunen de notitie niet",
+      "incorrectInfo": "Bevat onjuiste informatie",
+      "opinion": "Mening, geen feit",
+      "argumentative": "Argumentatief of bevooroordeeld",
+      "irrelevant": "Niet relevant voor het bericht"
+    }
+  },
+  "contributor": {
+    "addTitle": "Voeg een Community Note toe",
+    "addSubtitle": "Je notitie is privé totdat voldoende beoordelaars hem behulpzaam vinden. Houd je aan verifieerbare feiten en vermeld bronnen.",
+    "problemQuestion": "Wat is het probleem met dit bericht?",
+    "yourNote": "Je notitie",
+    "notePlaceholder": "Leg uit wat ontbreekt of misleidend is. Vermeld bronnen hieronder.",
+    "sourcesLabel": "Bronnen (één URL per regel)",
+    "cancel": "Annuleren",
+    "submitNote": "Notitie indienen",
+    "submitting": "Indienen…",
+    "requestTitle": "Een Community Note aanvragen",
+    "requestSubtitle": "Markeer dit bericht zodat een bijdrager het kan beoordelen. We waarschuwen de beoordelaarspool, je ziet de notitie niet meteen.",
+    "reason": "Reden",
+    "anythingElseOptional": "Nog iets anders? (optioneel)",
+    "commentPlaceholder": "Voeg nuttige context toe voor de bijdrager",
+    "sendRequest": "Verzoek verzenden",
+    "classification": {
+      "misleading": "Misleidend",
+      "missingContext": "Ontbrekende context",
+      "outdated": "Verouderd",
+      "satire": "Satire die als feit wordt behandeld",
+      "other": "Anders"
+    },
+    "requestReason": {
+      "misinformation": "Desinformatie",
+      "missingContext": "Heeft meer context nodig",
+      "manipulation": "Gemanipuleerde media",
+      "spam": "Spam of oplichting",
+      "other": "Andere zorg"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "newReview": "Nouvelle critique",
+  "type": "Type",
+  "movie": "Film",
+  "tvShow": "Série TV",
+  "change": "Modifier",
+  "rating": "Note",
+  "ratingWithValue": "Note ({{rating}}/{{max}})",
+  "review": "Critique",
+  "thisIsRevisit": "Cest un revisionnage",
+  "containsSpoilers": "Contient des spoilers"
+}

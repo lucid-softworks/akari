@@ -1,0 +1,12 @@
+{
+  "newReview": "Nová recenzia",
+  "type": "Typ",
+  "movie": "Film",
+  "tvShow": "Seriál",
+  "change": "Zmeniť",
+  "rating": "Hodnotenie",
+  "ratingWithValue": "Hodnotenie ({{rating}}/{{max}})",
+  "review": "Recenzia",
+  "thisIsRevisit": "Toto je opätovné pozretie",
+  "containsSpoilers": "Obsahuje spojlery"
+}

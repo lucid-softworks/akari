@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Hjælp med at give kontekst til opslag",
+    "body1": "Community Notes er korte noter, der knyttes til opslag, som har brug for mere kontekst. Bidragsydere skriver dem og bedømmer hinandens udkast; kun noter, som fællesskabet markerer som hjælpsomme, vises for læserne.",
+    "body2": "Når du tilmelder dig, får du adgang til bidragyderportalen: afventende opslag, bedømmelseskøen og din profil med skrevne noter.",
+    "cta": "Tilmeld"
+  },
+  "tabs": {
+    "pending": "Afventer",
+    "rate": "Bedøm",
+    "you": "Dig"
+  },
+  "pendingTab": {
+    "empty": "Ingen opslag er blevet markeret endnu. Kig forbi senere.",
+    "requestCountAndTime": "{count} anmodninger · {time}",
+    "writeNote": "Skriv en note"
+  },
+  "rateTab": {
+    "empty": "Der er intet at bedømme lige nu. Udkast fra andre bidragsydere vises her.",
+    "onPost": "På opslag {postId}"
+  },
+  "profile": {
+    "notesWritten": "Skrevne noter",
+    "helpfulRate": "Andel hjælpsomme",
+    "ratingsGiven": "Afgivne bedømmelser",
+    "contributorSince": "Bidragyder siden {date}",
+    "leave": "Forlad programmet",
+    "recentNotes": "Dine seneste noter",
+    "noNotes": "Du har ikke skrevet nogen noter endnu.",
+    "showPubliclyTitle": "Vis mine noter under mit handle",
+    "showPubliclyHint": "Når dette er slået fra, tilskrives noter, du skriver, til \"anonym bidragyder\"."
+  },
+  "note": {
+    "headlineHelpful": "Læsere har tilføjet kontekst",
+    "headlineUnderReview": "Note under gennemgang, mangler flere bedømmelser",
+    "ratingSummary": "{percent}% af {count} bedømmere fandt denne hjælpsom",
+    "rateThisNote": "Bedøm denne note",
+    "viewSources": "Vis kilder",
+    "rateModalTitle": "Er denne note hjælpsom?",
+    "rateModalSubtitle": "Din bedømmelse er med til at afgøre, om noten vises for andre læsere.",
+    "helpfulness": {
+      "helpful": "Hjælpsom",
+      "somewhat": "Delvist",
+      "notHelpful": "Ikke hjælpsom"
+    },
+    "whyNotHelpful": "Hvorfor ikke hjælpsom?",
+    "whatMakesItHelpful": "Hvad gør den hjælpsom?",
+    "anythingElse": "Andet?",
+    "commentPlaceholder": "Valgfri noter til bedømmelsesteamet",
+    "cancel": "Annullér",
+    "submit": "Send",
+    "submitting": "Sender ...",
+    "sourcesTitle": "Kilder",
+    "sourcesSubtitle": "Kilder, som bidragyderen har vedhæftet denne note.",
+    "noSources": "Ingen kilder vedhæftet.",
+    "close": "Luk",
+    "helpfulReasons": {
+      "citesSources": "Henviser til kilder af høj kvalitet",
+      "easyToUnderstand": "Let at forstå",
+      "addressesClaim": "Adresserer påstanden direkte",
+      "providesContext": "Giver vigtig kontekst",
+      "fairBalanced": "Skrevet i en neutral tone"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Kilderne understøtter ikke noten",
+      "incorrectInfo": "Indeholder ukorrekte oplysninger",
+      "opinion": "Holdning, ikke kendsgerning",
+      "argumentative": "Polemisk eller forudindtaget",
+      "irrelevant": "Irrelevant for opslaget"
+    }
+  },
+  "contributor": {
+    "addTitle": "Tilføj en Community Note",
+    "addSubtitle": "Din note er privat, indtil nok bedømmere markerer den som hjælpsom. Hold dig til verificerbare fakta, og angiv kilder.",
+    "problemQuestion": "Hvad er problemet med dette opslag?",
+    "yourNote": "Din note",
+    "notePlaceholder": "Forklar, hvad der mangler eller er vildledende. Angiv kilder nedenfor.",
+    "sourcesLabel": "Kilder (én URL pr. linje)",
+    "cancel": "Annullér",
+    "submitNote": "Send note",
+    "submitting": "Sender ...",
+    "requestTitle": "Anmod om en Community Note",
+    "requestSubtitle": "Markér dette opslag, så en bidragyder kan gennemgå det. Vi underretter bedømmerpuljen, du ser ikke noten med det samme.",
+    "reason": "Årsag",
+    "anythingElseOptional": "Andet? (valgfrit)",
+    "commentPlaceholder": "Tilføj nyttig kontekst til bidragyderen",
+    "sendRequest": "Send anmodning",
+    "classification": {
+      "misleading": "Vildledende",
+      "missingContext": "Manglende kontekst",
+      "outdated": "Forældet",
+      "satire": "Satire opfattet som fakta",
+      "other": "Andet"
+    },
+    "requestReason": {
+      "misinformation": "Misinformation",
+      "missingContext": "Mangler kontekst",
+      "manipulation": "Manipulerede medier",
+      "spam": "Spam eller fupnummer",
+      "other": "Anden bekymring"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "Bahasa postingan",
+  "postLanguageHint": "Pilih hingga {{max}} bahasa untuk postingan Anda.",
+  "postLanguageSearch": "Cari bahasa",
+  "postLanguageA11y": "Bahasa postingan: {{value}}"
+}

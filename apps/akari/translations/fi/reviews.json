@@ -1,0 +1,12 @@
+{
+  "newReview": "Uusi arvostelu",
+  "type": "Tyyppi",
+  "movie": "Elokuva",
+  "tvShow": "TV-sarja",
+  "change": "Vaihda",
+  "rating": "Arvosana",
+  "ratingWithValue": "Arvosana ({{rating}}/{{max}})",
+  "review": "Arvostelu",
+  "thisIsRevisit": "Tämä on uusintakatselu",
+  "containsSpoilers": "Sisältää juonipaljastuksia"
+}

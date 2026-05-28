@@ -1,0 +1,9 @@
+{
+  "selectGif": "เลือก GIF",
+  "searchPlaceholder": "ค้นหา GIF...",
+  "loadingMore": "กำลังโหลดเพิ่มเติม...",
+  "noResults": "ไม่พบ GIF",
+  "noTrending": "ไม่มี GIF ยอดนิยม",
+  "addGif": "เพิ่ม GIF",
+  "apiError": "ไม่สามารถโหลด GIF ได้ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ต"
+}

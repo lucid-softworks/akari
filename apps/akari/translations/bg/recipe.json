@@ -1,0 +1,14 @@
+{
+  "title": "Рецепта",
+  "time": "Време",
+  "servings": "Порции",
+  "category": "Категория",
+  "ingredients": "Съставки",
+  "cuisine": "Кухня",
+  "method": "Метод",
+  "calories": "Калории",
+  "dietaryRestrictions": "Диетични ограничения",
+  "instructions": "Инструкции",
+  "tags": "Етикети",
+  "source": "Източник"
+}

@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "البحث عن الملفات الشخصية والمنشورات على Bluesky",
+  "searching": "البحث...",
+  "searchFailed": "فشل البحث",
+  "noUsersFound": "لم يتم العثور على مستخدمين",
+  "noPostsFound": "لم يتم العثور على منشورات",
+  "noResultsFound": "لم يتم العثور على نتائج",
+  "searchInputPlaceholder": "البحث عن الملفات الشخصية والمنشورات...",
+  "all": "الكل",
+  "users": "المستخدمون",
+  "posts": "المنشورات",
+  "loadingMoreResults": "تحميل المزيد من النتائج...",
+  "sortTop": "الأعلى",
+  "sortLatest": "الأحدث",
+  "clearSearch": "مسح البحث"
+}

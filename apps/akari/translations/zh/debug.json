@@ -1,0 +1,23 @@
+{
+  "crashReporter": "崩溃报告器",
+  "crashDescription": "使用此按钮生成测试错误并确认崩溃报告配置正确。确保您的 Axiom 凭据已配置为传递报告。",
+  "triggerCrash": "触发崩溃",
+  "crashHint": "提示：测试后重新加载应用程序，以便调试屏幕重新渲染。",
+  "queryCacheDebug": "查询缓存调试",
+  "invalidateAll": "使所有无效",
+  "clearAll": "清除所有",
+  "totalQueries": "总查询数：{{count}}",
+  "activeQueries": "活动查询：{{count}}",
+  "successfulQueries": "成功查询：{{count}}",
+  "failedQueries": "失败查询：{{count}}",
+  "noQueriesInCache": "缓存中没有查询",
+  "queryKey": "查询键：",
+  "status": "状态：",
+  "dataUpdatedAt": "数据更新：",
+  "errorUpdatedAt": "错误更新：",
+  "fetchCount": "获取次数：",
+  "error": "错误：",
+  "data": "数据：",
+  "refetch": "重新获取",
+  "remove": "删除"
+}

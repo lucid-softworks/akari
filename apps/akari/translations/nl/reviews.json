@@ -1,0 +1,12 @@
+{
+  "newReview": "Nieuwe recensie",
+  "type": "Type",
+  "movie": "Film",
+  "tvShow": "Tv-serie",
+  "change": "Wijzigen",
+  "rating": "Beoordeling",
+  "ratingWithValue": "Beoordeling ({{rating}}/{{max}})",
+  "review": "Recensie",
+  "thisIsRevisit": "Dit is een herbezoek",
+  "containsSpoilers": "Bevat spoilers"
+}

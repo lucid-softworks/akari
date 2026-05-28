@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "帮助为帖子补充背景信息",
+    "body1": "Community Notes 是附加在需要更多背景信息的帖子下的简短笔记。贡献者撰写笔记并互相评价草稿；只有被社区标记为有用的笔记才会展示给读者。",
+    "body2": "加入计划即可进入贡献者门户：待处理的帖子、评分队列以及你撰写的笔记档案。",
+    "cta": "加入计划"
+  },
+  "tabs": {
+    "pending": "待处理",
+    "rate": "评分",
+    "you": "你"
+  },
+  "pendingTab": {
+    "empty": "目前还没有被标记的帖子，稍后再来看看。",
+    "requestCountAndTime": "{count} 个请求 · {time}",
+    "writeNote": "撰写笔记"
+  },
+  "rateTab": {
+    "empty": "目前没有可评分的内容。其他贡献者提交的草稿会显示在这里。",
+    "onPost": "针对帖子 {postId}"
+  },
+  "profile": {
+    "notesWritten": "已撰写笔记",
+    "helpfulRate": "有用率",
+    "ratingsGiven": "已给出评分",
+    "contributorSince": "贡献者起始日期 {date}",
+    "leave": "退出计划",
+    "recentNotes": "你最近的笔记",
+    "noNotes": "你还没有撰写过任何笔记。",
+    "showPubliclyTitle": "在我的 handle 下公开显示我的笔记",
+    "showPubliclyHint": "关闭后，你撰写的笔记将以“匿名贡献者”身份署名。"
+  },
+  "note": {
+    "headlineHelpful": "读者补充了背景信息",
+    "headlineUnderReview": "笔记审核中，需要更多评分",
+    "ratingSummary": "{count} 位评分者中有 {percent}% 认为这条笔记有用",
+    "rateThisNote": "为这条笔记评分",
+    "viewSources": "查看来源",
+    "rateModalTitle": "这条笔记有用吗？",
+    "rateModalSubtitle": "你的评分将帮助决定是否向其他读者展示这条笔记。",
+    "helpfulness": {
+      "helpful": "有用",
+      "somewhat": "一般",
+      "notHelpful": "没用"
+    },
+    "whyNotHelpful": "为什么没用？",
+    "whatMakesItHelpful": "为什么有用？",
+    "anythingElse": "还有其他要补充的吗？",
+    "commentPlaceholder": "给评分团队的备注（可选）",
+    "cancel": "取消",
+    "submit": "提交",
+    "submitting": "提交中…",
+    "sourcesTitle": "来源",
+    "sourcesSubtitle": "贡献者为这条笔记附上的引用。",
+    "noSources": "未附加来源。",
+    "close": "关闭",
+    "helpfulReasons": {
+      "citesSources": "引用了高质量的来源",
+      "easyToUnderstand": "易于理解",
+      "addressesClaim": "直接回应了相关说法",
+      "providesContext": "提供了重要背景信息",
+      "fairBalanced": "语气中立"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "来源无法支撑笔记的内容",
+      "incorrectInfo": "包含错误信息",
+      "opinion": "属于观点，并非事实",
+      "argumentative": "带有争辩或偏见",
+      "irrelevant": "与帖子无关"
+    }
+  },
+  "contributor": {
+    "addTitle": "添加 Community Note",
+    "addSubtitle": "在足够多的评分者将笔记标记为有用之前，你的笔记仅自己可见。请坚持可核实的事实并附上来源。",
+    "problemQuestion": "这条帖子存在什么问题？",
+    "yourNote": "你的笔记",
+    "notePlaceholder": "说明缺失或误导之处。请在下方列出来源。",
+    "sourcesLabel": "来源（每行一个 URL）",
+    "cancel": "取消",
+    "submitNote": "提交笔记",
+    "submitting": "提交中…",
+    "requestTitle": "请求 Community Note",
+    "requestSubtitle": "标记这条帖子，让贡献者审核。我们会通知评分者池，你不会立即看到笔记。",
+    "reason": "原因",
+    "anythingElseOptional": "还有其他要补充的吗？（可选）",
+    "commentPlaceholder": "为贡献者补充有用的背景信息",
+    "sendRequest": "发送请求",
+    "classification": {
+      "misleading": "误导性内容",
+      "missingContext": "缺少背景信息",
+      "outdated": "已过时",
+      "satire": "被当作事实的讽刺内容",
+      "other": "其他"
+    },
+    "requestReason": {
+      "misinformation": "虚假信息",
+      "missingContext": "需要更多背景信息",
+      "manipulation": "经过篡改的媒体内容",
+      "spam": "垃圾信息或诈骗",
+      "other": "其他疑虑"
+    }
+  }
+}

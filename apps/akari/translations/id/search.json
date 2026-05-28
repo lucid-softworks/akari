@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Cari profil dan post di Bluesky",
+  "searching": "Mencari...",
+  "searchFailed": "Pencarian gagal",
+  "noUsersFound": "Tidak ada pengguna ditemukan",
+  "noPostsFound": "Tidak ada post ditemukan",
+  "noResultsFound": "Tidak ada hasil ditemukan",
+  "searchInputPlaceholder": "Cari profil dan post...",
+  "all": "Semua",
+  "users": "Pengguna",
+  "posts": "Post",
+  "loadingMoreResults": "Memuat lebih banyak hasil...",
+  "sortTop": "Teratas",
+  "sortLatest": "Terbaru",
+  "clearSearch": "Hapus pencarian"
+}

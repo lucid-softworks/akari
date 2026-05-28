@@ -1,0 +1,23 @@
+{
+  "crashReporter": "クラッシュレポーター",
+  "crashDescription": "このボタンを使用してテストエラーを発生させ、クラッシュレポートが正しく設定されていることを確認してください。レポートが配信されるようにAxiomの認証情報が設定されていることを確認してください。",
+  "triggerCrash": "クラッシュを発生",
+  "crashHint": "ヒント：テスト後はアプリを再読み込みして、デバッグ画面が再表示されるようにしてください。",
+  "queryCacheDebug": "クエリキャッシュデバッグ",
+  "invalidateAll": "すべて無効化",
+  "clearAll": "すべてクリア",
+  "totalQueries": "総クエリ数：{{count}}",
+  "activeQueries": "アクティブクエリ数：{{count}}",
+  "successfulQueries": "成功クエリ数：{{count}}",
+  "failedQueries": "失敗クエリ数：{{count}}",
+  "noQueriesInCache": "キャッシュにクエリがありません",
+  "queryKey": "クエリキー：",
+  "status": "ステータス：",
+  "dataUpdatedAt": "データ更新日時：",
+  "errorUpdatedAt": "エラー更新日時：",
+  "fetchCount": "取得回数：",
+  "error": "エラー：",
+  "data": "データ：",
+  "refetch": "再取得",
+  "remove": "削除"
+}

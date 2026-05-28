@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Blueskyでプロフィールと投稿を検索",
+  "searching": "検索中...",
+  "searchFailed": "検索に失敗しました",
+  "noUsersFound": "ユーザーが見つかりません",
+  "noPostsFound": "投稿が見つかりません",
+  "noResultsFound": "結果が見つかりません",
+  "searchInputPlaceholder": "プロフィールと投稿を検索...",
+  "all": "すべて",
+  "users": "ユーザー",
+  "posts": "投稿",
+  "loadingMoreResults": "さらに結果を読み込み中...",
+  "sortTop": "トップ",
+  "sortLatest": "最新",
+  "clearSearch": "検索をクリア"
+}

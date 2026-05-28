@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Gönderilere bağlam eklemeye yardım edin",
+    "body1": "Community Notes, daha fazla bağlama ihtiyaç duyan gönderilere eklenen kısa notlardır. Katkıda bulunanlar bu notları yazar ve birbirlerinin taslaklarını değerlendirir; yalnızca topluluğun faydalı olarak işaretlediği notlar okuyuculara gösterilir.",
+    "body2": "Kayıt olmak sizi katkıda bulunan portalına dahil eder: bekleyen gönderiler, değerlendirme kuyruğu ve yazdığınız notların profili.",
+    "cta": "Kayıt ol"
+  },
+  "tabs": {
+    "pending": "Bekleyen",
+    "rate": "Değerlendir",
+    "you": "Siz"
+  },
+  "pendingTab": {
+    "empty": "Henüz hiçbir gönderi işaretlenmedi. Daha sonra tekrar bakın.",
+    "requestCountAndTime": "{count} istek · {time}",
+    "writeNote": "Not yaz"
+  },
+  "rateTab": {
+    "empty": "Şu anda değerlendirilecek bir şey yok. Diğer katkıda bulunanların gönderdiği taslaklar burada görünecek.",
+    "onPost": "{postId} gönderisinde"
+  },
+  "profile": {
+    "notesWritten": "Yazılan notlar",
+    "helpfulRate": "Faydalılık oranı",
+    "ratingsGiven": "Verilen değerlendirmeler",
+    "contributorSince": "Katkıda bulunma tarihi: {date}",
+    "leave": "Programdan ayrıl",
+    "recentNotes": "Son notlarınız",
+    "noNotes": "Henüz hiç not yazmadınız.",
+    "showPubliclyTitle": "Notlarımı kullanıcı adımla göster",
+    "showPubliclyHint": "Kapalıyken, yazdığınız notlar \"anonim katkıda bulunan\" olarak atfedilir."
+  },
+  "note": {
+    "headlineHelpful": "Okuyucular bağlam ekledi",
+    "headlineUnderReview": "Not inceleniyor, daha fazla değerlendirme gerekiyor",
+    "ratingSummary": "{count} değerlendiriciden %{percent}'i bunu faydalı buldu",
+    "rateThisNote": "Bu notu değerlendir",
+    "viewSources": "Kaynakları gör",
+    "rateModalTitle": "Bu not faydalı mı?",
+    "rateModalSubtitle": "Değerlendirmeniz, notun diğer okuyuculara gösterilip gösterilmeyeceğine karar verilmesine yardımcı olur.",
+    "helpfulness": {
+      "helpful": "Faydalı",
+      "somewhat": "Kısmen",
+      "notHelpful": "Faydalı değil"
+    },
+    "whyNotHelpful": "Neden faydalı değil?",
+    "whatMakesItHelpful": "Onu faydalı yapan nedir?",
+    "anythingElse": "Başka bir şey var mı?",
+    "commentPlaceholder": "Değerlendirme ekibi için isteğe bağlı notlar",
+    "cancel": "İptal",
+    "submit": "Gönder",
+    "submitting": "Gönderiliyor…",
+    "sourcesTitle": "Kaynaklar",
+    "sourcesSubtitle": "Katkıda bulunan tarafından bu nota eklenen alıntılar.",
+    "noSources": "Eklenmiş kaynak yok.",
+    "close": "Kapat",
+    "helpfulReasons": {
+      "citesSources": "Yüksek kaliteli kaynaklar gösteriyor",
+      "easyToUnderstand": "Anlaşılması kolay",
+      "addressesClaim": "İddiayı doğrudan ele alıyor",
+      "providesContext": "Önemli bağlam sağlıyor",
+      "fairBalanced": "Tarafsız bir tonda yazılmış"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Kaynaklar notu desteklemiyor",
+      "incorrectInfo": "Yanlış bilgi içeriyor",
+      "opinion": "Olgu değil, görüş",
+      "argumentative": "Tartışmacı veya taraflı",
+      "irrelevant": "Gönderiyle alakasız"
+    }
+  },
+  "contributor": {
+    "addTitle": "Community Note ekle",
+    "addSubtitle": "Notunuz, yeterli sayıda değerlendirici onu faydalı olarak işaretleyene kadar gizli kalır. Doğrulanabilir olgulara bağlı kalın ve kaynak gösterin.",
+    "problemQuestion": "Bu gönderideki sorun nedir?",
+    "yourNote": "Notunuz",
+    "notePlaceholder": "Eksik veya yanıltıcı olanı açıklayın. Aşağıda kaynak gösterin.",
+    "sourcesLabel": "Kaynaklar (her satıra bir URL)",
+    "cancel": "İptal",
+    "submitNote": "Notu gönder",
+    "submitting": "Gönderiliyor…",
+    "requestTitle": "Community Note iste",
+    "requestSubtitle": "Bu gönderiyi bir katkıda bulunanın incelemesi için işaretleyin. Değerlendirici havuzunu uyaracağız, notu hemen göremezsiniz.",
+    "reason": "Sebep",
+    "anythingElseOptional": "Başka bir şey? (isteğe bağlı)",
+    "commentPlaceholder": "Katkıda bulunan için faydalı bağlam ekleyin",
+    "sendRequest": "İstek gönder",
+    "classification": {
+      "misleading": "Yanıltıcı",
+      "missingContext": "Eksik bağlam",
+      "outdated": "Güncel değil",
+      "satire": "Olgu olarak ele alınan hiciv",
+      "other": "Diğer"
+    },
+    "requestReason": {
+      "misinformation": "Yanlış bilgi",
+      "missingContext": "Daha fazla bağlam gerekiyor",
+      "manipulation": "Manipüle edilmiş medya",
+      "spam": "Spam veya dolandırıcılık",
+      "other": "Diğer endişe"
+    }
+  }
+}

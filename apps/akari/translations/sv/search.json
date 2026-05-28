@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Sök efter profiler och inlägg på bluessky",
+  "searching": "Sökande...",
+  "searchFailed": "Sökningen misslyckades",
+  "noUsersFound": "Inga användare hittade",
+  "noPostsFound": "Inga inlägg hittades",
+  "noResultsFound": "Inga resultat hittades",
+  "searchInputPlaceholder": "Sökprofiler och inlägg ...",
+  "all": "Alla",
+  "users": "Användare",
+  "posts": "Inlägg",
+  "loadingMoreResults": "Laddar fler resultat ...",
+  "sortTop": "Topp",
+  "sortLatest": "Senaste",
+  "clearSearch": "Rensa sökning"
+}

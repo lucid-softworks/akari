@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Bantu tambahkan konteks pada postingan",
+    "body1": "Community Notes adalah catatan singkat yang dilampirkan pada postingan yang memerlukan konteks tambahan. Kontributor menulisnya dan saling menilai draf satu sama lain; hanya catatan yang ditandai komunitas sebagai bermanfaat yang ditampilkan kepada pembaca.",
+    "body2": "Mendaftar akan mengikutsertakanmu ke portal kontributor: postingan tertunda, antrean penilaian, dan profil catatanmu sendiri.",
+    "cta": "Daftar"
+  },
+  "tabs": {
+    "pending": "Tertunda",
+    "rate": "Nilai",
+    "you": "Kamu"
+  },
+  "pendingTab": {
+    "empty": "Belum ada postingan yang ditandai. Cek kembali nanti.",
+    "requestCountAndTime": "{count} permintaan · {time}",
+    "writeNote": "Tulis catatan"
+  },
+  "rateTab": {
+    "empty": "Tidak ada yang perlu dinilai saat ini. Draf yang dikirim kontributor lain akan muncul di sini.",
+    "onPost": "Pada postingan {postId}"
+  },
+  "profile": {
+    "notesWritten": "Catatan yang ditulis",
+    "helpfulRate": "Tingkat manfaat",
+    "ratingsGiven": "Penilaian yang diberikan",
+    "contributorSince": "Kontributor sejak {date}",
+    "leave": "Tinggalkan program",
+    "recentNotes": "Catatan terbarumu",
+    "noNotes": "Kamu belum menulis catatan apa pun.",
+    "showPubliclyTitle": "Tampilkan catatanku di bawah handle-ku",
+    "showPubliclyHint": "Jika nonaktif, catatan yang kamu tulis akan diatribusikan ke \"kontributor anonim\"."
+  },
+  "note": {
+    "headlineHelpful": "Pembaca menambahkan konteks",
+    "headlineUnderReview": "Catatan sedang ditinjau, butuh lebih banyak penilaian",
+    "ratingSummary": "{percent}% dari {count} penilai merasa ini bermanfaat",
+    "rateThisNote": "Nilai catatan ini",
+    "viewSources": "Lihat sumber",
+    "rateModalTitle": "Apakah catatan ini bermanfaat?",
+    "rateModalSubtitle": "Penilaianmu membantu menentukan apakah catatan ini ditampilkan ke pembaca lain.",
+    "helpfulness": {
+      "helpful": "Bermanfaat",
+      "somewhat": "Lumayan",
+      "notHelpful": "Tidak bermanfaat"
+    },
+    "whyNotHelpful": "Mengapa tidak bermanfaat?",
+    "whatMakesItHelpful": "Apa yang membuatnya bermanfaat?",
+    "anythingElse": "Ada hal lain?",
+    "commentPlaceholder": "Catatan opsional untuk tim penilai",
+    "cancel": "Batal",
+    "submit": "Kirim",
+    "submitting": "Mengirim…",
+    "sourcesTitle": "Sumber",
+    "sourcesSubtitle": "Kutipan yang dilampirkan pada catatan ini oleh kontributor.",
+    "noSources": "Tidak ada sumber yang dilampirkan.",
+    "close": "Tutup",
+    "helpfulReasons": {
+      "citesSources": "Mengutip sumber berkualitas tinggi",
+      "easyToUnderstand": "Mudah dipahami",
+      "addressesClaim": "Menjawab klaim secara langsung",
+      "providesContext": "Memberikan konteks penting",
+      "fairBalanced": "Ditulis dengan nada netral"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Sumber tidak mendukung catatan",
+      "incorrectInfo": "Mengandung informasi yang keliru",
+      "opinion": "Opini, bukan fakta",
+      "argumentative": "Argumentatif atau bias",
+      "irrelevant": "Tidak relevan dengan postingan"
+    }
+  },
+  "contributor": {
+    "addTitle": "Tambahkan Community Note",
+    "addSubtitle": "Catatanmu bersifat privat hingga cukup banyak penilai menandainya bermanfaat. Tetap berpegang pada fakta yang dapat diverifikasi dan sertakan sumber.",
+    "problemQuestion": "Apa masalah dengan postingan ini?",
+    "yourNote": "Catatanmu",
+    "notePlaceholder": "Jelaskan apa yang kurang atau menyesatkan. Cantumkan sumber di bawah.",
+    "sourcesLabel": "Sumber (satu URL per baris)",
+    "cancel": "Batal",
+    "submitNote": "Kirim catatan",
+    "submitting": "Mengirim…",
+    "requestTitle": "Minta Community Note",
+    "requestSubtitle": "Tandai postingan ini agar ditinjau kontributor. Kami akan memberi tahu pool penilai, kamu tidak akan langsung melihat catatannya.",
+    "reason": "Alasan",
+    "anythingElseOptional": "Ada hal lain? (opsional)",
+    "commentPlaceholder": "Tambahkan konteks yang berguna untuk kontributor",
+    "sendRequest": "Kirim permintaan",
+    "classification": {
+      "misleading": "Menyesatkan",
+      "missingContext": "Konteks kurang",
+      "outdated": "Usang",
+      "satire": "Satire dianggap fakta",
+      "other": "Lainnya"
+    },
+    "requestReason": {
+      "misinformation": "Misinformasi",
+      "missingContext": "Butuh lebih banyak konteks",
+      "manipulation": "Media yang dimanipulasi",
+      "spam": "Spam atau penipuan",
+      "other": "Kekhawatiran lain"
+    }
+  }
+}

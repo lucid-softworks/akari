@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "@{{handle}} olarak giriş yap",
+    "subtitle": "Akari'nin hesabında neler yapabileceğini seç. Gerekli izinlerin işareti kaldırılamaz çünkü uygulama girişin ve temel akışlar için bunlara ihtiyaç duyar.",
+    "continue": "Devam et",
+    "required": "Gerekli",
+    "action": {
+      "create": "Oluştur",
+      "update": "Güncelle",
+      "delete": "Sil"
+    },
+    "atproto": {
+      "label": "Kimlik",
+      "description": "Atproto'da kim olduğunu doğrula. Her zaman gereklidir."
+    },
+    "chat": {
+      "label": "Doğrudan mesajlar",
+      "description": "Senin adına sohbet mesajlarını okur ve gönderir."
+    },
+    "profile": {
+      "label": "Profil",
+      "description": "Görünen adını, biyografini, avatarını ve banner'ını düzenle."
+    },
+    "post": {
+      "label": "Gönderiler",
+      "description": "Yeni gönderiler yayınla, düzenle ve kendininkileri sil."
+    },
+    "threadgate": {
+      "label": "Yanıt denetimi",
+      "description": "Başlattığın bir konu başlığına kimin yanıt verebileceğini belirle."
+    },
+    "postgate": {
+      "label": "Alıntı denetimi",
+      "description": "Yaptığın bir gönderiyi kimin alıntılayabileceğini belirle."
+    },
+    "like": {
+      "label": "Beğeniler",
+      "description": "Gönderileri beğen ve beğenmekten vazgeç."
+    },
+    "repost": {
+      "label": "Yeniden paylaşımlar",
+      "description": "Yeniden paylaş ve yeniden paylaşımı geri al."
+    },
+    "follow": {
+      "label": "Takipler",
+      "description": "Hesapları takip et ve takipten çık."
+    },
+    "block": {
+      "label": "Engellemeler",
+      "description": "Hesapları engelle ve engellemeyi kaldır."
+    },
+    "list": {
+      "label": "Listeler",
+      "description": "Moderasyon veya seçki listeleri oluştur, yeniden adlandır ve sil."
+    },
+    "listitem": {
+      "label": "Liste üyeliği",
+      "description": "Hesapları listelerine ekle ve listelerinden çıkar."
+    },
+    "leafletPublication": {
+      "label": "Leaflet yayınları",
+      "description": "leaflet.pub üzerindeki uzun biçimli yayınları yönet."
+    },
+    "leafletDocument": {
+      "label": "Leaflet belgeleri",
+      "description": "leaflet.pub üzerinde uzun biçimli belgeler yayınla ve düzenle."
+    },
+    "aiPreference": {
+      "label": "AI tercihleri",
+      "description": "community-lexicon AI eğitim tercihlerini sakla."
+    },
+    "popfeedReview": {
+      "label": "Popfeed incelemeleri",
+      "description": "Popfeed medya inceleme ağında inceleme paylaş."
+    },
+    "recipe": {
+      "label": "Tarifler",
+      "description": "Açık exchange.recipe sözlüğü aracılığıyla tarifleri kaydet."
+    },
+    "linkatBoard": {
+      "label": "Linkat panosu",
+      "description": "Linkat link-in-bio panonu yönet."
+    }
+  }
+}

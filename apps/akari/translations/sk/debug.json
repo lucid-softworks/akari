@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Hlásenie Chýb",
+  "crashDescription": "Použite toto tlačidlo na vygenerovanie testovacej chyby a potvrdenie, že hlásenie chýb je správne nakonfigurované. Uistite sa, že vaše Axiom poverenia sú nakonfigurované na doručenie hlásenia.",
+  "triggerCrash": "Spustiť Chybu",
+  "crashHint": "Tip: po testovaní znovu načítajte aplikáciu, aby sa debug obrazovka znovu vykreslila.",
+  "queryCacheDebug": "Debug Cache Dotazov",
+  "invalidateAll": "Zneplatniť Všetky",
+  "clearAll": "Vymazať Všetky",
+  "totalQueries": "Celkové Dotazy: {{count}}",
+  "activeQueries": "Aktívne Dotazy: {{count}}",
+  "successfulQueries": "Úspešné Dotazy: {{count}}",
+  "failedQueries": "Neúspešné Dotazy: {{count}}",
+  "noQueriesInCache": "Žiadne dotazy v cache",
+  "queryKey": "Kľúč Dotazu:",
+  "status": "Stav:",
+  "dataUpdatedAt": "Dáta Aktualizované:",
+  "errorUpdatedAt": "Chyba Aktualizovaná:",
+  "fetchCount": "Počet Načítaní:",
+  "error": "Chyba:",
+  "data": "Dáta:",
+  "refetch": "Znovu Načítať",
+  "remove": "Odstrániť"
+}

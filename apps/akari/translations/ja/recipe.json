@@ -1,0 +1,14 @@
+{
+  "title": "レシピ",
+  "time": "時間",
+  "servings": "人数分",
+  "category": "カテゴリ",
+  "ingredients": "材料",
+  "cuisine": "料理",
+  "method": "方法",
+  "calories": "カロリー",
+  "dietaryRestrictions": "食事制限",
+  "instructions": "手順",
+  "tags": "タグ",
+  "source": "出典"
+}

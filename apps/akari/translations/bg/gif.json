@@ -1,0 +1,9 @@
+{
+  "selectGif": "Изберете GIF",
+  "searchPlaceholder": "Търсене GIFS ...",
+  "loadingMore": "Зареждане на повече ...",
+  "noResults": "Не са намерени gifs",
+  "noTrending": "Няма налични тенденциозни GIF файлове",
+  "addGif": "Добавете GIF",
+  "apiError": "Не може да се зареди GIF. Моля, проверете вашата интернет връзка."
+}

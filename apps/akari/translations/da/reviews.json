@@ -1,0 +1,12 @@
+{
+  "newReview": "Ny anmeldelse",
+  "type": "Type",
+  "movie": "Film",
+  "tvShow": "Tv-serie",
+  "change": "Skift",
+  "rating": "Bedømmelse",
+  "ratingWithValue": "Bedømmelse ({{rating}}/{{max}})",
+  "review": "Anmeldelse",
+  "thisIsRevisit": "Dette er et gensyn",
+  "containsSpoilers": "Indeholder spoilere"
+}

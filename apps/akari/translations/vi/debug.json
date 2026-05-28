@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Báo Cáo Sự Cố",
+  "crashDescription": "Sử dụng nút này để tạo lỗi thử nghiệm và xác nhận rằng báo cáo sự cố được cấu hình đúng. Đảm bảo rằng thông tin xác thực Axiom của bạn được cấu hình để báo cáo được gửi.",
+  "triggerCrash": "Kích Hoạt Sự Cố",
+  "crashHint": "Mẹo: tải lại ứng dụng sau khi thử nghiệm để màn hình gỡ lỗi được hiển thị lại.",
+  "queryCacheDebug": "Gỡ Lỗi Bộ Nhớ Đệm Truy Vấn",
+  "invalidateAll": "Vô Hiệu Hóa Tất Cả",
+  "clearAll": "Xóa Tất Cả",
+  "totalQueries": "Tổng Truy Vấn: {{count}}",
+  "activeQueries": "Truy Vấn Hoạt Động: {{count}}",
+  "successfulQueries": "Truy Vấn Thành Công: {{count}}",
+  "failedQueries": "Truy Vấn Thất Bại: {{count}}",
+  "noQueriesInCache": "Không có truy vấn trong bộ nhớ đệm",
+  "queryKey": "Khóa Truy Vấn:",
+  "status": "Trạng Thái:",
+  "dataUpdatedAt": "Dữ Liệu Được Cập Nhật:",
+  "errorUpdatedAt": "Lỗi Được Cập Nhật:",
+  "fetchCount": "Số Lần Tải:",
+  "error": "Lỗi:",
+  "data": "Dữ Liệu:",
+  "refetch": "Tải Lại",
+  "remove": "Xóa"
+}

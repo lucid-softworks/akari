@@ -1,0 +1,14 @@
+{
+  "title": "레시피",
+  "time": "시간",
+  "servings": "인분",
+  "category": "카테고리",
+  "ingredients": "재료",
+  "cuisine": "요리",
+  "method": "방법",
+  "calories": "칼로리",
+  "dietaryRestrictions": "식이 제한",
+  "instructions": "지침",
+  "tags": "태그",
+  "source": "출처"
+}

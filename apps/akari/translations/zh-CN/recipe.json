@@ -1,0 +1,14 @@
+{
+  "title": "食谱",
+  "time": "时间",
+  "servings": "份数",
+  "category": "类别",
+  "ingredients": "食材",
+  "cuisine": "菜系",
+  "method": "方法",
+  "calories": "卡路里",
+  "dietaryRestrictions": "饮食限制",
+  "instructions": "说明",
+  "tags": "标签",
+  "source": "来源"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "وصفة",
+  "time": "الوقت",
+  "servings": "الحصص",
+  "category": "الفئة",
+  "ingredients": "المكونات",
+  "cuisine": "المطبخ",
+  "method": "الطريقة",
+  "calories": "السعرات الحرارية",
+  "dietaryRestrictions": "القيود الغذائية",
+  "instructions": "التعليمات",
+  "tags": "العلامات",
+  "source": "المصدر"
+}

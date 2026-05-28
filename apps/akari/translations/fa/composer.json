@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "زبان پست",
+  "postLanguageHint": "حداکثر {{max}} زبان برای پست خود انتخاب کنید.",
+  "postLanguageSearch": "جستجوی زبان‌ها",
+  "postLanguageA11y": "زبان پست: {{value}}"
+}

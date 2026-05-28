@@ -1,0 +1,14 @@
+{
+  "title": "Συνταγή",
+  "time": "Χρόνος",
+  "servings": "Μερίδες",
+  "category": "Κατηγορία",
+  "ingredients": "Συστατικά",
+  "cuisine": "Κουζίνα",
+  "method": "Μέθοδος",
+  "calories": "Θερμίδες",
+  "dietaryRestrictions": "Διαιτητικοί Περιορισμοί",
+  "instructions": "Οδηγίες",
+  "tags": "Ετικέτες",
+  "source": "Πηγή"
+}

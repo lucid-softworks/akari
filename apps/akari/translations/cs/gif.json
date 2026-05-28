@@ -1,0 +1,9 @@
+{
+  "selectGif": "Vyberte GIF",
+  "searchPlaceholder": "Hledat gify ...",
+  "loadingMore": "Načítání více ...",
+  "noResults": "Nebyly nalezeny žádné GIF",
+  "noTrending": "K dispozici nejsou žádné trendové gify",
+  "addGif": "Přidejte gif",
+  "apiError": "Nelze načíst GIF. Zkontrolujte prosím připojení k internetu."
+}

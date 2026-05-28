@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Raportor de Erori",
+  "crashDescription": "Folosiți acest buton pentru a genera o eroare de test și a confirma că raportarea erorilor este configurată corect. Asigurați-vă că credențialele Axiom sunt configurate pentru livrarea raportului.",
+  "triggerCrash": "Declanșează Eroarea",
+  "crashHint": "Sfat: reîncărcați aplicația după testare pentru ca ecranul de debug să se randeze din nou.",
+  "queryCacheDebug": "Debug Cache Interogări",
+  "invalidateAll": "Invalidează Totul",
+  "clearAll": "Șterge Totul",
+  "totalQueries": "Interogări Totale: {{count}}",
+  "activeQueries": "Interogări Active: {{count}}",
+  "successfulQueries": "Interogări Reușite: {{count}}",
+  "failedQueries": "Interogări Eșuate: {{count}}",
+  "noQueriesInCache": "Nu există interogări în cache",
+  "queryKey": "Cheia Interogării:",
+  "status": "Status:",
+  "dataUpdatedAt": "Date Actualizate:",
+  "errorUpdatedAt": "Eroare Actualizată:",
+  "fetchCount": "Numărul de Preluări:",
+  "error": "Eroare:",
+  "data": "Date:",
+  "refetch": "Preluare Din Nou",
+  "remove": "Elimină"
+}

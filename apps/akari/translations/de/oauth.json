@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "Als @{{handle}} anmelden",
+    "subtitle": "Wähle, was akari mit deinem Konto tun darf. Erforderliche Berechtigungen können nicht abgewählt werden, weil die App sie braucht, um dich anzumelden und die wichtigsten Abläufe auszuführen.",
+    "continue": "Weiter",
+    "required": "Erforderlich",
+    "action": {
+      "create": "Erstellen",
+      "update": "Aktualisieren",
+      "delete": "Löschen"
+    },
+    "atproto": {
+      "label": "Identität",
+      "description": "Bestätige, wer du auf atproto bist. Immer erforderlich."
+    },
+    "chat": {
+      "label": "Direktnachrichten",
+      "description": "Chatnachrichten in deinem Namen lesen und senden."
+    },
+    "profile": {
+      "label": "Profil",
+      "description": "Anzeigename, Bio, Avatar und Banner bearbeiten."
+    },
+    "post": {
+      "label": "Beiträge",
+      "description": "Neue Beiträge veröffentlichen, bearbeiten und eigene löschen."
+    },
+    "threadgate": {
+      "label": "Antwortregeln",
+      "description": "Lege fest, wer auf einen von dir gestarteten Thread antworten darf."
+    },
+    "postgate": {
+      "label": "Zitatregeln",
+      "description": "Lege fest, wer einen von dir verfassten Beitrag zitieren darf."
+    },
+    "like": {
+      "label": "Likes",
+      "description": "Beiträge mit Like markieren und Likes wieder entfernen."
+    },
+    "repost": {
+      "label": "Reposts",
+      "description": "Reposten und Reposts rückgängig machen."
+    },
+    "follow": {
+      "label": "Folgen",
+      "description": "Konten folgen und entfolgen."
+    },
+    "block": {
+      "label": "Blockierungen",
+      "description": "Konten blockieren und entblocken."
+    },
+    "list": {
+      "label": "Listen",
+      "description": "Moderations- oder Kuratorenlisten erstellen, umbenennen und löschen."
+    },
+    "listitem": {
+      "label": "Listenmitgliedschaft",
+      "description": "Konten zu deinen Listen hinzufügen und daraus entfernen."
+    },
+    "leafletPublication": {
+      "label": "Leaflet-Publikationen",
+      "description": "Verwalte Langform-Publikationen auf leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "Leaflet-Dokumente",
+      "description": "Veröffentliche und bearbeite Langform-Dokumente auf leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "KI-Einstellungen",
+      "description": "Speichere deine community-lexicon KI-Trainingseinstellungen."
+    },
+    "popfeedReview": {
+      "label": "Popfeed-Bewertungen",
+      "description": "Veröffentliche Bewertungen im Popfeed-Medienbewertungsnetzwerk."
+    },
+    "recipe": {
+      "label": "Rezepte",
+      "description": "Speichere Rezepte über das offene exchange.recipe-Lexikon."
+    },
+    "linkatBoard": {
+      "label": "Linkat-Board",
+      "description": "Verwalte dein Linkat-Link-in-Bio-Board."
+    }
+  }
+}

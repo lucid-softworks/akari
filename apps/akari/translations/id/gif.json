@@ -1,0 +1,9 @@
+{
+  "selectGif": "Pilih GIF",
+  "searchPlaceholder": "Cari GIF...",
+  "loadingMore": "Memuat lebih banyak...",
+  "noResults": "Tidak ada GIF ditemukan",
+  "noTrending": "Tidak ada GIF populer",
+  "addGif": "Tambah GIF",
+  "apiError": "Tidak dapat memuat GIF. Periksa koneksi internet Anda."
+}

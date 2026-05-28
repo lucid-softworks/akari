@@ -1,0 +1,12 @@
+{
+  "newReview": "新影評",
+  "type": "類型",
+  "movie": "電影",
+  "tvShow": "電視節目",
+  "change": "變更",
+  "rating": "評分",
+  "ratingWithValue": "評分 ({{rating}}/{{max}})",
+  "review": "影評",
+  "thisIsRevisit": "這是重溫",
+  "containsSpoilers": "含有劇透"
+}

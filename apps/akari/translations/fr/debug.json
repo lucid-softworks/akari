@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Rapporteur de Plantage",
+  "crashDescription": "Utilisez ce bouton pour générer une erreur de test et confirmer que le rapport de plantage est configuré correctement. Assurez-vous que vos identifiants Axiom sont configurés pour que le rapport soit livré.",
+  "triggerCrash": "Déclencher Plantage",
+  "crashHint": "Conseil : rechargez l'application après le test pour que l'écran de débogage se rende à nouveau.",
+  "queryCacheDebug": "Débogage du Cache de Requêtes",
+  "invalidateAll": "Invalider Tout",
+  "clearAll": "Effacer Tout",
+  "totalQueries": "Requêtes Totales : {{count}}",
+  "activeQueries": "Requêtes Actives : {{count}}",
+  "successfulQueries": "Requêtes Réussies : {{count}}",
+  "failedQueries": "Requêtes Échouées : {{count}}",
+  "noQueriesInCache": "Aucune requête en cache",
+  "queryKey": "Clé de Requête :",
+  "status": "Statut :",
+  "dataUpdatedAt": "Données Mises à Jour Le :",
+  "errorUpdatedAt": "Erreur Mise à Jour Le :",
+  "fetchCount": "Nombre de Récupérations :",
+  "error": "Erreur :",
+  "data": "Données :",
+  "refetch": "Récupérer à Nouveau",
+  "remove": "Supprimer"
+}

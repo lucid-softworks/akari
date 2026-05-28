@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "Език на публикацията",
+  "postLanguageHint": "Изберете до {{max}} езика за вашата публикация.",
+  "postLanguageSearch": "Търси езици",
+  "postLanguageA11y": "Език на публикацията: {{value}}"
+}

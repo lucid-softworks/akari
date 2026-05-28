@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Paylaşımlara kontekst əlavə etməyə kömək edin",
+    "body1": "Community Notes daha çox kontekstə ehtiyacı olan paylaşımlara əlavə edilən qısa qeydlərdir. İştirakçılar onları yazır və bir-birinin qaralamalarını qiymətləndirir; yalnız icmanın faydalı kimi qeyd etdiyi qeydlər oxuculara göstərilir.",
+    "body2": "Qeydiyyatdan keçmək sizi iştirakçı portalına daxil edir: gözləyən paylaşımlar, qiymətləndirmə növbəsi və müəllifi olduğunuz qeydlərin profili.",
+    "cta": "Qeydiyyatdan keç"
+  },
+  "tabs": {
+    "pending": "Gözləyən",
+    "rate": "Qiymətləndir",
+    "you": "Sən"
+  },
+  "pendingTab": {
+    "empty": "Hələ heç bir paylaşım qeyd edilməyib. Sonra yenidən yoxlayın.",
+    "requestCountAndTime": "{count} sorğu · {time}",
+    "writeNote": "Qeyd yaz"
+  },
+  "rateTab": {
+    "empty": "Hazırda qiymətləndiriləcək heç nə yoxdur. Digər iştirakçıların təqdim etdiyi qaralamalar burada görünəcək.",
+    "onPost": "{postId} paylaşımında"
+  },
+  "profile": {
+    "notesWritten": "Yazılmış qeydlər",
+    "helpfulRate": "Faydalılıq dərəcəsi",
+    "ratingsGiven": "Verilmiş qiymətləndirmələr",
+    "contributorSince": "İştirakçıdır: {date}",
+    "leave": "Proqramdan çıx",
+    "recentNotes": "Sonuncu qeydləriniz",
+    "noNotes": "Hələ heç bir qeyd yazmamısınız.",
+    "showPubliclyTitle": "Qeydlərimi istifadəçi adım altında göstər",
+    "showPubliclyHint": "Söndürüldükdə, müəllifi olduğunuz qeydlər \"anonim iştirakçı\" kimi qeyd edilir."
+  },
+  "note": {
+    "headlineHelpful": "Oxucular kontekst əlavə etdi",
+    "headlineUnderReview": "Qeyd nəzərdən keçirilir, daha çox qiymətləndirmə lazımdır",
+    "ratingSummary": "{count} qiymətləndiricidən {percent}%-i bunu faydalı saydı",
+    "rateThisNote": "Bu qeydi qiymətləndir",
+    "viewSources": "Mənbələrə bax",
+    "rateModalTitle": "Bu qeyd faydalıdır?",
+    "rateModalSubtitle": "Sizin qiymətləndirməniz qeydin digər oxuculara göstərilib-göstərilməyəcəyini müəyyənləşdirməyə kömək edir.",
+    "helpfulness": {
+      "helpful": "Faydalı",
+      "somewhat": "Qismən",
+      "notHelpful": "Faydalı deyil"
+    },
+    "whyNotHelpful": "Niyə faydalı deyil?",
+    "whatMakesItHelpful": "Onu faydalı edən nədir?",
+    "anythingElse": "Başqa nəsə?",
+    "commentPlaceholder": "Qiymətləndirmə qrupu üçün istəyə bağlı qeydlər",
+    "cancel": "Ləğv et",
+    "submit": "Göndər",
+    "submitting": "Göndərilir…",
+    "sourcesTitle": "Mənbələr",
+    "sourcesSubtitle": "İştirakçı tərəfindən bu qeydə əlavə edilmiş istinadlar.",
+    "noSources": "Mənbə əlavə edilməyib.",
+    "close": "Bağla",
+    "helpfulReasons": {
+      "citesSources": "Keyfiyyətli mənbələrə istinad edir",
+      "easyToUnderstand": "Başa düşülməsi asandır",
+      "addressesClaim": "İddianı birbaşa cavablandırır",
+      "providesContext": "Mühüm kontekst təqdim edir",
+      "fairBalanced": "Neytral tonda yazılıb"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Mənbələr qeydi dəstəkləmir",
+      "incorrectInfo": "Yanlış məlumat var",
+      "opinion": "Fakt deyil, rəydir",
+      "argumentative": "Mübahisəli və ya qərəzli",
+      "irrelevant": "Paylaşıma aidiyyatı yoxdur"
+    }
+  },
+  "contributor": {
+    "addTitle": "Community Note əlavə et",
+    "addSubtitle": "Qeydiniz kifayət qədər qiymətləndirici onu faydalı kimi qeyd edənə qədər gizli qalır. Yoxlanıla bilən faktlara sadiq qalın və mənbələrə istinad edin.",
+    "problemQuestion": "Bu paylaşımdakı problem nədir?",
+    "yourNote": "Qeydiniz",
+    "notePlaceholder": "Nəyin əskik və ya yanıltıcı olduğunu izah edin. Aşağıda mənbələrə istinad edin.",
+    "sourcesLabel": "Mənbələr (hər sətirdə bir URL)",
+    "cancel": "Ləğv et",
+    "submitNote": "Qeydi göndər",
+    "submitting": "Göndərilir…",
+    "requestTitle": "Community Note tələb et",
+    "requestSubtitle": "Bu paylaşımı bir iştirakçının nəzərdən keçirməsi üçün qeyd edin. Qiymətləndirici qrupuna xəbər verəcəyik, qeydi dərhal görməyəcəksiniz.",
+    "reason": "Səbəb",
+    "anythingElseOptional": "Başqa nəsə? (istəyə bağlı)",
+    "commentPlaceholder": "İştirakçı üçün faydalı kontekst əlavə edin",
+    "sendRequest": "Sorğu göndər",
+    "classification": {
+      "misleading": "Yanıltıcı",
+      "missingContext": "Çatışmayan kontekst",
+      "outdated": "Köhnəlmiş",
+      "satire": "Fakt kimi qəbul edilən satira",
+      "other": "Digər"
+    },
+    "requestReason": {
+      "misinformation": "Dezinformasiya",
+      "missingContext": "Daha çox kontekstə ehtiyac var",
+      "manipulation": "Manipulyasiya edilmiş media",
+      "spam": "Spam və ya fırıldaq",
+      "other": "Digər narahatlıq"
+    }
+  }
+}

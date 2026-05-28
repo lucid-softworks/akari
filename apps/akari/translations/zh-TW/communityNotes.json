@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "協助為貼文補充背景資訊",
+    "body1": "Community Notes 是附加在需要更多背景資訊的貼文上的簡短註記。由貢獻者撰寫並互相評分草稿，只有社群評為有幫助的註記才會顯示給讀者。",
+    "body2": "註冊後可進入貢獻者入口：待處理貼文、評分佇列以及你撰寫的註記檔案。",
+    "cta": "註冊加入"
+  },
+  "tabs": {
+    "pending": "待處理",
+    "rate": "評分",
+    "you": "你"
+  },
+  "pendingTab": {
+    "empty": "目前尚未有貼文被標記。請稍後再來查看。",
+    "requestCountAndTime": "{count} 個請求 · {time}",
+    "writeNote": "撰寫註記"
+  },
+  "rateTab": {
+    "empty": "目前沒有可評分的內容。其他貢獻者送出的草稿會出現在這裡。",
+    "onPost": "於貼文 {postId}"
+  },
+  "profile": {
+    "notesWritten": "已撰寫註記",
+    "helpfulRate": "有幫助率",
+    "ratingsGiven": "給予的評分",
+    "contributorSince": "貢獻者起始日 {date}",
+    "leave": "退出計畫",
+    "recentNotes": "你最近的註記",
+    "noNotes": "你尚未撰寫任何註記。",
+    "showPubliclyTitle": "在我的使用者名稱下顯示我的註記",
+    "showPubliclyHint": "關閉後，你撰寫的註記會以「匿名貢獻者」名義顯示。"
+  },
+  "note": {
+    "headlineHelpful": "讀者補充了背景資訊",
+    "headlineUnderReview": "註記審核中，需要更多評分",
+    "ratingSummary": "{count} 位評分者中有 {percent}% 認為這則註記有幫助",
+    "rateThisNote": "為此註記評分",
+    "viewSources": "查看來源",
+    "rateModalTitle": "這則註記有幫助嗎？",
+    "rateModalSubtitle": "你的評分將協助決定是否將此註記顯示給其他讀者。",
+    "helpfulness": {
+      "helpful": "有幫助",
+      "somewhat": "還算有幫助",
+      "notHelpful": "沒有幫助"
+    },
+    "whyNotHelpful": "為什麼沒有幫助？",
+    "whatMakesItHelpful": "是什麼讓它有幫助？",
+    "anythingElse": "還有其他想說的嗎？",
+    "commentPlaceholder": "給評分團隊的選填備註",
+    "cancel": "取消",
+    "submit": "送出",
+    "submitting": "送出中…",
+    "sourcesTitle": "來源",
+    "sourcesSubtitle": "貢獻者附加在此註記上的引用來源。",
+    "noSources": "未附加任何來源。",
+    "close": "關閉",
+    "helpfulReasons": {
+      "citesSources": "引用高品質的來源",
+      "easyToUnderstand": "易於理解",
+      "addressesClaim": "直接回應該主張",
+      "providesContext": "提供重要的背景資訊",
+      "fairBalanced": "以中立的語氣撰寫"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "來源無法佐證此註記",
+      "incorrectInfo": "包含不正確的資訊",
+      "opinion": "屬於意見，並非事實",
+      "argumentative": "論戰意味重或帶有偏見",
+      "irrelevant": "與貼文無關"
+    }
+  },
+  "contributor": {
+    "addTitle": "新增 Community Note",
+    "addSubtitle": "在足夠多的評分者認為有幫助之前，你的註記將維持私人。請聚焦在可驗證的事實並附上來源。",
+    "problemQuestion": "這則貼文有什麼問題？",
+    "yourNote": "你的註記",
+    "notePlaceholder": "說明缺少什麼或哪裡誤導。請在下方附上來源。",
+    "sourcesLabel": "來源（每行一個網址）",
+    "cancel": "取消",
+    "submitNote": "送出註記",
+    "submitting": "送出中…",
+    "requestTitle": "請求 Community Note",
+    "requestSubtitle": "標記此貼文供貢獻者審視。我們會通知評分者池，你不會立刻看到註記。",
+    "reason": "原因",
+    "anythingElseOptional": "還有其他想說的嗎？（選填）",
+    "commentPlaceholder": "為貢獻者補上有用的背景資訊",
+    "sendRequest": "送出請求",
+    "classification": {
+      "misleading": "具誤導性",
+      "missingContext": "缺少背景資訊",
+      "outdated": "資訊過時",
+      "satire": "諷刺內容被當作事實",
+      "other": "其他"
+    },
+    "requestReason": {
+      "misinformation": "錯誤資訊",
+      "missingContext": "需要更多背景資訊",
+      "manipulation": "經過操弄的媒體內容",
+      "spam": "垃圾訊息或詐騙",
+      "other": "其他疑慮"
+    }
+  }
+}

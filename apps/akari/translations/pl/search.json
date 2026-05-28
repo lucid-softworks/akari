@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Szukaj profili i postów na Bluesky",
+  "searching": "Szukanie...",
+  "searchFailed": "Wyszukiwanie nie powiodło się",
+  "noUsersFound": "Nie znaleziono użytkowników",
+  "noPostsFound": "Nie znaleziono postów",
+  "noResultsFound": "Nie znaleziono wyników",
+  "searchInputPlaceholder": "Szukaj profili i postów...",
+  "all": "Wszystko",
+  "users": "Użytkownicy",
+  "posts": "Posty",
+  "loadingMoreResults": "Ładowanie większej liczby wyników...",
+  "sortTop": "Najlepsze",
+  "sortLatest": "Najnowsze",
+  "clearSearch": "Wyczyść wyszukiwanie"
+}

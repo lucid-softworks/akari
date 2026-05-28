@@ -1,0 +1,14 @@
+{
+  "title": "สูตรอาหาร",
+  "time": "เวลา",
+  "servings": "จำนวนเสิร์ฟ",
+  "category": "หมวดหมู่",
+  "ingredients": "ส่วนผสม",
+  "cuisine": "อาหาร",
+  "method": "วิธี",
+  "calories": "แคลอรี่",
+  "dietaryRestrictions": "ข้อจำกัดด้านอาหาร",
+  "instructions": "คำแนะนำ",
+  "tags": "แท็ก",
+  "source": "แหล่งที่มา"
+}

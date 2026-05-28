@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Bluesky-də profillər və yazıları axtarın",
+  "searching": "Axtarış ...",
+  "searchFailed": "Axtarış uğursuz oldu",
+  "noUsersFound": "Heç bir istifadəçi tapılmadı",
+  "noPostsFound": "Yazı yoxdur",
+  "noResultsFound": "Heç bir nəticə tapılmadı",
+  "searchInputPlaceholder": "Profilləri və ismarıcları axtarın ...",
+  "all": "Hamar",
+  "users": "İstifadəçilər",
+  "posts": "Yazı",
+  "loadingMoreResults": "Daha çox nəticə yüklənir ...",
+  "sortTop": "Ən Yaxşı",
+  "sortLatest": "Ən Son",
+  "clearSearch": "Axtarışı təmizlə"
+}

@@ -1,0 +1,6 @@
+{
+  "screenNotFound": "This screen does not exist.",
+  "pathname": "Path: {{pathname}}",
+  "goToHome": "Go to home screen!",
+  "goToSitemap": "Go to sitemap!"
+}

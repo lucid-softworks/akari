@@ -1,0 +1,12 @@
+{
+  "newReview": "नई समीक्षा",
+  "type": "प्रकार",
+  "movie": "फ़िल्म",
+  "tvShow": "टीवी शो",
+  "change": "बदलें",
+  "rating": "रेटिंग",
+  "ratingWithValue": "रेटिंग ({{rating}}/{{max}})",
+  "review": "समीक्षा",
+  "thisIsRevisit": "यह दोबारा देखना है",
+  "containsSpoilers": "स्पॉइलर शामिल हैं"
+}

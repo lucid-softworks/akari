@@ -1,0 +1,14 @@
+{
+  "title": "Resept",
+  "time": "Vaxt",
+  "servings": "Porsiya",
+  "category": "Kateqoriya",
+  "ingredients": "İngredientlər",
+  "cuisine": "Mətbəx",
+  "method": "Metod",
+  "calories": "Kalori",
+  "dietaryRestrictions": "Pəhriz Məhdudiyyətləri",
+  "instructions": "Təlimatlar",
+  "tags": "Teqlər",
+  "source": "Mənbə"
+}

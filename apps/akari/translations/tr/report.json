@@ -1,0 +1,18 @@
+{
+  "reportPost": "Report Post",
+  "reportAccount": "Report Account",
+  "whyReporting": "Why are you reporting this?",
+  "additionalDetails": "Additional details (optional)",
+  "describeIssue": "Describe the issue...",
+  "submitReport": "Submit Report",
+  "submitting": "Submitting...",
+  "submitted": "Report submitted",
+  "submitFailed": "Failed to submit report",
+  "reasonSpam": "Spam",
+  "reasonMisleading": "Misleading",
+  "reasonSexual": "Unwanted sexual content",
+  "reasonRude": "Anti-social behavior",
+  "reasonViolation": "Illegal or harmful",
+  "reasonOther": "Other",
+  "sendTo": "Gönderilecek yer"
+}

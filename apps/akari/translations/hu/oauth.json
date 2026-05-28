@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "Bejelentkezés mint @{{handle}}",
+    "subtitle": "Válaszd ki, mit tehet az akari a fiókodban. A kötelező engedélyek nem vehetők ki, mert az alkalmazásnak szüksége van rájuk a bejelentkezéshez és a fő folyamatok futtatásához.",
+    "continue": "Folytatás",
+    "required": "Kötelező",
+    "action": {
+      "create": "Létrehozás",
+      "update": "Frissítés",
+      "delete": "Törlés"
+    },
+    "atproto": {
+      "label": "Identitás",
+      "description": "Erősítsd meg, ki vagy az atprotón. Mindig kötelező."
+    },
+    "chat": {
+      "label": "Közvetlen üzenetek",
+      "description": "Csevegőüzenetek olvasása és küldése a nevedben."
+    },
+    "profile": {
+      "label": "Profil",
+      "description": "Szerkeszd a megjelenítendő neved, a bemutatkozásod, az avatárod és a bannered."
+    },
+    "post": {
+      "label": "Bejegyzések",
+      "description": "Új bejegyzések közzététele, szerkesztése és sajátjaid törlése."
+    },
+    "threadgate": {
+      "label": "Válaszvezérlés",
+      "description": "Állítsd be, ki válaszolhat egy általad indított szálra."
+    },
+    "postgate": {
+      "label": "Idézésvezérlés",
+      "description": "Állítsd be, ki idézheti egy általad írt bejegyzést."
+    },
+    "like": {
+      "label": "Kedvelések",
+      "description": "Bejegyzések kedvelése és kedvelés visszavonása."
+    },
+    "repost": {
+      "label": "Megosztások",
+      "description": "Megosztás és megosztás visszavonása."
+    },
+    "follow": {
+      "label": "Követések",
+      "description": "Fiókok követése és követés megszüntetése."
+    },
+    "block": {
+      "label": "Tiltások",
+      "description": "Fiókok tiltása és feloldása."
+    },
+    "list": {
+      "label": "Listák",
+      "description": "Moderációs vagy kurátori listák létrehozása, átnevezése és törlése."
+    },
+    "listitem": {
+      "label": "Listatagság",
+      "description": "Fiókok hozzáadása és eltávolítása a listáidról."
+    },
+    "leafletPublication": {
+      "label": "Leaflet kiadványok",
+      "description": "Hosszabb kiadványok kezelése a leaflet.pub oldalon."
+    },
+    "leafletDocument": {
+      "label": "Leaflet dokumentumok",
+      "description": "Hosszabb dokumentumok közzététele és szerkesztése a leaflet.pub oldalon."
+    },
+    "aiPreference": {
+      "label": "AI beállítások",
+      "description": "Tárold a community-lexicon AI tanítási beállításaidat."
+    },
+    "popfeedReview": {
+      "label": "Popfeed értékelések",
+      "description": "Értékelések közzététele a Popfeed médiaértékelő hálózaton."
+    },
+    "recipe": {
+      "label": "Receptek",
+      "description": "Receptek mentése a nyílt exchange.recipe lexikonon keresztül."
+    },
+    "linkatBoard": {
+      "label": "Linkat tábla",
+      "description": "Kezeld a Linkat link-in-bio tábládat."
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "newReview": "Νέα κριτική",
+  "type": "Τύπος",
+  "movie": "Ταινία",
+  "tvShow": "Τηλεοπτική σειρά",
+  "change": "Αλλαγή",
+  "rating": "Βαθμολογία",
+  "ratingWithValue": "Βαθμολογία ({{rating}}/{{max}})",
+  "review": "Κριτική",
+  "thisIsRevisit": "Αυτό είναι επανεξέταση",
+  "containsSpoilers": "Περιέχει spoilers"
+}

@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "Jazyk príspevku",
+  "postLanguageHint": "Vyberte až {{max}} jazykov pre váš príspevok.",
+  "postLanguageSearch": "Hľadať jazyky",
+  "postLanguageA11y": "Jazyk príspevku: {{value}}"
+}

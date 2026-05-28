@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Segnalatore di Errori",
+  "crashDescription": "Usa questo pulsante per generare un errore di test e confermare che la segnalazione degli errori è configurata correttamente. Assicurati che le tue credenziali Axiom siano configurate in modo che il rapporto venga consegnato.",
+  "triggerCrash": "Genera Errore",
+  "crashHint": "Suggerimento: ricarica l'app dopo il test in modo che la schermata di debug venga renderizzata di nuovo.",
+  "queryCacheDebug": "Debug Cache Query",
+  "invalidateAll": "Invalida Tutto",
+  "clearAll": "Cancella Tutto",
+  "totalQueries": "Query Totali: {{count}}",
+  "activeQueries": "Query Attive: {{count}}",
+  "successfulQueries": "Query Riuscite: {{count}}",
+  "failedQueries": "Query Fallite: {{count}}",
+  "noQueriesInCache": "Nessuna query nella cache",
+  "queryKey": "Chiave Query:",
+  "status": "Stato:",
+  "dataUpdatedAt": "Dati Aggiornati Il:",
+  "errorUpdatedAt": "Errore Aggiornato Il:",
+  "fetchCount": "Conteggio Recuperi:",
+  "error": "Errore:",
+  "data": "Dati:",
+  "refetch": "Recupera di Nuovo",
+  "remove": "Rimuovi"
+}

@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Hjälp till att lägga sammanhang till inlägg",
+    "body1": "Community Notes är korta anteckningar som fästs vid inlägg som behöver mer sammanhang. Bidragsgivare skriver dem och betygsätter varandras utkast; endast anteckningar som gemenskapen markerar som hjälpsamma visas för läsarna.",
+    "body2": "Att gå med ger dig tillgång till bidragsgivarportalen: väntande inlägg, betygskön och din profil med skrivna anteckningar.",
+    "cta": "Gå med"
+  },
+  "tabs": {
+    "pending": "Väntande",
+    "rate": "Betygsätt",
+    "you": "Du"
+  },
+  "pendingTab": {
+    "empty": "Inga inlägg har flaggats än. Kom tillbaka senare.",
+    "requestCountAndTime": "{count} förfrågningar · {time}",
+    "writeNote": "Skriv en anteckning"
+  },
+  "rateTab": {
+    "empty": "Inget att betygsätta just nu. Utkast från andra bidragsgivare visas här.",
+    "onPost": "På inlägg {postId}"
+  },
+  "profile": {
+    "notesWritten": "Skrivna anteckningar",
+    "helpfulRate": "Hjälpsamhetsgrad",
+    "ratingsGiven": "Givna betyg",
+    "contributorSince": "Bidragsgivare sedan {date}",
+    "leave": "Lämna programmet",
+    "recentNotes": "Dina senaste anteckningar",
+    "noNotes": "Du har inte skrivit några anteckningar än.",
+    "showPubliclyTitle": "Visa mina anteckningar under mitt användarnamn",
+    "showPubliclyHint": "När detta är av tillskrivs anteckningar du skriver \"anonym bidragsgivare\"."
+  },
+  "note": {
+    "headlineHelpful": "Läsare har lagt till sammanhang",
+    "headlineUnderReview": "Anteckningen granskas, behöver fler betyg",
+    "ratingSummary": "{percent} % av {count} bedömare tyckte att detta var hjälpsamt",
+    "rateThisNote": "Betygsätt denna anteckning",
+    "viewSources": "Visa källor",
+    "rateModalTitle": "Är denna anteckning hjälpsam?",
+    "rateModalSubtitle": "Ditt betyg bidrar till att avgöra om anteckningen visas för andra läsare.",
+    "helpfulness": {
+      "helpful": "Hjälpsam",
+      "somewhat": "Delvis",
+      "notHelpful": "Inte hjälpsam"
+    },
+    "whyNotHelpful": "Varför inte hjälpsam?",
+    "whatMakesItHelpful": "Vad gör den hjälpsam?",
+    "anythingElse": "Något annat?",
+    "commentPlaceholder": "Valfria anteckningar till betygssättningsteamet",
+    "cancel": "Avbryt",
+    "submit": "Skicka",
+    "submitting": "Skickar…",
+    "sourcesTitle": "Källor",
+    "sourcesSubtitle": "Citeringar som bidragsgivaren har bifogat till denna anteckning.",
+    "noSources": "Inga källor bifogade.",
+    "close": "Stäng",
+    "helpfulReasons": {
+      "citesSources": "Citerar källor av hög kvalitet",
+      "easyToUnderstand": "Lätt att förstå",
+      "addressesClaim": "Bemöter påståendet direkt",
+      "providesContext": "Tillhandahåller viktigt sammanhang",
+      "fairBalanced": "Skriven i en neutral ton"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Källorna stöder inte anteckningen",
+      "incorrectInfo": "Innehåller felaktig information",
+      "opinion": "Åsikt, inte faktum",
+      "argumentative": "Argumenterande eller partisk",
+      "irrelevant": "Irrelevant för inlägget"
+    }
+  },
+  "contributor": {
+    "addTitle": "Lägg till en Community Note",
+    "addSubtitle": "Din anteckning är privat tills tillräckligt många bedömare markerar den som hjälpsam. Håll dig till verifierbara fakta och citera källor.",
+    "problemQuestion": "Vad är problemet med detta inlägg?",
+    "yourNote": "Din anteckning",
+    "notePlaceholder": "Förklara vad som saknas eller är vilseledande. Citera källor nedan.",
+    "sourcesLabel": "Källor (en URL per rad)",
+    "cancel": "Avbryt",
+    "submitNote": "Skicka anteckning",
+    "submitting": "Skickar…",
+    "requestTitle": "Begär en Community Note",
+    "requestSubtitle": "Flagga detta inlägg för granskning av en bidragsgivare. Vi meddelar bedömarpoolen, du ser inte anteckningen direkt.",
+    "reason": "Anledning",
+    "anythingElseOptional": "Något annat? (valfritt)",
+    "commentPlaceholder": "Lägg till användbart sammanhang för bidragsgivaren",
+    "sendRequest": "Skicka förfrågan",
+    "classification": {
+      "misleading": "Vilseledande",
+      "missingContext": "Saknar sammanhang",
+      "outdated": "Inaktuell",
+      "satire": "Satir som tas för fakta",
+      "other": "Annat"
+    },
+    "requestReason": {
+      "misinformation": "Felaktig information",
+      "missingContext": "Behöver mer sammanhang",
+      "manipulation": "Manipulerad media",
+      "spam": "Skräppost eller bedrägeri",
+      "other": "Annan oro"
+    }
+  }
+}

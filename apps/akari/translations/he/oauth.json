@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "התחברות בתור @{{handle}}",
+    "subtitle": "בחרו מה akari יכול לעשות בחשבון שלכם. אי אפשר לבטל הרשאות חובה כי האפליקציה זקוקה להן כדי להתחבר ולהפעיל את הזרימות הבסיסיות.",
+    "continue": "המשך",
+    "required": "חובה",
+    "action": {
+      "create": "צור",
+      "update": "עדכן",
+      "delete": "מחק"
+    },
+    "atproto": {
+      "label": "זהות",
+      "description": "אשרו מי אתם ב-atproto. תמיד נדרש."
+    },
+    "chat": {
+      "label": "הודעות ישירות",
+      "description": "קריאה ושליחה של הודעות צ'אט בשמכם."
+    },
+    "profile": {
+      "label": "פרופיל",
+      "description": "ערכו את שם התצוגה, הביו, האווטאר והבאנר שלכם."
+    },
+    "post": {
+      "label": "פוסטים",
+      "description": "פרסמו פוסטים חדשים, ערכו אותם ומחקו את שלכם."
+    },
+    "threadgate": {
+      "label": "בקרת תגובות",
+      "description": "קבעו מי יכול להגיב לשרשור שפתחתם."
+    },
+    "postgate": {
+      "label": "בקרת ציטוטים",
+      "description": "קבעו מי יכול לצטט פוסט שיצרתם."
+    },
+    "like": {
+      "label": "לייקים",
+      "description": "סמנו וביטלו לייקים על פוסטים."
+    },
+    "repost": {
+      "label": "שיתופים מחדש",
+      "description": "שתפו מחדש ובטלו שיתופים מחדש."
+    },
+    "follow": {
+      "label": "עוקבים",
+      "description": "עקבו ובטלו מעקב אחרי חשבונות."
+    },
+    "block": {
+      "label": "חסימות",
+      "description": "חסמו וביטלו חסימה של חשבונות."
+    },
+    "list": {
+      "label": "רשימות",
+      "description": "צרו, שנו שם ומחקו רשימות מנוהלות או רשימות אצירה."
+    },
+    "listitem": {
+      "label": "חברות ברשימה",
+      "description": "הוסיפו והסירו חשבונות מהרשימות שלכם."
+    },
+    "leafletPublication": {
+      "label": "פרסומי Leaflet",
+      "description": "ניהול פרסומים ארוכים ב-leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "מסמכי Leaflet",
+      "description": "פרסום ועריכה של מסמכים ארוכים ב-leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "העדפות בינה מלאכותית",
+      "description": "שמרו את העדפות אימון הבינה המלאכותית לפי community-lexicon."
+    },
+    "popfeedReview": {
+      "label": "ביקורות Popfeed",
+      "description": "פרסמו ביקורות ברשת ביקורות המדיה Popfeed."
+    },
+    "recipe": {
+      "label": "מתכונים",
+      "description": "שמרו מתכונים דרך הלקסיקון הפתוח exchange.recipe."
+    },
+    "linkatBoard": {
+      "label": "לוח Linkat",
+      "description": "נהלו את לוח link-in-bio שלכם ב-Linkat."
+    }
+  }
+}

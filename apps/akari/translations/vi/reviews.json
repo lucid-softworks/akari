@@ -1,0 +1,12 @@
+{
+  "newReview": "Đánh giá mới",
+  "type": "Loại",
+  "movie": "Phim",
+  "tvShow": "Chương trình TV",
+  "change": "Thay đổi",
+  "rating": "Điểm",
+  "ratingWithValue": "Điểm ({{rating}}/{{max}})",
+  "review": "Đánh giá",
+  "thisIsRevisit": "Đây là lần xem lại",
+  "containsSpoilers": "Chứa tiết lộ nội dung"
+}

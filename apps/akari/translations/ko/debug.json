@@ -1,0 +1,23 @@
+{
+  "crashReporter": "크래시 리포터",
+  "crashDescription": "이 버튼을 사용하여 테스트 오류를 발생시키고 크래시 리포팅이 올바르게 설정되었는지 확인하세요. 보고서가 전달되도록 Axiom 자격 증명이 구성되어 있는지 확인하세요.",
+  "triggerCrash": "크래시 발생",
+  "crashHint": "팁: 테스트 후 앱을 다시 로드하여 디버그 화면이 다시 렌더링되도록 하세요.",
+  "queryCacheDebug": "쿼리 캐시 디버그",
+  "invalidateAll": "모두 무효화",
+  "clearAll": "모두 지우기",
+  "totalQueries": "총 쿼리: {{count}}",
+  "activeQueries": "활성 쿼리: {{count}}",
+  "successfulQueries": "성공한 쿼리: {{count}}",
+  "failedQueries": "실패한 쿼리: {{count}}",
+  "noQueriesInCache": "캐시에 쿼리가 없습니다",
+  "queryKey": "쿼리 키:",
+  "status": "상태:",
+  "dataUpdatedAt": "데이터 업데이트 시간:",
+  "errorUpdatedAt": "오류 업데이트 시간:",
+  "fetchCount": "가져오기 횟수:",
+  "error": "오류:",
+  "data": "데이터:",
+  "refetch": "다시 가져오기",
+  "remove": "제거"
+}

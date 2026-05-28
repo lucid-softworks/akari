@@ -1,0 +1,14 @@
+{
+  "title": "Recept",
+  "time": "Čas",
+  "servings": "Porcie",
+  "category": "Kategória",
+  "ingredients": "Ingrediencie",
+  "cuisine": "Kuchyňa",
+  "method": "Metóda",
+  "calories": "Kalórie",
+  "dietaryRestrictions": "Diétne Obmedzenia",
+  "instructions": "Inštrukcie",
+  "tags": "Značky",
+  "source": "Zdroj"
+}

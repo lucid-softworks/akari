@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Pomagaj dodati kontekst objavam",
+    "body1": "Community Notes so kratke opombe, pripete objavam, ki potrebujejo več konteksta. Sodelujoči jih pišejo in ocenjujejo osnutke drug drugemu, bralcem pa so prikazane le opombe, ki jih skupnost označi kot koristne.",
+    "body2": "Z včlanitvijo se pridružiš portalu za sodelujoče: čakajočim objavam, čakalni vrsti za ocenjevanje in profilu z napisanimi opombami.",
+    "cta": "Včlani se"
+  },
+  "tabs": {
+    "pending": "V obravnavi",
+    "rate": "Oceni",
+    "you": "Ti"
+  },
+  "pendingTab": {
+    "empty": "Še ni nobene označene objave. Preveri pozneje.",
+    "requestCountAndTime": "{count} zahtev · {time}",
+    "writeNote": "Napiši opombo"
+  },
+  "rateTab": {
+    "empty": "Trenutno ni ničesar za oceniti. Osnutki drugih sodelujočih se bodo pojavili tukaj.",
+    "onPost": "Pri objavi {postId}"
+  },
+  "profile": {
+    "notesWritten": "Napisanih opomb",
+    "helpfulRate": "Stopnja koristnosti",
+    "ratingsGiven": "Oddanih ocen",
+    "contributorSince": "Sodelujoči od {date}",
+    "leave": "Zapusti program",
+    "recentNotes": "Tvoje nedavne opombe",
+    "noNotes": "Še nisi napisal nobene opombe.",
+    "showPubliclyTitle": "Prikaži moje opombe pod mojim ročajem",
+    "showPubliclyHint": "Ko je izklopljeno, so opombe, ki jih napišeš, pripisane \"anonimnemu sodelujočemu\"."
+  },
+  "note": {
+    "headlineHelpful": "Bralci so dodali kontekst",
+    "headlineUnderReview": "Opomba je v pregledu, potrebuje več ocen",
+    "ratingSummary": "{percent} % od {count} ocenjevalcev je to označilo kot koristno",
+    "rateThisNote": "Oceni to opombo",
+    "viewSources": "Poglej vire",
+    "rateModalTitle": "Je ta opomba koristna?",
+    "rateModalSubtitle": "Tvoja ocena pomaga odločiti, ali se opomba prikaže drugim bralcem.",
+    "helpfulness": {
+      "helpful": "Koristna",
+      "somewhat": "Delno",
+      "notHelpful": "Ni koristna"
+    },
+    "whyNotHelpful": "Zakaj ni koristna?",
+    "whatMakesItHelpful": "Zaradi česa je koristna?",
+    "anythingElse": "Še kaj?",
+    "commentPlaceholder": "Neobvezne opombe za ekipo ocenjevalcev",
+    "cancel": "Prekliči",
+    "submit": "Oddaj",
+    "submitting": "Oddajanje ...",
+    "sourcesTitle": "Viri",
+    "sourcesSubtitle": "Navedbe, ki jih je opombi priložil sodelujoči.",
+    "noSources": "Ni priloženih virov.",
+    "close": "Zapri",
+    "helpfulReasons": {
+      "citesSources": "Navaja kakovostne vire",
+      "easyToUnderstand": "Lahko razumljiva",
+      "addressesClaim": "Neposredno naslavlja trditev",
+      "providesContext": "Ponuja pomemben kontekst",
+      "fairBalanced": "Napisana v nevtralnem tonu"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Viri ne podpirajo opombe",
+      "incorrectInfo": "Vsebuje napačne informacije",
+      "opinion": "Mnenje, ne dejstvo",
+      "argumentative": "Polemična ali pristranska",
+      "irrelevant": "Nepomembna za objavo"
+    }
+  },
+  "contributor": {
+    "addTitle": "Dodaj Community Note",
+    "addSubtitle": "Tvoja opomba je zasebna, dokler je dovolj ocenjevalcev ne označi kot koristne. Drži se preverljivih dejstev in navajaj vire.",
+    "problemQuestion": "Kaj je narobe s to objavo?",
+    "yourNote": "Tvoja opomba",
+    "notePlaceholder": "Pojasni, kaj manjka ali kaj zavaja. Navedi vire spodaj.",
+    "sourcesLabel": "Viri (en URL na vrstico)",
+    "cancel": "Prekliči",
+    "submitNote": "Oddaj opombo",
+    "submitting": "Oddajanje ...",
+    "requestTitle": "Zahtevaj Community Note",
+    "requestSubtitle": "Označi to objavo za pregled sodelujočega. Obvestili bomo ocenjevalce, opombe pa ne boš videl takoj.",
+    "reason": "Razlog",
+    "anythingElseOptional": "Še kaj? (neobvezno)",
+    "commentPlaceholder": "Dodaj koristen kontekst za sodelujočega",
+    "sendRequest": "Pošlji zahtevo",
+    "classification": {
+      "misleading": "Zavajajoče",
+      "missingContext": "Manjkajoči kontekst",
+      "outdated": "Zastarelo",
+      "satire": "Satira, predstavljena kot dejstvo",
+      "other": "Drugo"
+    },
+    "requestReason": {
+      "misinformation": "Dezinformacija",
+      "missingContext": "Potrebuje več konteksta",
+      "manipulation": "Prirejena vsebina",
+      "spam": "Neželena pošta ali prevara",
+      "other": "Drug pomislek"
+    }
+  }
+}

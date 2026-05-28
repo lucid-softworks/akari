@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Pomóż dodawać kontekst do postów",
+    "body1": "Community Notes to krótkie notatki dołączane do postów, które wymagają większego kontekstu. Współtwórcy je piszą i oceniają nawzajem swoje wersje robocze; czytelnikom pokazywane są tylko notatki oznaczone przez społeczność jako pomocne.",
+    "body2": "Zapisanie się otwiera portal współtwórcy: oczekujące posty, kolejka ocen i profil twoich utworzonych notatek.",
+    "cta": "Zapisz się"
+  },
+  "tabs": {
+    "pending": "Oczekujące",
+    "rate": "Oceń",
+    "you": "Ty"
+  },
+  "pendingTab": {
+    "empty": "Żadne posty nie zostały jeszcze zgłoszone. Sprawdź ponownie później.",
+    "requestCountAndTime": "{count} zgłoszeń · {time}",
+    "writeNote": "Napisz notatkę"
+  },
+  "rateTab": {
+    "empty": "Obecnie nie ma nic do oceny. Wersje robocze od innych współtwórców pojawią się tutaj.",
+    "onPost": "Do postu {postId}"
+  },
+  "profile": {
+    "notesWritten": "Napisane notatki",
+    "helpfulRate": "Wskaźnik pomocności",
+    "ratingsGiven": "Wystawione oceny",
+    "contributorSince": "Współtwórca od {date}",
+    "leave": "Opuść program",
+    "recentNotes": "Twoje ostatnie notatki",
+    "noNotes": "Nie napisałeś jeszcze żadnych notatek.",
+    "showPubliclyTitle": "Pokazuj moje notatki pod moim handle",
+    "showPubliclyHint": "Gdy wyłączone, notatki twojego autorstwa są przypisywane do „anonimowego współtwórcy”."
+  },
+  "note": {
+    "headlineHelpful": "Czytelnicy dodali kontekst",
+    "headlineUnderReview": "Notatka w trakcie oceny, wymaga więcej ocen",
+    "ratingSummary": "{percent}% z {count} oceniających uznało ją za pomocną",
+    "rateThisNote": "Oceń tę notatkę",
+    "viewSources": "Pokaż źródła",
+    "rateModalTitle": "Czy ta notatka jest pomocna?",
+    "rateModalSubtitle": "Twoja ocena pomaga zdecydować, czy notatka będzie pokazywana innym czytelnikom.",
+    "helpfulness": {
+      "helpful": "Pomocna",
+      "somewhat": "Częściowo",
+      "notHelpful": "Niepomocna"
+    },
+    "whyNotHelpful": "Dlaczego niepomocna?",
+    "whatMakesItHelpful": "Co czyni ją pomocną?",
+    "anythingElse": "Coś jeszcze?",
+    "commentPlaceholder": "Opcjonalne uwagi dla zespołu oceniającego",
+    "cancel": "Anuluj",
+    "submit": "Wyślij",
+    "submitting": "Wysyłanie…",
+    "sourcesTitle": "Źródła",
+    "sourcesSubtitle": "Cytowania dołączone do tej notatki przez współtwórcę.",
+    "noSources": "Brak dołączonych źródeł.",
+    "close": "Zamknij",
+    "helpfulReasons": {
+      "citesSources": "Cytuje wiarygodne źródła",
+      "easyToUnderstand": "Łatwa do zrozumienia",
+      "addressesClaim": "Bezpośrednio odnosi się do twierdzenia",
+      "providesContext": "Dostarcza ważnego kontekstu",
+      "fairBalanced": "Napisana neutralnym tonem"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Źródła nie potwierdzają notatki",
+      "incorrectInfo": "Zawiera nieprawdziwe informacje",
+      "opinion": "Opinia, a nie fakt",
+      "argumentative": "Polemiczna lub stronnicza",
+      "irrelevant": "Nieistotna dla postu"
+    }
+  },
+  "contributor": {
+    "addTitle": "Dodaj Community Note",
+    "addSubtitle": "Twoja notatka pozostaje prywatna, dopóki wystarczająca liczba oceniających nie uzna jej za pomocną. Trzymaj się weryfikowalnych faktów i cytuj źródła.",
+    "problemQuestion": "Na czym polega problem z tym postem?",
+    "yourNote": "Twoja notatka",
+    "notePlaceholder": "Wyjaśnij, czego brakuje lub co wprowadza w błąd. Źródła podaj poniżej.",
+    "sourcesLabel": "Źródła (jeden adres URL w linii)",
+    "cancel": "Anuluj",
+    "submitNote": "Wyślij notatkę",
+    "submitting": "Wysyłanie…",
+    "requestTitle": "Poproś o Community Note",
+    "requestSubtitle": "Oznacz ten post do oceny przez współtwórcę. Powiadomimy grupę oceniających, notatki nie zobaczysz od razu.",
+    "reason": "Powód",
+    "anythingElseOptional": "Coś jeszcze? (opcjonalne)",
+    "commentPlaceholder": "Dodaj przydatny kontekst dla współtwórcy",
+    "sendRequest": "Wyślij zgłoszenie",
+    "classification": {
+      "misleading": "Wprowadza w błąd",
+      "missingContext": "Brakuje kontekstu",
+      "outdated": "Nieaktualne",
+      "satire": "Satyra brana za fakt",
+      "other": "Inne"
+    },
+    "requestReason": {
+      "misinformation": "Dezinformacja",
+      "missingContext": "Wymaga większego kontekstu",
+      "manipulation": "Zmanipulowane media",
+      "spam": "Spam lub oszustwo",
+      "other": "Inny problem"
+    }
+  }
+}

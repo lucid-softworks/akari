@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "Limba postării",
+  "postLanguageHint": "Alege până la {{max}} limbi pentru postarea ta.",
+  "postLanguageSearch": "Caută limbi",
+  "postLanguageA11y": "Limba postării: {{value}}"
+}

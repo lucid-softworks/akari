@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "لغة المنشور",
+  "postLanguageHint": "اختر حتى {{max}} لغات لمنشورك.",
+  "postLanguageSearch": "ابحث عن لغة",
+  "postLanguageA11y": "لغة المنشور: {{value}}"
+}

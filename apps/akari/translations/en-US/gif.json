@@ -1,0 +1,9 @@
+{
+  "selectGif": "Select GIF",
+  "searchPlaceholder": "Search GIFs...",
+  "loadingMore": "Loading more...",
+  "noResults": "No GIFs found",
+  "noTrending": "No trending GIFs available",
+  "addGif": "Add GIF",
+  "apiError": "Unable to load GIFs. Please check your internet connection."
+}

@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "Мова допису",
+  "postLanguageHint": "Виберіть до {{max}} мов для свого допису.",
+  "postLanguageSearch": "Пошук мов",
+  "postLanguageA11y": "Мова допису: {{value}}"
+}

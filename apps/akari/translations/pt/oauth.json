@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "Iniciar sessão como @{{handle}}",
+    "subtitle": "Escolha o que o akari pode fazer na sua conta. Permissões obrigatórias não podem ser desmarcadas porque o aplicativo precisa delas para fazer login e executar os fluxos principais.",
+    "continue": "Continuar",
+    "required": "Obrigatório",
+    "action": {
+      "create": "Criar",
+      "update": "Atualizar",
+      "delete": "Excluir"
+    },
+    "atproto": {
+      "label": "Identidade",
+      "description": "Confirma quem você é no atproto. Sempre obrigatório."
+    },
+    "chat": {
+      "label": "Mensagens diretas",
+      "description": "Ler e enviar mensagens de chat em seu nome."
+    },
+    "profile": {
+      "label": "Perfil",
+      "description": "Edite seu nome de exibição, biografia, avatar e banner."
+    },
+    "post": {
+      "label": "Publicações",
+      "description": "Publicar novas publicações, editá-las e excluir as suas."
+    },
+    "threadgate": {
+      "label": "Controle de respostas",
+      "description": "Defina quem pode responder em um tópico que você iniciou."
+    },
+    "postgate": {
+      "label": "Controle de citações",
+      "description": "Defina quem pode citar uma publicação que você fez."
+    },
+    "like": {
+      "label": "Curtidas",
+      "description": "Curtir e descurtir publicações."
+    },
+    "repost": {
+      "label": "Repostagens",
+      "description": "Repostar e desfazer repostagens."
+    },
+    "follow": {
+      "label": "Seguidos",
+      "description": "Seguir e deixar de seguir contas."
+    },
+    "block": {
+      "label": "Bloqueios",
+      "description": "Bloquear e desbloquear contas."
+    },
+    "list": {
+      "label": "Listas",
+      "description": "Criar, renomear e excluir listas de moderação ou curadoria."
+    },
+    "listitem": {
+      "label": "Participação em listas",
+      "description": "Adicionar e remover contas das suas listas."
+    },
+    "leafletPublication": {
+      "label": "Publicações do Leaflet",
+      "description": "Gerenciar publicações longas no leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "Documentos do Leaflet",
+      "description": "Publicar e editar documentos longos no leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "Preferências de IA",
+      "description": "Armazene suas preferências de treinamento de IA segundo community-lexicon."
+    },
+    "popfeedReview": {
+      "label": "Avaliações Popfeed",
+      "description": "Publique avaliações na rede de avaliações de mídia Popfeed."
+    },
+    "recipe": {
+      "label": "Receitas",
+      "description": "Salve receitas pelo léxico aberto exchange.recipe."
+    },
+    "linkatBoard": {
+      "label": "Painel Linkat",
+      "description": "Gerencie seu painel Linkat link-in-bio."
+    }
+  }
+}

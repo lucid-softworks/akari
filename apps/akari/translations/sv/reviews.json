@@ -1,0 +1,12 @@
+{
+  "newReview": "Ny recension",
+  "type": "Typ",
+  "movie": "Film",
+  "tvShow": "TV-serie",
+  "change": "Ändra",
+  "rating": "Betyg",
+  "ratingWithValue": "Betyg ({{rating}}/{{max}})",
+  "review": "Recension",
+  "thisIsRevisit": "Det här är en omvisning",
+  "containsSpoilers": "Innehåller spoilers"
+}

@@ -1,0 +1,12 @@
+{
+  "newReview": "Nueva reseña",
+  "type": "Tipo",
+  "movie": "Película",
+  "tvShow": "Serie de TV",
+  "change": "Cambiar",
+  "rating": "Puntuación",
+  "ratingWithValue": "Puntuación ({{rating}}/{{max}})",
+  "review": "Reseña",
+  "thisIsRevisit": "Es un revisionado",
+  "containsSpoilers": "Contiene spoilers"
+}

@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Hledejte profily a příspěvky na Bluesky",
+  "searching": "Hledání ...",
+  "searchFailed": "Hledání selhalo",
+  "noUsersFound": "Žádní uživatelé nenašli",
+  "noPostsFound": "Žádné příspěvky nalezeny",
+  "noResultsFound": "Žádné výsledky",
+  "searchInputPlaceholder": "Hledat profily a příspěvky ...",
+  "all": "Vše",
+  "users": "Uživatelé",
+  "posts": "Příspěvky",
+  "loadingMoreResults": "Načítání dalších výsledků ...",
+  "sortTop": "Nejlepší",
+  "sortLatest": "Nejnovější",
+  "clearSearch": "Vymazat hledání"
+}

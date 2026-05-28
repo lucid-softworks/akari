@@ -1,0 +1,12 @@
+{
+  "newReview": "ביקורת חדשה",
+  "type": "סוג",
+  "movie": "סרט",
+  "tvShow": "סדרת טלוויזיה",
+  "change": "שנה",
+  "rating": "דירוג",
+  "ratingWithValue": "דירוג ({{rating}}/{{max}})",
+  "review": "ביקורת",
+  "thisIsRevisit": "זוהי צפייה חוזרת",
+  "containsSpoilers": "מכיל ספוילרים"
+}

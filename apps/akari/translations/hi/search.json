@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Bluesky पर प्रोफ़ाइल और पोस्ट खोजें",
+  "searching": "खोज रहा है...",
+  "searchFailed": "खोज विफल",
+  "noUsersFound": "कोई उपयोगकर्ता नहीं मिला",
+  "noPostsFound": "कोई पोस्ट नहीं मिला",
+  "noResultsFound": "कोई परिणाम नहीं मिला",
+  "searchInputPlaceholder": "प्रोफ़ाइल और पोस्ट खोजें...",
+  "all": "सभी",
+  "users": "उपयोगकर्ता",
+  "posts": "पोस्ट",
+  "loadingMoreResults": "अधिक परिणाम लोड हो रहे हैं...",
+  "sortTop": "शीर्ष",
+  "sortLatest": "नवीनतम",
+  "clearSearch": "खोज साफ़ करें"
+}

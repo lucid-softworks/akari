@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Pomozte přidávat kontext k příspěvkům",
+    "body1": "Community Notes jsou krátké poznámky připojené k příspěvkům, které potřebují více kontextu. Přispěvatelé je píší a vzájemně hodnotí návrhy ostatních; čtenářům se zobrazují pouze poznámky, které komunita označila jako užitečné.",
+    "body2": "Zapsáním se přihlásíte do portálu pro přispěvatele: čekající příspěvky, fronta hodnocení a profil vašich vytvořených poznámek.",
+    "cta": "Zapsat se"
+  },
+  "tabs": {
+    "pending": "Čekající",
+    "rate": "Hodnotit",
+    "you": "Vy"
+  },
+  "pendingTab": {
+    "empty": "Žádné příspěvky zatím nebyly označeny. Zkuste to později.",
+    "requestCountAndTime": "{count} žádostí · {time}",
+    "writeNote": "Napsat poznámku"
+  },
+  "rateTab": {
+    "empty": "Momentálně není co hodnotit. Návrhy od ostatních přispěvatelů se zobrazí zde.",
+    "onPost": "K příspěvku {postId}"
+  },
+  "profile": {
+    "notesWritten": "Napsané poznámky",
+    "helpfulRate": "Míra užitečnosti",
+    "ratingsGiven": "Udělená hodnocení",
+    "contributorSince": "Přispěvatelem od {date}",
+    "leave": "Opustit program",
+    "recentNotes": "Vaše nedávné poznámky",
+    "noNotes": "Zatím jste nenapsali žádné poznámky.",
+    "showPubliclyTitle": "Zobrazit mé poznámky pod mým handle",
+    "showPubliclyHint": "Když je vypnuto, vaše poznámky jsou přiřazeny „anonymnímu přispěvateli“."
+  },
+  "note": {
+    "headlineHelpful": "Čtenáři přidali kontext",
+    "headlineUnderReview": "Poznámka se posuzuje, potřebuje více hodnocení",
+    "ratingSummary": "{percent} % z {count} hodnotitelů ji označilo jako užitečnou",
+    "rateThisNote": "Ohodnotit tuto poznámku",
+    "viewSources": "Zobrazit zdroje",
+    "rateModalTitle": "Je tato poznámka užitečná?",
+    "rateModalSubtitle": "Vaše hodnocení pomáhá rozhodnout, zda se poznámka zobrazí ostatním čtenářům.",
+    "helpfulness": {
+      "helpful": "Užitečná",
+      "somewhat": "Částečně",
+      "notHelpful": "Neužitečná"
+    },
+    "whyNotHelpful": "Proč není užitečná?",
+    "whatMakesItHelpful": "Co ji dělá užitečnou?",
+    "anythingElse": "Něco dalšího?",
+    "commentPlaceholder": "Volitelné poznámky pro tým hodnocení",
+    "cancel": "Zrušit",
+    "submit": "Odeslat",
+    "submitting": "Odesílání…",
+    "sourcesTitle": "Zdroje",
+    "sourcesSubtitle": "Citace připojené k této poznámce přispěvatelem.",
+    "noSources": "Nejsou připojeny žádné zdroje.",
+    "close": "Zavřít",
+    "helpfulReasons": {
+      "citesSources": "Cituje kvalitní zdroje",
+      "easyToUnderstand": "Snadno srozumitelná",
+      "addressesClaim": "Přímo reaguje na tvrzení",
+      "providesContext": "Poskytuje důležitý kontext",
+      "fairBalanced": "Napsaná neutrálním tónem"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Zdroje poznámku nepodporují",
+      "incorrectInfo": "Obsahuje nesprávné informace",
+      "opinion": "Názor, nikoli fakt",
+      "argumentative": "Polemická nebo zaujatá",
+      "irrelevant": "Není relevantní k příspěvku"
+    }
+  },
+  "contributor": {
+    "addTitle": "Přidat Community Note",
+    "addSubtitle": "Vaše poznámka je soukromá, dokud ji dostatek hodnotitelů neoznačí jako užitečnou. Držte se ověřitelných faktů a citujte zdroje.",
+    "problemQuestion": "V čem je problém s tímto příspěvkem?",
+    "yourNote": "Vaše poznámka",
+    "notePlaceholder": "Vysvětlete, co chybí nebo co je zavádějící. Zdroje uveďte níže.",
+    "sourcesLabel": "Zdroje (jedna URL na řádek)",
+    "cancel": "Zrušit",
+    "submitNote": "Odeslat poznámku",
+    "submitting": "Odesílání…",
+    "requestTitle": "Vyžádat Community Note",
+    "requestSubtitle": "Označte tento příspěvek, aby ho přispěvatel posoudil. Upozorníme okruh hodnotitelů, poznámku neuvidíte okamžitě.",
+    "reason": "Důvod",
+    "anythingElseOptional": "Něco dalšího? (volitelné)",
+    "commentPlaceholder": "Přidejte užitečný kontext pro přispěvatele",
+    "sendRequest": "Odeslat žádost",
+    "classification": {
+      "misleading": "Zavádějící",
+      "missingContext": "Chybějící kontext",
+      "outdated": "Zastaralé",
+      "satire": "Satira brána jako fakt",
+      "other": "Jiné"
+    },
+    "requestReason": {
+      "misinformation": "Dezinformace",
+      "missingContext": "Potřebuje více kontextu",
+      "manipulation": "Zmanipulovaná média",
+      "spam": "Spam nebo podvod",
+      "other": "Jiný problém"
+    }
+  }
+}

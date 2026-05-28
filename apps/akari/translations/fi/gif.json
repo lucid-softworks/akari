@@ -1,0 +1,9 @@
+{
+  "selectGif": "Valitse GIF",
+  "searchPlaceholder": "Haku GIF -tiedostoja ...",
+  "loadingMore": "Lataamalla lisää ...",
+  "noResults": "GIF -tiedostoja ei löydy",
+  "noTrending": "Trendikkäitä GIF -tiedostoja ei ole käytettävissä",
+  "addGif": "Lisää GIF",
+  "apiError": "GIF -tiedostoja ei voida ladata. Tarkista Internet -yhteys."
+}

@@ -1,0 +1,12 @@
+{
+  "newReview": "Новый отзыв",
+  "type": "Тип",
+  "movie": "Фильм",
+  "tvShow": "Сериал",
+  "change": "Изменить",
+  "rating": "Оценка",
+  "ratingWithValue": "Оценка ({{rating}}/{{max}})",
+  "review": "Отзыв",
+  "thisIsRevisit": "Это повторный просмотр",
+  "containsSpoilers": "Содержит спойлеры"
+}

@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "Beitragssprache",
+  "postLanguageHint": "Wähle bis zu {{max}} Sprachen für deinen Beitrag aus.",
+  "postLanguageSearch": "Sprachen suchen",
+  "postLanguageA11y": "Beitragssprache: {{value}}"
+}

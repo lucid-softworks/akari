@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Căutați profiluri și postări pe Bluesky",
+  "searching": "Căutând ...",
+  "searchFailed": "Căutarea a eșuat",
+  "noUsersFound": "Nu au fost găsiți utilizatori",
+  "noPostsFound": "Nu s -au găsit postări",
+  "noResultsFound": "Nu au fost găsite rezultate",
+  "searchInputPlaceholder": "Căutați profiluri și postări ...",
+  "all": "Toate",
+  "users": "Utilizatori",
+  "posts": "Postări",
+  "loadingMoreResults": "Încărcarea mai multor rezultate ...",
+  "sortTop": "Populare",
+  "sortLatest": "Recente",
+  "clearSearch": "Șterge căutarea"
+}

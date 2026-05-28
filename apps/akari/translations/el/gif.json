@@ -1,0 +1,9 @@
+{
+  "selectGif": "Επιλέξτε GIF",
+  "searchPlaceholder": "Αναζήτηση GIF ...",
+  "loadingMore": "Φόρτωση περισσότερο ...",
+  "noResults": "Δεν βρέθηκαν gifs",
+  "noTrending": "Δεν υπάρχουν διαθέσιμα τάσμα GIFs",
+  "addGif": "Προσθήκη gif",
+  "apiError": "Δεν είναι δυνατή η φόρτωση GIF. Ελέγξτε τη σύνδεσή σας στο Διαδίκτυο."
+}

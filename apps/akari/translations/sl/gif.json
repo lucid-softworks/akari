@@ -1,0 +1,9 @@
+{
+  "selectGif": "Izberite GIF",
+  "searchPlaceholder": "Iskanje gifov ...",
+  "loadingMore": "Nalaganje več ...",
+  "noResults": "Ni najdenih GIF -jev",
+  "noTrending": "Ni na voljo trendi",
+  "addGif": "Dodajte gif",
+  "apiError": "Ne morem naložiti GIF -jev. Preverite svojo internetno povezavo."
+}

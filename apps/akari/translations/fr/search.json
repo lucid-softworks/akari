@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Rechercher des profils et publications sur Bluesky",
+  "searching": "Recherche...",
+  "searchFailed": "Échec de la recherche",
+  "noUsersFound": "Aucun utilisateur trouvé",
+  "noPostsFound": "Aucune publication trouvée",
+  "noResultsFound": "Aucun résultat trouvé",
+  "searchInputPlaceholder": "Rechercher des profils et publications...",
+  "all": "Tout",
+  "users": "Utilisateurs",
+  "posts": "Publications",
+  "loadingMoreResults": "Chargement de plus de résultats...",
+  "sortTop": "Populaires",
+  "sortLatest": "Récents",
+  "clearSearch": "Effacer la recherche"
+}

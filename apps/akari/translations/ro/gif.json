@@ -1,0 +1,9 @@
+{
+  "selectGif": "Selectați GIF",
+  "searchPlaceholder": "Căutați GIF -uri ...",
+  "loadingMore": "Încărcarea mai mult ...",
+  "noResults": "Nu s -au găsit GIF -uri",
+  "noTrending": "Nu există GIF -uri în tendință disponibile",
+  "addGif": "Adăugați gif",
+  "apiError": "Incapabil să încarce GIF -uri. Vă rugăm să verificați conexiunea la internet."
+}

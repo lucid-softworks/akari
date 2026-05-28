@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Vyhľadajte profily a príspevky na Bluessky",
+  "searching": "Hľadanie ...",
+  "searchFailed": "Vyhľadávanie zlyhalo",
+  "noUsersFound": "Žiadni používatelia nenašli",
+  "noPostsFound": "Nenašli sa žiadne príspevky",
+  "noResultsFound": "Nezistili sa žiadne výsledky",
+  "searchInputPlaceholder": "Profily a príspevky vyhľadávania ...",
+  "all": "Všetko",
+  "users": "Užívatelia",
+  "posts": "Pracovné miesta",
+  "loadingMoreResults": "Načítava sa viac výsledkov ...",
+  "sortTop": "Najlepšie",
+  "sortLatest": "Najnovšie",
+  "clearSearch": "Vymazať hľadanie"
+}

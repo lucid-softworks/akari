@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Шукайте профілі та публікації на Bluesky",
+  "searching": "Пошук ...",
+  "searchFailed": "Помилка пошуку",
+  "noUsersFound": "Жодних користувачів не знайдено",
+  "noPostsFound": "Пости не знайдено",
+  "noResultsFound": "Жодних результатів не знайдено",
+  "searchInputPlaceholder": "Пошук профілів та публікації ...",
+  "all": "Все",
+  "users": "Користувачі",
+  "posts": "Дописи",
+  "loadingMoreResults": "Завантаження більше результатів ...",
+  "sortTop": "Топ",
+  "sortLatest": "Нові",
+  "clearSearch": "Очистити пошук"
+}

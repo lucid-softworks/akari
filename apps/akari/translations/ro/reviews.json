@@ -1,0 +1,12 @@
+{
+  "newReview": "Recenzie nouă",
+  "type": "Tip",
+  "movie": "Film",
+  "tvShow": "Serial TV",
+  "change": "Schimbă",
+  "rating": "Notă",
+  "ratingWithValue": "Notă ({{rating}}/{{max}})",
+  "review": "Recenzie",
+  "thisIsRevisit": "Aceasta este o revizionare",
+  "containsSpoilers": "Conține spoilere"
+}

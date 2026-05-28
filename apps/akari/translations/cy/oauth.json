@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "Mewngofnodi fel @{{handle}}",
+    "subtitle": "Dewiswch beth all akari ei wneud ar eich cyfrif. Ni ellir dad-dicio caniatâd gofynnol oherwydd bod angen y rhain ar yr ap i'ch mewngofnodi a rhedeg llifoedd craidd.",
+    "continue": "Parhau",
+    "required": "Gofynnol",
+    "action": {
+      "create": "Creu",
+      "update": "Diweddaru",
+      "delete": "Dileu"
+    },
+    "atproto": {
+      "label": "Hunaniaeth",
+      "description": "Cadarnhewch pwy ydych ar atproto. Yn ofynnol bob amser."
+    },
+    "chat": {
+      "label": "Negeseuon uniongyrchol",
+      "description": "Darllen ac anfon negeseuon sgwrs ar eich rhan."
+    },
+    "profile": {
+      "label": "Proffil",
+      "description": "Golygu eich enw arddangos, bywgraffiad, afatar a baner."
+    },
+    "post": {
+      "label": "Postiadau",
+      "description": "Cyhoeddi postiadau newydd, eu golygu, a dileu eich rhai eich hun."
+    },
+    "threadgate": {
+      "label": "Rheoli atebion",
+      "description": "Penderfynwch pwy all ateb edefyn a gychwynnoch."
+    },
+    "postgate": {
+      "label": "Rheoli dyfynnu",
+      "description": "Penderfynwch pwy all ddyfynnu postiad rydych wedi'i wneud."
+    },
+    "like": {
+      "label": "Hoffi",
+      "description": "Hoffi a dad-hoffi postiadau."
+    },
+    "repost": {
+      "label": "Ailbostiadau",
+      "description": "Ailbostio a dadwneud ailbostiadau."
+    },
+    "follow": {
+      "label": "Dilyniant",
+      "description": "Dilyn a dad-ddilyn cyfrifon."
+    },
+    "block": {
+      "label": "Blociau",
+      "description": "Blocio a dadflocio cyfrifon."
+    },
+    "list": {
+      "label": "Rhestrau",
+      "description": "Creu, ailenwi a dileu rhestrau cymedroli neu guradu."
+    },
+    "listitem": {
+      "label": "Aelodaeth rhestr",
+      "description": "Ychwanegu a thynnu cyfrifon o'ch rhestrau."
+    },
+    "leafletPublication": {
+      "label": "Cyhoeddiadau Leaflet",
+      "description": "Rheoli cyhoeddiadau hir ar leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "Dogfennau Leaflet",
+      "description": "Cyhoeddi a golygu dogfennau hir ar leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "Dewisiadau AI",
+      "description": "Storio eich dewisiadau hyfforddi AI community-lexicon."
+    },
+    "popfeedReview": {
+      "label": "Adolygiadau Popfeed",
+      "description": "Postio adolygiadau ar rwydwaith adolygu cyfryngau Popfeed."
+    },
+    "recipe": {
+      "label": "Ryseitiau",
+      "description": "Cadw ryseitiau drwy'r geirfa exchange.recipe agored."
+    },
+    "linkatBoard": {
+      "label": "Bwrdd Linkat",
+      "description": "Rheoli eich bwrdd dolenni Linkat link-in-bio."
+    }
+  }
+}

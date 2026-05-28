@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "貼文語言",
+  "postLanguageHint": "為你的貼文選擇最多 {{max}} 種語言。",
+  "postLanguageSearch": "搜尋語言",
+  "postLanguageA11y": "貼文語言：{{value}}"
+}

@@ -1,5 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import en from "@/translations/en.json";
+import en from "@/translations/en";
 import i18n from "@/utils/i18n";
 import { useCallback } from "react";
 
@@ -12,8 +12,10 @@ type DotNotation<T> = T extends object
     }[keyof T]
   : never;
 
-// Type for all possible translation keys in dot notation
-type TranslationKey = DotNotation<(typeof en)["translations"]>;
+// Type for all possible translation keys in dot notation. `en` is the
+// per-locale barrel — `{ auth: {…}, post: {…}, … }` — so dot-notation
+// against it produces `auth.signupEmail`, `post.postedToast`, etc.
+type TranslationKey = DotNotation<typeof en>;
 
 export const useTranslation = () => {
   const { currentLocale, changeLanguage, availableLocales } = useLanguage();

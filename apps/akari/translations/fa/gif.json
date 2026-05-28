@@ -1,0 +1,9 @@
+{
+  "selectGif": "GIF را انتخاب کنید",
+  "searchPlaceholder": "GIF های جستجو ...",
+  "loadingMore": "بارگیری بیشتر ...",
+  "noResults": "هیچ GIF پیدا نشده است",
+  "noTrending": "هیچ GIF های روند در دسترس نیست",
+  "addGif": "gif را اضافه کنید",
+  "apiError": "بارگیری GIF امکان پذیر نیست. لطفا اتصال اینترنت خود را بررسی کنید."
+}

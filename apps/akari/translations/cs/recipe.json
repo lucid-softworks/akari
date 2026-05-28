@@ -1,0 +1,14 @@
+{
+  "title": "Recept",
+  "time": "Čas",
+  "servings": "Porce",
+  "category": "Kategorie",
+  "ingredients": "Ingredience",
+  "cuisine": "Kuchyně",
+  "method": "Metoda",
+  "calories": "Kalorie",
+  "dietaryRestrictions": "Dietní omezení",
+  "instructions": "Pokyny",
+  "tags": "Štítky",
+  "source": "Zdroj"
+}

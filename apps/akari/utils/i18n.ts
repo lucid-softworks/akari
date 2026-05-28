@@ -1,46 +1,51 @@
-import ar from "@/translations/ar.json";
-import az from "@/translations/az.json";
-import bg from "@/translations/bg.json";
-import cs from "@/translations/cs.json";
-import cy from "@/translations/cy.json";
-import da from "@/translations/da.json";
-import de from "@/translations/de.json";
-import el from "@/translations/el.json";
-import enUS from "@/translations/en-US.json";
-import en from "@/translations/en.json";
-import es from "@/translations/es.json";
-import fa from "@/translations/fa.json";
-import fi from "@/translations/fi.json";
-import fr from "@/translations/fr.json";
-import he from "@/translations/he.json";
-import hi from "@/translations/hi.json";
-import hu from "@/translations/hu.json";
-import id from "@/translations/id.json";
-import it from "@/translations/it.json";
-import ja from "@/translations/ja.json";
-import ko from "@/translations/ko.json";
-import nl from "@/translations/nl.json";
-import pl from "@/translations/pl.json";
-import pt from "@/translations/pt.json";
-import ro from "@/translations/ro.json";
-import ru from "@/translations/ru.json";
-import sk from "@/translations/sk.json";
-import sl from "@/translations/sl.json";
-import sv from "@/translations/sv.json";
-import th from "@/translations/th.json";
-import tr from "@/translations/tr.json";
-import uk from "@/translations/uk.json";
-import vi from "@/translations/vi.json";
-import zh from "@/translations/zh.json";
-import zhCN from "@/translations/zh-CN.json";
-import zhTW from "@/translations/zh-TW.json";
 import { getLocales } from "expo-localization";
 import { I18n } from "i18n-js";
+
+import meta from "@/translations/_meta.json";
+import ar from "@/translations/ar";
+import az from "@/translations/az";
+import bg from "@/translations/bg";
+import cs from "@/translations/cs";
+import cy from "@/translations/cy";
+import da from "@/translations/da";
+import de from "@/translations/de";
+import el from "@/translations/el";
+import enUS from "@/translations/en-US";
+import en from "@/translations/en";
+import es from "@/translations/es";
+import fa from "@/translations/fa";
+import fi from "@/translations/fi";
+import fr from "@/translations/fr";
+import he from "@/translations/he";
+import hi from "@/translations/hi";
+import hu from "@/translations/hu";
+import id from "@/translations/id";
+import it from "@/translations/it";
+import ja from "@/translations/ja";
+import ko from "@/translations/ko";
+import nl from "@/translations/nl";
+import pl from "@/translations/pl";
+import pt from "@/translations/pt";
+import ro from "@/translations/ro";
+import ru from "@/translations/ru";
+import sk from "@/translations/sk";
+import sl from "@/translations/sl";
+import sv from "@/translations/sv";
+import th from "@/translations/th";
+import tr from "@/translations/tr";
+import uk from "@/translations/uk";
+import vi from "@/translations/vi";
+import zh from "@/translations/zh";
+import zhCN from "@/translations/zh-CN";
+import zhTW from "@/translations/zh-TW";
+
 import { pseudoLocalizeObject } from "./pseudoLocalization";
 import { translationLogger } from "./translationLogger";
 
-// Raw translation data (includes metadata and nested translations)
-const rawTranslations = {
+// Each locale barrel exports the merged `{ section: { …keys } }` shape.
+// Metadata (language name + native name + flag) lives in the global
+// `_meta.json` so per-locale dirs only contain translation strings.
+const sectionsByLocale = {
   en,
   ja,
   ar,
@@ -79,77 +84,61 @@ const rawTranslations = {
   "zh-TW": zhTW,
 };
 
-// Create pseudo translation data based on English
-const createPseudoTranslations = () => ({
-  language: "Pseudo",
-  nativeName: "Pseudo",
-  flag: "🔤",
-  translations: pseudoLocalizeObject(rawTranslations.en.translations),
-});
-
-// Add pseudo translations to raw translations
-const pseudoTranslations = createPseudoTranslations();
-const rawTranslationsWithPseudo = {
-  ...rawTranslations,
-  pseudo: pseudoTranslations,
+// Pseudo locale is generated from English at boot — handy for catching
+// strings that aren't routed through `useTranslation` (they show up
+// untransformed in the UI).
+const sectionsWithPseudo = {
+  ...sectionsByLocale,
+  pseudo: pseudoLocalizeObject(en),
 };
 
-// Extract only the nested translations for the I18n constructor
-const translations = Object.fromEntries(
-  Object.entries(rawTranslationsWithPseudo).map(([locale, data]) => [
-    locale,
-    data.translations,
-  ])
-);
+const metaWithPseudo = {
+  ...meta,
+  pseudo: { language: "Pseudo", nativeName: "Pseudo", flag: "🔤" },
+};
 
-// Create i18n instance
-const i18n = new I18n(translations);
+const i18n = new I18n(sectionsWithPseudo);
 
-// Set the locale based on device settings
 const deviceLanguage = getLocales()[0].languageCode;
 i18n.locale = deviceLanguage ?? "en";
 
-// Enable fallback to English when a translation is missing
 i18n.enableFallback = true;
-
-// Set default locale
 i18n.defaultLocale = "en";
 
-// Add missing translation logging
+// Log missing keys so we notice when a screen reaches for a string that
+// doesn't exist in the current locale.
 const originalTranslate = i18n.t.bind(i18n);
 i18n.t = (
   scope: Parameters<typeof originalTranslate>[0],
   options?: Parameters<typeof originalTranslate>[1]
 ) => {
   const result = originalTranslate(scope, options);
-
-  // Check if the translation is missing (returns the key itself)
   if (typeof scope === "string" && result === scope) {
     translationLogger.logMissing(scope, i18n.locale);
   } else if (typeof scope === "string") {
     translationLogger.logUsage(scope, i18n.locale);
   }
-
   return result;
 };
 
 export default i18n;
 
-// Helper function to get current locale
 export const getCurrentLocale = () => i18n.locale;
 
-// Helper function to set locale
 export const setLocale = (locale: string) => {
   i18n.locale = locale;
 };
 
-// Helper function to get available locales
-export const getAvailableLocales = () => Object.keys(rawTranslationsWithPseudo);
+export const getAvailableLocales = () => Object.keys(sectionsWithPseudo);
 
-// Helper function to get translation data for a specific locale (includes metadata)
+/**
+ * Returns the `{ language, nativeName, flag, translations }` bundle a
+ * caller used to get from the flat locale file. Kept in this shape for
+ * backwards compatibility with the language-picker screens.
+ */
 export const getTranslationData = (locale: string) => {
-  return rawTranslationsWithPseudo[
-    locale as keyof typeof rawTranslationsWithPseudo
-  ];
+  const sections = sectionsWithPseudo[locale as keyof typeof sectionsWithPseudo];
+  const m = metaWithPseudo[locale as keyof typeof metaWithPseudo];
+  if (!sections || !m) return undefined;
+  return { ...m, translations: sections };
 };
-

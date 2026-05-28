@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Αναζητήστε προφίλ και δημοσιεύσεις στο Bluesky",
+  "searching": "Ερευνητικός...",
+  "searchFailed": "Απέτυχε η αναζήτηση",
+  "noUsersFound": "Δεν βρέθηκαν χρήστες",
+  "noPostsFound": "Δεν βρέθηκαν αναρτήσεις",
+  "noResultsFound": "Δεν βρέθηκαν αποτελέσματα",
+  "searchInputPlaceholder": "Προφίλ αναζήτησης και δημοσιεύσεις ...",
+  "all": "Ολοι",
+  "users": "Χρήστες",
+  "posts": "Θέσεις",
+  "loadingMoreResults": "Φόρτωση περισσότερων αποτελεσμάτων ...",
+  "sortTop": "Κορυφαία",
+  "sortLatest": "Πρόσφατα",
+  "clearSearch": "Καθαρισμός αναζήτησης"
+}

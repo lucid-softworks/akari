@@ -1,0 +1,6 @@
+{
+  "postLanguageTitle": "Berichttaal",
+  "postLanguageHint": "Kies maximaal {{max}} talen voor je bericht.",
+  "postLanguageSearch": "Zoek talen",
+  "postLanguageA11y": "Berichttaal: {{value}}"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Resepti",
+  "time": "Aika",
+  "servings": "Annoksia",
+  "category": "Kategoria",
+  "ingredients": "Ainekset",
+  "cuisine": "Keittiö",
+  "method": "Menetelmä",
+  "calories": "Kalorit",
+  "dietaryRestrictions": "Ruokavaliokäytännöt",
+  "instructions": "Ohjeet",
+  "tags": "Tunnisteet",
+  "source": "Lähde"
+}

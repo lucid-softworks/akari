@@ -1,0 +1,12 @@
+{
+  "newReview": "Nova ocena",
+  "type": "Vrsta",
+  "movie": "Film",
+  "tvShow": "TV-serija",
+  "change": "Spremeni",
+  "rating": "Ocena",
+  "ratingWithValue": "Ocena ({{rating}}/{{max}})",
+  "review": "Ocena",
+  "thisIsRevisit": "To je ponovni ogled",
+  "containsSpoilers": "Vsebuje spojlerje"
+}

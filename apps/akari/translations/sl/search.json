@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Poiščite profile in objave na Bluesskyju",
+  "searching": "Iskanje ...",
+  "searchFailed": "Iskanje ni uspelo",
+  "noUsersFound": "Ni uporabnika",
+  "noPostsFound": "Ni najdenih objav",
+  "noResultsFound": "Ni mogoče najti",
+  "searchInputPlaceholder": "Iskalni profili in objave ...",
+  "all": "Vse",
+  "users": "Uporabniki",
+  "posts": "Objave",
+  "loadingMoreResults": "Nalaganje več rezultatov ...",
+  "sortTop": "Najboljše",
+  "sortLatest": "Najnovejše",
+  "clearSearch": "Počisti iskanje"
+}

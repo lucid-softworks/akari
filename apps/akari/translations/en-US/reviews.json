@@ -1,0 +1,12 @@
+{
+  "newReview": "New Review",
+  "type": "Type",
+  "movie": "Movie",
+  "tvShow": "TV Show",
+  "change": "Change",
+  "rating": "Rating",
+  "ratingWithValue": "Rating ({{rating}}/{{max}})",
+  "review": "Review",
+  "thisIsRevisit": "This is a revisit",
+  "containsSpoilers": "Contains spoilers"
+}

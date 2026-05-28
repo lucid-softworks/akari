@@ -1,0 +1,9 @@
+{
+  "selectGif": "Välj GIF",
+  "searchPlaceholder": "Sök gifs ...",
+  "loadingMore": "Laddar mer ...",
+  "noResults": "Inga gifs hittades",
+  "noTrending": "Inga trendiga gifs tillgängliga",
+  "addGif": "Lägg till gif",
+  "apiError": "Det går inte att ladda GIF. Kontrollera din internetanslutning."
+}

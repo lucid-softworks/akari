@@ -1,0 +1,12 @@
+{
+  "newReview": "新規レビュー",
+  "type": "タイプ",
+  "movie": "映画",
+  "tvShow": "テレビ番組",
+  "change": "変更",
+  "rating": "評価",
+  "ratingWithValue": "評価 ({{rating}}/{{max}})",
+  "review": "レビュー",
+  "thisIsRevisit": "再視聴です",
+  "containsSpoilers": "ネタバレを含みます"
+}

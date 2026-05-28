@@ -1,0 +1,9 @@
+{
+  "selectGif": "GIF selecteren",
+  "searchPlaceholder": "GIF zoeken...",
+  "loadingMore": "Meer laden...",
+  "noResults": "Geen GIF gevonden",
+  "noTrending": "Geen populaire GIF beschikbaar",
+  "addGif": "GIF toevoegen",
+  "apiError": "Kan GIF niet laden. Controleer je internetverbinding."
+}

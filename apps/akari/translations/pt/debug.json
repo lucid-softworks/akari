@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Relatório de Falhas",
+  "crashDescription": "Use este botão para gerar um erro de teste e confirmar que o relatório de falhas está configurado corretamente. Certifique-se de que suas credenciais do Axiom estão configuradas para que o relatório seja entregue.",
+  "triggerCrash": "Gerar Falha",
+  "crashHint": "Dica: recarregue o aplicativo após o teste para que a tela de depuração seja renderizada novamente.",
+  "queryCacheDebug": "Depuração do Cache de Consultas",
+  "invalidateAll": "Invalidar Tudo",
+  "clearAll": "Limpar Tudo",
+  "totalQueries": "Consultas Totais: {{count}}",
+  "activeQueries": "Consultas Ativas: {{count}}",
+  "successfulQueries": "Consultas Bem-sucedidas: {{count}}",
+  "failedQueries": "Consultas Falhadas: {{count}}",
+  "noQueriesInCache": "Nenhuma consulta no cache",
+  "queryKey": "Chave da Consulta:",
+  "status": "Status:",
+  "dataUpdatedAt": "Dados Atualizados Em:",
+  "errorUpdatedAt": "Erro Atualizado Em:",
+  "fetchCount": "Contagem de Busca:",
+  "error": "Erro:",
+  "data": "Dados:",
+  "refetch": "Buscar Novamente",
+  "remove": "Remover"
+}

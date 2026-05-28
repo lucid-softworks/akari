@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Søg efter profiler og posts på Bluesky",
+  "searching": "Søger ...",
+  "searchFailed": "Søgning mislykket",
+  "noUsersFound": "Ingen brugere fundet",
+  "noPostsFound": "Ingen posts fundet",
+  "noResultsFound": "Ingen resultater fundet",
+  "searchInputPlaceholder": "Søg i profiler og indlæg ...",
+  "all": "Alle",
+  "users": "Brugere",
+  "posts": "Posts",
+  "loadingMoreResults": "Indlæser flere resultater ...",
+  "sortTop": "Top",
+  "sortLatest": "Seneste",
+  "clearSearch": "Ryd søgning"
+}

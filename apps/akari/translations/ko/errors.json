@@ -1,0 +1,6 @@
+{
+  "screenNotFound": "이 화면은 존재하지 않습니다.",
+  "pathname": "경로: {{pathname}}",
+  "goToHome": "홈 화면으로 이동!",
+  "goToSitemap": "사이트맵으로 이동!"
+}

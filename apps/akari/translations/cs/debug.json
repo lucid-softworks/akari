@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Hlášení o pádech",
+  "crashDescription": "Použijte toto tlačítko k vygenerování testovací chyby a potvrzení, že hlášení o pádech je správně nakonfigurováno. Ujistěte se, že vaše Axiom přihlašovací údaje jsou nakonfigurovány pro doručení hlášení.",
+  "triggerCrash": "Spustit pád",
+  "crashHint": "Tip: po testování znovu načtěte aplikaci, aby se obrazovka ladění znovu vykreslila.",
+  "queryCacheDebug": "Ladění mezipaměti dotazů",
+  "invalidateAll": "Zneplatnit vše",
+  "clearAll": "Vymazat vše",
+  "totalQueries": "Celkem dotazů: {{count}}",
+  "activeQueries": "Aktivní dotazy: {{count}}",
+  "successfulQueries": "Úspěšné dotazy: {{count}}",
+  "failedQueries": "Neúspěšné dotazy: {{count}}",
+  "noQueriesInCache": "Žádné dotazy v mezipaměti",
+  "queryKey": "Klíč dotazu:",
+  "status": "Stav:",
+  "dataUpdatedAt": "Data aktualizována:",
+  "errorUpdatedAt": "Chyba aktualizována:",
+  "fetchCount": "Počet načtení:",
+  "error": "Chyba:",
+  "data": "Data:",
+  "refetch": "Znovu načíst",
+  "remove": "Odebrat"
+}

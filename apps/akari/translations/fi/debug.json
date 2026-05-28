@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Kaatumisraportoija",
+  "crashDescription": "Käytä tätä painiketta luomaan testivirhe ja vahvistaaksesi, että kaatumisraportointi on määritetty oikein. Varmista, että Axiom-tunnistetietosi on määritetty toimittamaan raportti.",
+  "triggerCrash": "Laukaise Kaatumus",
+  "crashHint": "Vinkki: lataa sovellus uudelleen testin jälkeen, jotta debug-näyttö renderöidään uudelleen.",
+  "queryCacheDebug": "Kyselyvälimuistin Debug",
+  "invalidateAll": "Merkitse Kaikki Päteviksi",
+  "clearAll": "Tyhjennä Kaikki",
+  "totalQueries": "Kyselyitä Yhteensä: {{count}}",
+  "activeQueries": "Aktiivisia Kyselyitä: {{count}}",
+  "successfulQueries": "Onnistuneita Kyselyitä: {{count}}",
+  "failedQueries": "Epäonnistuneita Kyselyitä: {{count}}",
+  "noQueriesInCache": "Ei kyselyitä välimuistissa",
+  "queryKey": "Kyselyn Avain:",
+  "status": "Tila:",
+  "dataUpdatedAt": "Tiedot Päivitetty:",
+  "errorUpdatedAt": "Virhe Päivitetty:",
+  "fetchCount": "Haun Määrä:",
+  "error": "Virhe:",
+  "data": "Tiedot:",
+  "refetch": "Hae Uudelleen",
+  "remove": "Poista"
+}

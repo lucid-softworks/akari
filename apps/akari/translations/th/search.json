@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "ค้นหาโปรไฟล์และโพสต์บน Bluesky",
+  "searching": "กำลังค้นหา...",
+  "searchFailed": "การค้นหาล้มเหลว",
+  "noUsersFound": "ไม่พบผู้ใช้",
+  "noPostsFound": "ไม่พบโพสต์",
+  "noResultsFound": "ไม่พบผลลัพธ์",
+  "searchInputPlaceholder": "ค้นหาโปรไฟล์และโพสต์...",
+  "all": "ทั้งหมด",
+  "users": "ผู้ใช้",
+  "posts": "โพสต์",
+  "loadingMoreResults": "กำลังโหลดผลลัพธ์เพิ่มเติม...",
+  "sortTop": "ยอดนิยม",
+  "sortLatest": "ล่าสุด",
+  "clearSearch": "ล้างการค้นหา"
+}

@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Auta lisäämään kontekstia julkaisuihin",
+    "body1": "Community Notes ovat lyhyitä huomioita, jotka liitetään julkaisuihin, jotka kaipaavat lisää kontekstia. Avustajat kirjoittavat niitä ja arvioivat toistensa luonnoksia. Vain ne huomiot, jotka yhteisö merkitsee hyödyllisiksi, näytetään lukijoille.",
+    "body2": "Ilmoittautumalla pääset avustajaportaaliin: odottavat julkaisut, arviointijono ja oma kirjoitettujen huomioiden profiilisi.",
+    "cta": "Ilmoittaudu"
+  },
+  "tabs": {
+    "pending": "Odottavat",
+    "rate": "Arvioi",
+    "you": "Sinä"
+  },
+  "pendingTab": {
+    "empty": "Yhtään julkaisua ei ole vielä merkitty. Tarkista myöhemmin.",
+    "requestCountAndTime": "{count} pyyntöä · {time}",
+    "writeNote": "Kirjoita huomio"
+  },
+  "rateTab": {
+    "empty": "Mitään arvioitavaa ei juuri nyt. Muiden avustajien lähettämät luonnokset ilmestyvät tänne.",
+    "onPost": "Julkaisussa {postId}"
+  },
+  "profile": {
+    "notesWritten": "Kirjoitetut huomiot",
+    "helpfulRate": "Hyödyllisyysosuus",
+    "ratingsGiven": "Annetut arviot",
+    "contributorSince": "Avustaja alkaen {date}",
+    "leave": "Poistu ohjelmasta",
+    "recentNotes": "Viimeisimmät huomiosi",
+    "noNotes": "Et ole vielä kirjoittanut yhtään huomiota.",
+    "showPubliclyTitle": "Näytä huomioni käyttäjätunnukseni alla",
+    "showPubliclyHint": "Kun pois päältä, kirjoittamasi huomiot näytetään nimellä \"nimetön avustaja\"."
+  },
+  "note": {
+    "headlineHelpful": "Lukijat lisäsivät kontekstia",
+    "headlineUnderReview": "Huomio arvioinnissa, tarvitsee lisää arvioita",
+    "ratingSummary": "{percent} % {count} arvioijasta piti tätä hyödyllisenä",
+    "rateThisNote": "Arvioi tämä huomio",
+    "viewSources": "Näytä lähteet",
+    "rateModalTitle": "Onko tämä huomio hyödyllinen?",
+    "rateModalSubtitle": "Arviosi auttaa päättämään, näytetäänkö huomio muille lukijoille.",
+    "helpfulness": {
+      "helpful": "Hyödyllinen",
+      "somewhat": "Jonkin verran",
+      "notHelpful": "Ei hyödyllinen"
+    },
+    "whyNotHelpful": "Miksi ei hyödyllinen?",
+    "whatMakesItHelpful": "Mikä tekee siitä hyödyllisen?",
+    "anythingElse": "Vielä jotain?",
+    "commentPlaceholder": "Vapaaehtoiset huomiot arviointitiimille",
+    "cancel": "Peruuta",
+    "submit": "Lähetä",
+    "submitting": "Lähetetään…",
+    "sourcesTitle": "Lähteet",
+    "sourcesSubtitle": "Avustajan tähän huomioon liittämät lähdeviittaukset.",
+    "noSources": "Ei liitettyjä lähteitä.",
+    "close": "Sulje",
+    "helpfulReasons": {
+      "citesSources": "Viittaa laadukkaisiin lähteisiin",
+      "easyToUnderstand": "Helppo ymmärtää",
+      "addressesClaim": "Käsittelee suoraan väitettä",
+      "providesContext": "Tarjoaa tärkeää kontekstia",
+      "fairBalanced": "Kirjoitettu neutraalilla sävyllä"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Lähteet eivät tue huomiota",
+      "incorrectInfo": "Sisältää virheellistä tietoa",
+      "opinion": "Mielipide, ei tosiasia",
+      "argumentative": "Riitelevä tai puolueellinen",
+      "irrelevant": "Ei liity julkaisuun"
+    }
+  },
+  "contributor": {
+    "addTitle": "Lisää Community Note",
+    "addSubtitle": "Huomiosi on yksityinen, kunnes tarpeeksi arvioijia merkitsee sen hyödylliseksi. Pitäydy todennettavissa tosiasioissa ja viittaa lähteisiin.",
+    "problemQuestion": "Mikä on ongelma tässä julkaisussa?",
+    "yourNote": "Huomiosi",
+    "notePlaceholder": "Selitä, mikä puuttuu tai on harhaanjohtavaa. Liitä lähteet alle.",
+    "sourcesLabel": "Lähteet (yksi URL-osoite riviä kohden)",
+    "cancel": "Peruuta",
+    "submitNote": "Lähetä huomio",
+    "submitting": "Lähetetään…",
+    "requestTitle": "Pyydä Community Note",
+    "requestSubtitle": "Merkitse tämä julkaisu avustajan tarkastettavaksi. Ilmoitamme arvioijille, et näe huomiota heti.",
+    "reason": "Syy",
+    "anythingElseOptional": "Vielä jotain? (valinnainen)",
+    "commentPlaceholder": "Lisää hyödyllistä kontekstia avustajalle",
+    "sendRequest": "Lähetä pyyntö",
+    "classification": {
+      "misleading": "Harhaanjohtava",
+      "missingContext": "Puuttuva konteksti",
+      "outdated": "Vanhentunut",
+      "satire": "Satiiri esitetty tosiasiana",
+      "other": "Muu"
+    },
+    "requestReason": {
+      "misinformation": "Disinformaatio",
+      "missingContext": "Tarvitsee lisää kontekstia",
+      "manipulation": "Manipuloitu media",
+      "spam": "Roskaposti tai huijaus",
+      "other": "Muu huoli"
+    }
+  }
+}

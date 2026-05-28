@@ -1,0 +1,16 @@
+{
+  "searchPlaceholder": "Keressen profilokat és hozzászólásokat a Bluesky -n",
+  "searching": "Keresés ...",
+  "searchFailed": "A keresés nem sikerült",
+  "noUsersFound": "Egyetlen felhasználó sem talált",
+  "noPostsFound": "Nincsenek hozzászólások",
+  "noResultsFound": "Nincs eredmény",
+  "searchInputPlaceholder": "Keresési profilok és hozzászólások ...",
+  "all": "Minden",
+  "users": "Felhasználók",
+  "posts": "Poszt",
+  "loadingMoreResults": "További eredmények betöltése ...",
+  "sortTop": "Legjobb",
+  "sortLatest": "Legújabb",
+  "clearSearch": "Keresés törlése"
+}

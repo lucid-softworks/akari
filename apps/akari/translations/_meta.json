@@ -1,0 +1,182 @@
+{
+  "ar": {
+    "language": "Arabic",
+    "nativeName": "العربية",
+    "flag": "🇸🇦"
+  },
+  "az": {
+    "language": "Azerbaijani",
+    "nativeName": "Azərbaycanca",
+    "flag": "🇦🇿"
+  },
+  "bg": {
+    "language": "Bulgarian",
+    "nativeName": "Български",
+    "flag": "🇧🇬"
+  },
+  "cs": {
+    "language": "Czech",
+    "nativeName": "Čeština",
+    "flag": "🇨🇿"
+  },
+  "cy": {
+    "language": "Welsh",
+    "nativeName": "Cymraeg",
+    "flag": "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
+  },
+  "da": {
+    "language": "Danish",
+    "nativeName": "Dansk",
+    "flag": "🇩🇰"
+  },
+  "de": {
+    "language": "German",
+    "nativeName": "Deutsch",
+    "flag": "🇩🇪"
+  },
+  "el": {
+    "language": "Greek",
+    "nativeName": "Ελληνικά",
+    "flag": "🇬🇷"
+  },
+  "en-US": {
+    "language": "English (US)",
+    "nativeName": "English (US)",
+    "flag": "🇺🇸"
+  },
+  "en": {
+    "language": "English",
+    "nativeName": "English",
+    "flag": "🇬🇧"
+  },
+  "es": {
+    "language": "Spanish",
+    "nativeName": "Español",
+    "flag": "🇪🇸"
+  },
+  "fa": {
+    "language": "Persian",
+    "nativeName": "فارسی",
+    "flag": "🇮🇷"
+  },
+  "fi": {
+    "language": "Finnish",
+    "nativeName": "Suomi",
+    "flag": "🇫🇮"
+  },
+  "fr": {
+    "language": "French",
+    "nativeName": "Français",
+    "flag": "🇫🇷"
+  },
+  "he": {
+    "language": "Hebrew",
+    "nativeName": "עברית",
+    "flag": "🇮🇱"
+  },
+  "hi": {
+    "language": "Hindi",
+    "nativeName": "हिन्दी",
+    "flag": "🇮🇳"
+  },
+  "hu": {
+    "language": "Hungarian",
+    "nativeName": "Magyar",
+    "flag": "🇭🇺"
+  },
+  "id": {
+    "language": "Indonesian",
+    "nativeName": "Bahasa Indonesia",
+    "flag": "🇮🇩"
+  },
+  "it": {
+    "language": "Italian",
+    "nativeName": "Italiano",
+    "flag": "🇮🇹"
+  },
+  "ja": {
+    "language": "Japanese",
+    "nativeName": "日本語",
+    "flag": "🇯🇵"
+  },
+  "ko": {
+    "language": "Korean",
+    "nativeName": "한국어",
+    "flag": "🇰🇷"
+  },
+  "nl": {
+    "language": "Dutch",
+    "nativeName": "Nederlands",
+    "flag": "🇳🇱"
+  },
+  "pl": {
+    "language": "Polish",
+    "nativeName": "Polski",
+    "flag": "🇵🇱"
+  },
+  "pt": {
+    "language": "Portuguese",
+    "nativeName": "Português",
+    "flag": "🇵🇹"
+  },
+  "ro": {
+    "language": "Romanian",
+    "nativeName": "Română",
+    "flag": "🇷🇴"
+  },
+  "ru": {
+    "language": "Russian",
+    "nativeName": "Русский",
+    "flag": "🇷🇺"
+  },
+  "sk": {
+    "language": "Slovak",
+    "nativeName": "Slovenčina",
+    "flag": "🇸🇰"
+  },
+  "sl": {
+    "language": "Slovenian",
+    "nativeName": "Slovenščina",
+    "flag": "🇸🇮"
+  },
+  "sv": {
+    "language": "Swedish",
+    "nativeName": "Svenska",
+    "flag": "🇸🇪"
+  },
+  "th": {
+    "language": "Thai",
+    "nativeName": "ไทย",
+    "flag": "🇹🇭"
+  },
+  "tr": {
+    "language": "Turkish",
+    "nativeName": "Türkçe",
+    "flag": "🇹🇷"
+  },
+  "uk": {
+    "language": "Ukrainian",
+    "nativeName": "Українська",
+    "flag": "🇺🇦"
+  },
+  "vi": {
+    "language": "Vietnamese",
+    "nativeName": "Tiếng Việt",
+    "flag": "🇻🇳"
+  },
+  "zh-CN": {
+    "language": "Chinese (Simplified)",
+    "nativeName": "简体中文",
+    "flag": "🇨🇳"
+  },
+  "zh-TW": {
+    "language": "Chinese (Traditional)",
+    "nativeName": "繁體中文",
+    "flag": "🇹🇼"
+  },
+  "zh": {
+    "language": "Chinese",
+    "nativeName": "中文",
+    "flag": "🇨🇳"
+  }
+}

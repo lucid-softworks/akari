@@ -1,0 +1,12 @@
+{
+  "newReview": "نقد جدید",
+  "type": "نوع",
+  "movie": "فیلم",
+  "tvShow": "سریال",
+  "change": "تغییر",
+  "rating": "امتیاز",
+  "ratingWithValue": "امتیاز ({{rating}}/{{max}})",
+  "review": "نقد",
+  "thisIsRevisit": "این بازبینی مجدد است",
+  "containsSpoilers": "حاوی اسپویل است"
+}

@@ -1,0 +1,12 @@
+{
+  "newReview": "รีวิวใหม่",
+  "type": "ประเภท",
+  "movie": "ภาพยนตร์",
+  "tvShow": "รายการทีวี",
+  "change": "เปลี่ยน",
+  "rating": "คะแนน",
+  "ratingWithValue": "คะแนน ({{rating}}/{{max}})",
+  "review": "รีวิว",
+  "thisIsRevisit": "นี่คือการดูซ้ำ",
+  "containsSpoilers": "มีการสปอยล์"
+}

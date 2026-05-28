@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "@{{handle}} としてサインイン",
+    "subtitle": "akari がアカウントで何をできるかを選んでください。必須権限はサインインや主要な機能に必要なため、チェックを外すことはできません。",
+    "continue": "続ける",
+    "required": "必須",
+    "action": {
+      "create": "作成",
+      "update": "更新",
+      "delete": "削除"
+    },
+    "atproto": {
+      "label": "アイデンティティ",
+      "description": "atproto 上のあなたが誰かを確認します。常に必須。"
+    },
+    "chat": {
+      "label": "ダイレクトメッセージ",
+      "description": "あなたに代わってチャットメッセージを読み、送信します。"
+    },
+    "profile": {
+      "label": "プロフィール",
+      "description": "表示名、自己紹介、アバター、バナーを編集します。"
+    },
+    "post": {
+      "label": "投稿",
+      "description": "新しい投稿を公開、編集し、自分の投稿を削除します。"
+    },
+    "threadgate": {
+      "label": "返信コントロール",
+      "description": "あなたが始めたスレッドに返信できる人を設定します。"
+    },
+    "postgate": {
+      "label": "引用コントロール",
+      "description": "あなたが投稿した内容を引用できる人を設定します。"
+    },
+    "like": {
+      "label": "いいね",
+      "description": "投稿にいいねを付けたり外したりします。"
+    },
+    "repost": {
+      "label": "リポスト",
+      "description": "リポストとリポスト取り消しを行います。"
+    },
+    "follow": {
+      "label": "フォロー",
+      "description": "アカウントのフォローとフォロー解除を行います。"
+    },
+    "block": {
+      "label": "ブロック",
+      "description": "アカウントのブロックと解除を行います。"
+    },
+    "list": {
+      "label": "リスト",
+      "description": "モデレーションやキュレーションのリストを作成、名称変更、削除します。"
+    },
+    "listitem": {
+      "label": "リストのメンバー",
+      "description": "あなたのリストにアカウントを追加・削除します。"
+    },
+    "leafletPublication": {
+      "label": "Leaflet パブリケーション",
+      "description": "leaflet.pub の長文パブリケーションを管理します。"
+    },
+    "leafletDocument": {
+      "label": "Leaflet ドキュメント",
+      "description": "leaflet.pub で長文ドキュメントを公開・編集します。"
+    },
+    "aiPreference": {
+      "label": "AI 設定",
+      "description": "あなたの community-lexicon AI トレーニング設定を保存します。"
+    },
+    "popfeedReview": {
+      "label": "Popfeed レビュー",
+      "description": "Popfeed メディアレビューネットワークにレビューを投稿します。"
+    },
+    "recipe": {
+      "label": "レシピ",
+      "description": "オープンな exchange.recipe レキシコンでレシピを保存します。"
+    },
+    "linkatBoard": {
+      "label": "Linkat ボード",
+      "description": "あなたの Linkat link-in-bio ボードを管理します。"
+    }
+  }
+}

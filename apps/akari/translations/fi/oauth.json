@@ -1,0 +1,85 @@
+{
+  "scopes": {
+    "title": "Kirjaudu sisään tilillä @{{handle}}",
+    "subtitle": "Valitse, mitä akari saa tehdä tililläsi. Pakollisia oikeuksia ei voi poistaa, koska sovellus tarvitsee niitä kirjatakseen sinut sisään ja suorittaakseen ydintoimintoja.",
+    "continue": "Jatka",
+    "required": "Pakollinen",
+    "action": {
+      "create": "Luo",
+      "update": "Päivitä",
+      "delete": "Poista"
+    },
+    "atproto": {
+      "label": "Identiteetti",
+      "description": "Vahvista, kuka olet atprotossa. Aina pakollinen."
+    },
+    "chat": {
+      "label": "Yksityisviestit",
+      "description": "Lukee ja lähettää chat-viestejä puolestasi."
+    },
+    "profile": {
+      "label": "Profiili",
+      "description": "Muokkaa näyttönimeäsi, kuvaustasi, avatariasi ja banneriasi."
+    },
+    "post": {
+      "label": "Julkaisut",
+      "description": "Julkaise uusia julkaisuja, muokkaa niitä ja poista omiasi."
+    },
+    "threadgate": {
+      "label": "Vastausasetukset",
+      "description": "Määritä, kuka voi vastata aloittamaasi ketjuun."
+    },
+    "postgate": {
+      "label": "Lainausasetukset",
+      "description": "Määritä, kuka voi lainata tekemääsi julkaisua."
+    },
+    "like": {
+      "label": "Tykkäykset",
+      "description": "Tykkää julkaisuista ja poista tykkäyksiä."
+    },
+    "repost": {
+      "label": "Uudelleenjulkaisut",
+      "description": "Julkaise uudelleen ja peru uudelleenjulkaisuja."
+    },
+    "follow": {
+      "label": "Seurattavat",
+      "description": "Seuraa ja lopeta tilien seuraaminen."
+    },
+    "block": {
+      "label": "Estot",
+      "description": "Estä ja poista tilien estoja."
+    },
+    "list": {
+      "label": "Listat",
+      "description": "Luo, nimeä uudelleen ja poista moderointi- tai kuratointilistoja."
+    },
+    "listitem": {
+      "label": "Listan jäsenyys",
+      "description": "Lisää ja poista tilejä listoiltasi."
+    },
+    "leafletPublication": {
+      "label": "Leaflet-julkaisut",
+      "description": "Hallitse pitkän muodon julkaisuja sivustolla leaflet.pub."
+    },
+    "leafletDocument": {
+      "label": "Leaflet-asiakirjat",
+      "description": "Julkaise ja muokkaa pitkän muodon asiakirjoja sivustolla leaflet.pub."
+    },
+    "aiPreference": {
+      "label": "AI-asetukset",
+      "description": "Tallenna community-lexicon AI-koulutusasetuksesi."
+    },
+    "popfeedReview": {
+      "label": "Popfeed-arvostelut",
+      "description": "Julkaise arvosteluja Popfeed-mediakuvausverkostossa."
+    },
+    "recipe": {
+      "label": "Reseptit",
+      "description": "Tallenna reseptejä avoimen exchange.recipe-sanaston kautta."
+    },
+    "linkatBoard": {
+      "label": "Linkat-taulu",
+      "description": "Hallitse Linkat link-in-bio -tauluasi."
+    }
+  }
+}

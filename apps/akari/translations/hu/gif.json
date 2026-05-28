@@ -1,0 +1,9 @@
+{
+  "selectGif": "Válassza ki a GIF -et",
+  "searchPlaceholder": "Keresés GIF -ek ...",
+  "loadingMore": "További betöltés ...",
+  "noResults": "Nincsenek GIF -ek",
+  "noTrending": "Nincsenek trend GIF -ek",
+  "addGif": "Adja hozzá a GIF -t",
+  "apiError": "Nem lehet GIF -eket betölteni. Kérjük, ellenőrizze az internetkapcsolatát."
+}

@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Aiuta ad aggiungere contesto ai post",
+    "body1": "Le Community Notes sono brevi note allegate ai post che necessitano di maggiore contesto. I contributori le scrivono e valutano le bozze degli altri; solo le note che la community giudica utili vengono mostrate ai lettori.",
+    "body2": "Iscrivendoti accedi al portale dei contributori: post in attesa, coda di valutazione e profilo delle note scritte.",
+    "cta": "Iscriviti"
+  },
+  "tabs": {
+    "pending": "In attesa",
+    "rate": "Valuta",
+    "you": "Tu"
+  },
+  "pendingTab": {
+    "empty": "Nessun post è stato segnalato finora. Ricontrolla più tardi.",
+    "requestCountAndTime": "{count} richieste · {time}",
+    "writeNote": "Scrivi una nota"
+  },
+  "rateTab": {
+    "empty": "Niente da valutare al momento. Le bozze inviate da altri contributori appariranno qui.",
+    "onPost": "Sul post {postId}"
+  },
+  "profile": {
+    "notesWritten": "Note scritte",
+    "helpfulRate": "Tasso di utilità",
+    "ratingsGiven": "Valutazioni date",
+    "contributorSince": "Contributore dal {date}",
+    "leave": "Lascia il programma",
+    "recentNotes": "Le tue note recenti",
+    "noNotes": "Non hai ancora scritto nessuna nota.",
+    "showPubliclyTitle": "Mostra le mie note con il mio handle",
+    "showPubliclyHint": "Quando è disattivato, le note che scrivi sono attribuite a \"contributore anonimo\"."
+  },
+  "note": {
+    "headlineHelpful": "I lettori hanno aggiunto contesto",
+    "headlineUnderReview": "Nota in revisione, servono più valutazioni",
+    "ratingSummary": "{percent}% di {count} valutatori l'hanno trovata utile",
+    "rateThisNote": "Valuta questa nota",
+    "viewSources": "Visualizza fonti",
+    "rateModalTitle": "Questa nota è utile?",
+    "rateModalSubtitle": "La tua valutazione aiuta a decidere se la nota verrà mostrata agli altri lettori.",
+    "helpfulness": {
+      "helpful": "Utile",
+      "somewhat": "Abbastanza",
+      "notHelpful": "Non utile"
+    },
+    "whyNotHelpful": "Perché non è utile?",
+    "whatMakesItHelpful": "Cosa la rende utile?",
+    "anythingElse": "Altro da aggiungere?",
+    "commentPlaceholder": "Note opzionali per il team di valutazione",
+    "cancel": "Annulla",
+    "submit": "Invia",
+    "submitting": "Invio in corso...",
+    "sourcesTitle": "Fonti",
+    "sourcesSubtitle": "Citazioni allegate a questa nota dal contributore.",
+    "noSources": "Nessuna fonte allegata.",
+    "close": "Chiudi",
+    "helpfulReasons": {
+      "citesSources": "Cita fonti di alta qualità",
+      "easyToUnderstand": "Facile da capire",
+      "addressesClaim": "Affronta direttamente l'affermazione",
+      "providesContext": "Fornisce un contesto importante",
+      "fairBalanced": "Scritta con un tono neutrale"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Le fonti non supportano la nota",
+      "incorrectInfo": "Contiene informazioni errate",
+      "opinion": "Opinione, non un fatto",
+      "argumentative": "Polemica o di parte",
+      "irrelevant": "Irrilevante rispetto al post"
+    }
+  },
+  "contributor": {
+    "addTitle": "Aggiungi una Community Note",
+    "addSubtitle": "La tua nota resta privata finché abbastanza valutatori non la giudicano utile. Attieniti a fatti verificabili e cita le fonti.",
+    "problemQuestion": "Qual è il problema con questo post?",
+    "yourNote": "La tua nota",
+    "notePlaceholder": "Spiega cosa manca o cosa è fuorviante. Cita le fonti qui sotto.",
+    "sourcesLabel": "Fonti (un URL per riga)",
+    "cancel": "Annulla",
+    "submitNote": "Invia nota",
+    "submitting": "Invio in corso...",
+    "requestTitle": "Richiedi una Community Note",
+    "requestSubtitle": "Segnala questo post affinché un contributore lo esamini. Avviseremo il pool di valutatori, ma non vedrai la nota immediatamente.",
+    "reason": "Motivo",
+    "anythingElseOptional": "Altro da aggiungere? (facoltativo)",
+    "commentPlaceholder": "Aggiungi contesto utile per il contributore",
+    "sendRequest": "Invia richiesta",
+    "classification": {
+      "misleading": "Fuorviante",
+      "missingContext": "Contesto mancante",
+      "outdated": "Obsoleto",
+      "satire": "Satira presentata come fatto",
+      "other": "Altro"
+    },
+    "requestReason": {
+      "misinformation": "Disinformazione",
+      "missingContext": "Serve più contesto",
+      "manipulation": "Media manipolati",
+      "spam": "Spam o truffa",
+      "other": "Altra preoccupazione"
+    }
+  }
+}

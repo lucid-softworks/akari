@@ -1,0 +1,14 @@
+{
+  "title": "Recept",
+  "time": "Tid",
+  "servings": "Portioner",
+  "category": "Kategori",
+  "ingredients": "Ingredienser",
+  "cuisine": "Kök",
+  "method": "Metod",
+  "calories": "Kalorier",
+  "dietaryRestrictions": "Kostrestriktioner",
+  "instructions": "Instruktioner",
+  "tags": "Taggar",
+  "source": "Källa"
+}

@@ -1,0 +1,12 @@
+{
+  "newReview": "Ulasan Baru",
+  "type": "Jenis",
+  "movie": "Film",
+  "tvShow": "Serial TV",
+  "change": "Ubah",
+  "rating": "Peringkat",
+  "ratingWithValue": "Peringkat ({{rating}}/{{max}})",
+  "review": "Ulasan",
+  "thisIsRevisit": "Ini adalah tontonan ulang",
+  "containsSpoilers": "Mengandung spoiler"
+}

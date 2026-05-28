@@ -1,0 +1,104 @@
+{
+  "title": "Community Notes",
+  "enroll": {
+    "title": "Helpu i ychwanegu cyd-destun at bostiadau",
+    "body1": "Mae Community Notes yn nodiadau byr sydd wedi'u hatodi at bostiadau sydd angen rhagor o gyd-destun. Mae cyfranwyr yn eu hysgrifennu ac yn graddio drafftiau ei gilydd; dim ond y nodiadau y mae'r gymuned yn eu nodi'n ddefnyddiol sy'n cael eu dangos i ddarllenwyr.",
+    "body2": "Mae ymrestru'n eich derbyn i'r porth cyfranwyr: postiadau sy'n aros, y ciw graddio, a'ch proffil nodiadau a awdurwyd.",
+    "cta": "Ymrestru"
+  },
+  "tabs": {
+    "pending": "Yn aros",
+    "rate": "Graddio",
+    "you": "Chi"
+  },
+  "pendingTab": {
+    "empty": "Nid oes unrhyw bostiadau wedi'u nodi eto. Edrychwch eto'n hwyrach.",
+    "requestCountAndTime": "{count} cais · {time}",
+    "writeNote": "Ysgrifennu nodyn"
+  },
+  "rateTab": {
+    "empty": "Dim byd i'w raddio ar hyn o bryd. Bydd drafftiau a gyflwynir gan gyfranwyr eraill yn ymddangos yma.",
+    "onPost": "Ar bostiad {postId}"
+  },
+  "profile": {
+    "notesWritten": "Nodiadau wedi'u hysgrifennu",
+    "helpfulRate": "Cyfradd ddefnyddiol",
+    "ratingsGiven": "Graddiadau a roddwyd",
+    "contributorSince": "Cyfrannwr ers {date}",
+    "leave": "Gadael y rhaglen",
+    "recentNotes": "Eich nodiadau diweddar",
+    "noNotes": "Nid ydych wedi ysgrifennu unrhyw nodiadau eto.",
+    "showPubliclyTitle": "Dangos fy nodiadau o dan fy handlen",
+    "showPubliclyHint": "Pan fydd hwn wedi'i ddiffodd, caiff nodiadau a awdurir gennych eu priodoli i \"gyfrannwr dienw\"."
+  },
+  "note": {
+    "headlineHelpful": "Ychwanegodd darllenwyr gyd-destun",
+    "headlineUnderReview": "Nodyn dan adolygiad, mae angen rhagor o raddiadau",
+    "ratingSummary": "Daeth {percent}% o {count} graddiwr o hyd i hyn yn ddefnyddiol",
+    "rateThisNote": "Graddio'r nodyn hwn",
+    "viewSources": "Gweld y ffynonellau",
+    "rateModalTitle": "A yw'r nodyn hwn yn ddefnyddiol?",
+    "rateModalSubtitle": "Mae eich graddiad yn helpu i benderfynu a ddangosir y nodyn i ddarllenwyr eraill.",
+    "helpfulness": {
+      "helpful": "Defnyddiol",
+      "somewhat": "Rhywfaint",
+      "notHelpful": "Ddim yn ddefnyddiol"
+    },
+    "whyNotHelpful": "Pam nad yw'n ddefnyddiol?",
+    "whatMakesItHelpful": "Beth sy'n ei wneud yn ddefnyddiol?",
+    "anythingElse": "Unrhyw beth arall?",
+    "commentPlaceholder": "Nodiadau dewisol i'r tîm graddio",
+    "cancel": "Canslo",
+    "submit": "Cyflwyno",
+    "submitting": "Wrthi'n cyflwyno...",
+    "sourcesTitle": "Ffynonellau",
+    "sourcesSubtitle": "Dyfyniadau a atodwyd at y nodyn hwn gan y cyfrannwr.",
+    "noSources": "Dim ffynonellau wedi'u hatodi.",
+    "close": "Cau",
+    "helpfulReasons": {
+      "citesSources": "Yn dyfynnu ffynonellau o ansawdd uchel",
+      "easyToUnderstand": "Hawdd ei ddeall",
+      "addressesClaim": "Yn mynd i'r afael yn uniongyrchol â'r honiad",
+      "providesContext": "Yn rhoi cyd-destun pwysig",
+      "fairBalanced": "Wedi'i ysgrifennu mewn tôn niwtral"
+    },
+    "notHelpfulReasons": {
+      "sourcesDoNotSupport": "Nid yw'r ffynonellau'n cefnogi'r nodyn",
+      "incorrectInfo": "Yn cynnwys gwybodaeth anghywir",
+      "opinion": "Barn, nid ffaith",
+      "argumentative": "Dadleuol neu ragfarnllyd",
+      "irrelevant": "Amherthnasol i'r postiad"
+    }
+  },
+  "contributor": {
+    "addTitle": "Ychwanegu Community Note",
+    "addSubtitle": "Mae eich nodyn yn breifat hyd nes y bydd digon o raddwyr yn ei farcio'n ddefnyddiol. Cadwch at ffeithiau y gellir eu gwirio a dyfynnwch ffynonellau.",
+    "problemQuestion": "Beth yw'r broblem gyda'r postiad hwn?",
+    "yourNote": "Eich nodyn",
+    "notePlaceholder": "Eglurwch beth sydd ar goll neu'n gamarweiniol. Dyfynnwch ffynonellau isod.",
+    "sourcesLabel": "Ffynonellau (un URL fesul llinell)",
+    "cancel": "Canslo",
+    "submitNote": "Cyflwyno'r nodyn",
+    "submitting": "Wrthi'n cyflwyno...",
+    "requestTitle": "Gofyn am Community Note",
+    "requestSubtitle": "Nodwch y postiad hwn er mwyn i gyfrannwr ei adolygu. Byddwn yn rhybuddio'r pwll graddwyr, ni welwch y nodyn ar unwaith.",
+    "reason": "Rheswm",
+    "anythingElseOptional": "Unrhyw beth arall? (dewisol)",
+    "commentPlaceholder": "Ychwanegwch gyd-destun defnyddiol i'r cyfrannwr",
+    "sendRequest": "Anfon cais",
+    "classification": {
+      "misleading": "Camarweiniol",
+      "missingContext": "Cyd-destun ar goll",
+      "outdated": "Hen",
+      "satire": "Dychan wedi'i drin fel ffaith",
+      "other": "Arall"
+    },
+    "requestReason": {
+      "misinformation": "Camwybodaeth",
+      "missingContext": "Angen rhagor o gyd-destun",
+      "manipulation": "Cyfryngau wedi'u trin",
+      "spam": "Sbam neu sgam",
+      "other": "Pryder arall"
+    }
+  }
+}

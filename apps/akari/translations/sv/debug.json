@@ -1,0 +1,23 @@
+{
+  "crashReporter": "Kraschrapporterare",
+  "crashDescription": "Använd denna knapp för att generera ett testfel och bekräfta att kraschrapportering är korrekt konfigurerad. Se till att dina Axiom-autentiseringsuppgifter är konfigurerade för att leverera rapporten.",
+  "triggerCrash": "Utlös Krasch",
+  "crashHint": "Tips: ladda om appen efter testning så att debug-skärmen renderas igen.",
+  "queryCacheDebug": "Frågecache Debug",
+  "invalidateAll": "Ogiltigförklara Alla",
+  "clearAll": "Rensa Alla",
+  "totalQueries": "Totalt Antal Frågor: {{count}}",
+  "activeQueries": "Aktiva Frågor: {{count}}",
+  "successfulQueries": "Lyckade Frågor: {{count}}",
+  "failedQueries": "Misslyckade Frågor: {{count}}",
+  "noQueriesInCache": "Inga frågor i cache",
+  "queryKey": "Fråge Nyckel:",
+  "status": "Status:",
+  "dataUpdatedAt": "Data Uppdaterad:",
+  "errorUpdatedAt": "Fel Uppdaterat:",
+  "fetchCount": "Antal Hämtningar:",
+  "error": "Fel:",
+  "data": "Data:",
+  "refetch": "Hämta Igen",
+  "remove": "Ta Bort"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Rețetă",
+  "time": "Timp",
+  "servings": "Porții",
+  "category": "Categorie",
+  "ingredients": "Ingrediente",
+  "cuisine": "Bucătărie",
+  "method": "Metodă",
+  "calories": "Calorii",
+  "dietaryRestrictions": "Restricții Dietetice",
+  "instructions": "Instrucțiuni",
+  "tags": "Etichete",
+  "source": "Sursă"
+}
