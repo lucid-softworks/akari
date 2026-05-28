@@ -280,7 +280,6 @@ const styles = StyleSheet.create({
   modeSelector: {
     flexDirection: 'row',
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: radius.sm,
     overflow: 'hidden',
@@ -310,7 +309,6 @@ const styles = StyleSheet.create({
   logoOptions: {
     flexDirection: 'row',
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: radius.sm,
     overflow: 'hidden',
@@ -333,20 +331,17 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
     padding: spacing.md,
     backgroundColor: 'transparent',
   },
   linkCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },
   resetButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     paddingVertical: spacing.md,
     alignItems: 'center',
     borderWidth: StyleSheet.hairlineWidth,

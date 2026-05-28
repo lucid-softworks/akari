@@ -150,13 +150,11 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   intro: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     fontSize: fontSize.sm,
     lineHeight: 20,
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },
@@ -189,7 +187,6 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     paddingVertical: spacing.md,
     flexDirection: 'row',
     alignItems: 'center',

@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },

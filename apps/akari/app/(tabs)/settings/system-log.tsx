@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   intro: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     fontSize: fontSize.sm,
     lineHeight: 20,
   },
@@ -173,13 +172,11 @@ const styles = StyleSheet.create({
   },
   disabled: { opacity: 0.4 },
   empty: {
-    marginTop: spacing.xxl,
     textAlign: 'center',
     fontSize: fontSize.sm,
   },
   logCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     borderRadius: radius.sm,
     overflow: 'hidden',

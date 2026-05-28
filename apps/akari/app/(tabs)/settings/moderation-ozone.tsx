@@ -113,7 +113,6 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: 32 },
   card: {
     marginHorizontal: 16,
-    marginTop: 12,
     padding: 16,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',

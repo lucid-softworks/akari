@@ -231,7 +231,6 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },
@@ -265,7 +264,6 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     paddingVertical: spacing.md,
     alignItems: 'center',
     borderRadius: radius.xl,
@@ -277,7 +275,6 @@ const styles = StyleSheet.create({
   },
   notFoundCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     padding: spacing.lg,
     borderWidth: layout.hairline,
   },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, ScrollView, type ScrollViewProps, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, type ScrollViewProps, View } from 'react-native';
 
 /**
  * Drop-in replacement for `<ScrollView>` inside settings sub-pages.
@@ -28,13 +28,19 @@ export function SettingsScroll({
   ref,
   ...scrollProps
 }: SettingsScrollProps) {
+  // Default a vertical gap between top-level children so screens can
+  // stack <SettingsSection> entries without any inline `marginTop`. A
+  // top padding replaces what was historically the first section's
+  // `marginTop: 24`. Consumers can still override either via
+  // `contentContainerStyle`.
+  const container = [styles.container, contentContainerStyle];
   if (Platform.OS === 'web') {
-    return <View style={[style, contentContainerStyle]}>{children}</View>;
+    return <View style={[style, container]}>{children}</View>;
   }
   return (
     <ScrollView
       ref={ref}
-      contentContainerStyle={contentContainerStyle}
+      contentContainerStyle={container}
       style={style}
       {...scrollProps}
     >
@@ -42,3 +48,9 @@ export function SettingsScroll({
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 32,
+  },
+});

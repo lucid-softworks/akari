@@ -60,13 +60,11 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   intro: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     fontSize: fontSize.sm,
     lineHeight: 20,
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },

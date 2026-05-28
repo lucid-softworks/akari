@@ -1,6 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { BlueskyPreference, BlueskyBlueskySavedFeedItemsPref, BlueskySavedFeedItem } from '@/bluesky-api';
+import type {
+  BlueskyPreference,
+  BlueskySavedFeedItem,
+  BlueskySavedFeedsPref,
+} from '@/bluesky-api';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { queryKeys } from '@/hooks/queryKeys';
@@ -15,7 +19,7 @@ type Updater = (current: BlueskySavedFeedItem[]) => BlueskySavedFeedItem[];
  * that takes the current saved feeds and returns the new ordering /
  * pin state / membership.
  */
-export function useUpdateBlueskySavedFeedItems() {
+export function useUpdateSavedFeeds() {
   const queryClient = useQueryClient();
   const { data: token } = useJwtToken();
   const { data: currentAccount } = useCurrentAccount();
@@ -28,11 +32,11 @@ export function useUpdateBlueskySavedFeedItems() {
       const current = await api.getPreferences(token);
 
       const existing = current.preferences.find(
-        (p): p is BlueskyBlueskySavedFeedItemsPref => p.$type === PREF_TYPE,
+        (p): p is BlueskySavedFeedsPref => p.$type === PREF_TYPE,
       );
       const nextItems = updater(existing?.items ?? []);
 
-      const nextPref: BlueskyBlueskySavedFeedItemsPref = { $type: PREF_TYPE, items: nextItems };
+      const nextPref: BlueskySavedFeedsPref = { $type: PREF_TYPE, items: nextItems };
       const others = current.preferences.filter((p) => p.$type !== PREF_TYPE);
       const next: BlueskyPreference[] = [...others, nextPref];
 

@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   introCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     padding: spacing.md,
     borderWidth: layout.hairline,
   },
@@ -127,7 +126,6 @@ const styles = StyleSheet.create({
   },
   dangerButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     paddingVertical: spacing.md,
     alignItems: 'center',
     borderWidth: layout.hairline,

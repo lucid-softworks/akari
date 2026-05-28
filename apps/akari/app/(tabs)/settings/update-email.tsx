@@ -167,7 +167,6 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   introCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     padding: spacing.md,
     borderWidth: layout.hairline,
   },
@@ -177,13 +176,11 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },
   secondaryButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     paddingVertical: spacing.sm,
     alignItems: 'center',
     borderWidth: layout.hairline,

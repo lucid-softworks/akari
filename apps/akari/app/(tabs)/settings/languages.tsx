@@ -149,13 +149,11 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },
   dropdownRow: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,

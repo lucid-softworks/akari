@@ -178,7 +178,6 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   introCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     padding: spacing.md,
     borderWidth: layout.hairline,
     borderRadius: radius.sm,
@@ -199,13 +198,11 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },
   requestButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     paddingVertical: spacing.sm,
     alignItems: 'center',
     borderWidth: layout.hairline,

@@ -151,7 +151,6 @@ const styles = StyleSheet.create({
   },
   introCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     padding: spacing.md,
     borderWidth: layout.hairline,
   },
@@ -162,7 +161,6 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },

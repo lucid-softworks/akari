@@ -30,8 +30,15 @@ type SettingsRowProps = SettingsRowDescriptor & {
 };
 
 export function SettingsSection({ children, isFirst = false, title }: SettingsSectionProps) {
+  // Section spacing is owned by the parent scroll container (`gap` on
+  // `SettingsScroll`'s contentContainerStyle); the section itself just
+  // stacks its title and body with a small internal gap. The `isFirst`
+  // prop is kept for API back-compat — historically it tightened the
+  // top margin on the very first section — but is now a no-op because
+  // the parent gap doesn't trigger before the first child.
+  void isFirst;
   return (
-    <ThemedView style={[styles.section, isFirst && styles.firstSection]}>
+    <ThemedView style={styles.section}>
       {title ? <ThemedText style={styles.sectionTitle}>{title}</ThemedText> : null}
       {children}
     </ThemedView>
@@ -101,10 +108,7 @@ export function SettingsRow({
 
 const styles = StyleSheet.create({
   section: {
-    marginTop: 32,
-  },
-  firstSection: {
-    marginTop: 24,
+    gap: 12,
   },
   sectionTitle: {
     fontSize: 14,
@@ -128,6 +132,7 @@ const styles = StyleSheet.create({
   },
   rowContent: {
     flex: 1,
+    gap: 4,
   },
   rowLabel: {
     fontSize: 16,
@@ -138,7 +143,6 @@ const styles = StyleSheet.create({
   },
   rowDescription: {
     fontSize: 13,
-    marginTop: 4,
   },
   rowValue: {
     fontSize: 14,

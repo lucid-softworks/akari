@@ -210,7 +210,6 @@ const styles = StyleSheet.create({
   intro: { fontSize: 14, paddingHorizontal: 16, paddingTop: 16, lineHeight: 20 },
   sectionCard: {
     marginHorizontal: 16,
-    marginTop: 12,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },

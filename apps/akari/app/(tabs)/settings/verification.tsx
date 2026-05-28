@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: 16,
-    marginTop: 12,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },

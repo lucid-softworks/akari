@@ -190,7 +190,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     opacity: opacity.secondary,
     marginBottom: spacing.sm,
-    marginTop: spacing.lg,
   },
   card: {
     borderWidth: layout.hairline,
@@ -229,7 +228,6 @@ const styles = StyleSheet.create({
   resetButton: {
     alignItems: 'center',
     paddingVertical: spacing.lg,
-    marginTop: spacing.xl,
   },
   resetText: {
     fontSize: fontSize.base,

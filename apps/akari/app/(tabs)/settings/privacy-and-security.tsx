@@ -221,7 +221,6 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: 16,
-    marginTop: 12,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },
@@ -255,7 +254,6 @@ const styles = StyleSheet.create({
   },
   noticeCard: {
     marginHorizontal: 16,
-    marginTop: 24,
     padding: 16,
     borderWidth: StyleSheet.hairlineWidth,
   },

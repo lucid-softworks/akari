@@ -179,13 +179,11 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   intro: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     fontSize: fontSize.sm,
     lineHeight: 20,
   },
   helper: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     fontSize: fontSize.sm,
     lineHeight: 20,
   },
@@ -194,7 +192,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     padding: spacing.lg,
     borderWidth: layout.hairline,
     borderRadius: radius.md,
@@ -204,7 +201,6 @@ const styles = StyleSheet.create({
   statusEmail: { fontSize: fontSize.sm },
   primaryButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     paddingVertical: spacing.md,
     borderRadius: radius.xl,
     alignItems: 'center',
@@ -216,7 +212,6 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },

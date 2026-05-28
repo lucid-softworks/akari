@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: 32 },
   sectionCard: {
     marginHorizontal: 16,
-    marginTop: 12,
     borderWidth: layout.hairline,
     backgroundColor: 'transparent',
   },

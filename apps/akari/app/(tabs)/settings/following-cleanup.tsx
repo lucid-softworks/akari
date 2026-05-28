@@ -180,7 +180,6 @@ const styles = StyleSheet.create({
   },
   introCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     padding: spacing.md,
     borderWidth: layout.hairline,
   },

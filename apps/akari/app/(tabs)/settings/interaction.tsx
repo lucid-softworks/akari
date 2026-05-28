@@ -359,7 +359,6 @@ const styles = StyleSheet.create({
   },
   introCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     padding: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
   },
@@ -369,7 +368,6 @@ const styles = StyleSheet.create({
   },
   sectionCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: 'transparent',
   },
@@ -377,7 +375,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.sm,
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
   },
   modeButton: {
     flex: 1,
@@ -450,7 +447,6 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     paddingVertical: spacing.md,
     alignItems: 'center',
     borderRadius: radius.xl,

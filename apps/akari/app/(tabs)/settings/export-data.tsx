@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
   contentContainer: { paddingBottom: spacing.xxl },
   introCard: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
     padding: spacing.md,
     borderWidth: layout.hairline,
   },
@@ -139,7 +138,6 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
     paddingVertical: spacing.md,
     borderRadius: radius.xl,
     alignItems: 'center',
