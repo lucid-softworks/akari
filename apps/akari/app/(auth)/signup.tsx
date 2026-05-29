@@ -12,9 +12,8 @@ import {
 
 import { ThemedText } from '@/components/ThemedText';
 import { AuthHeader } from '@/components/auth/AuthHeader';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Input } from '@/components/ui/Input';
-import { Menu, MenuTrigger, type MenuItem } from '@/components/ui/Menu';
+import { SignupFields } from '@/components/auth/SignupFields';
+import { type MenuItem } from '@/components/ui/Menu';
 import {
   activeOpacity,
   fontSize,
@@ -75,7 +74,10 @@ export default function SignupScreen() {
   const screenBackground = useThemeColor({}, 'background');
 
   const isCustom = provider === 'custom';
-  const suffixes = isCustom ? [] : SIGNUP_PROVIDERS[provider].handleSuffixes;
+  const suffixes = useMemo(
+    () => (isCustom ? [] : SIGNUP_PROVIDERS[provider].handleSuffixes),
+    [isCustom, provider],
+  );
   const hasSuffixChoice = suffixes.length > 1;
 
   const providerItems: readonly MenuItem[] = useMemo(
@@ -136,26 +138,6 @@ export default function SignupScreen() {
     return <Redirect href={redirectAfterAuth as never} />;
   }
 
-  const handleSuffixSlot = hasSuffixChoice ? (
-    <Menu items={suffixItems}>
-      <MenuTrigger
-        style={({ pressed }) => [
-          styles.suffixTrigger,
-          pressed && { opacity: activeOpacity.default },
-        ]}
-      >
-        <ThemedText style={[styles.suffixLabel, { color: helperColor }]}>
-          {handleSuffix}
-        </ThemedText>
-        <IconSymbol name="chevron.down" size={12} color={helperColor} />
-      </MenuTrigger>
-    </Menu>
-  ) : (
-    <ThemedText style={[styles.suffixLabel, { color: helperColor }]}>
-      {handleSuffix}
-    </ThemedText>
-  );
-
   return (
     <KeyboardAvoidingView
       style={[styles.container, { backgroundColor: screenBackground }]}
@@ -172,150 +154,35 @@ export default function SignupScreen() {
             subtitle={t('auth.signupScreenSubtitle')}
           />
 
-          <View style={styles.fields}>
-            <View style={styles.field}>
-              <ThemedText style={[styles.label, { color: labelColor }]}>
-                {t('auth.signupServer')}
-              </ThemedText>
-              <Menu items={providerItems}>
-                <MenuTrigger
-                  style={({ pressed }) => [
-                    styles.dropdownTrigger,
-                    { borderColor, backgroundColor: inputBackground },
-                    pressed && { opacity: activeOpacity.default },
-                  ]}
-                >
-                  <ThemedText style={[styles.dropdownTriggerLabel, { color: labelColor }]}>
-                    {providerDisplayLabel}
-                  </ThemedText>
-                  <IconSymbol name="chevron.down" size={14} color={helperColor} />
-                </MenuTrigger>
-              </Menu>
-            </View>
-
-            {isCustom ? (
-              <View style={styles.field}>
-                <ThemedText style={[styles.label, { color: labelColor }]}>
-                  {t('auth.signupCustomPdsUrl')}
-                </ThemedText>
-                <Input
-                  ref={customPdsUrlInputRef}
-                  value={customPdsUrl}
-                  onChangeText={setCustomPdsUrl}
-                  placeholder={t('auth.signupCustomPdsUrlPlaceholder')}
-                  keyboardType="url"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  returnKeyType="next"
-                />
-                <ThemedText style={[styles.helper, { color: helperColor }]}>
-                  {t('auth.signupCustomPdsUrlHelper')}
-                </ThemedText>
-              </View>
-            ) : null}
-
-            <View style={styles.field}>
-              <ThemedText style={[styles.label, { color: labelColor }]}>
-                {t('auth.signupEmail')}
-              </ThemedText>
-              <Input
-                value={email}
-                onChangeText={setEmail}
-                placeholder={t('auth.signupEmailPlaceholder')}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoComplete="email"
-                autoCorrect={false}
-                returnKeyType="next"
-                onSubmitEditing={() => passwordInputRef.current?.focus()}
-              />
-            </View>
-
-            <View style={styles.field}>
-              <ThemedText style={[styles.label, { color: labelColor }]}>
-                {t('auth.signupPassword')}
-              </ThemedText>
-              <Input
-                ref={passwordInputRef}
-                value={password}
-                onChangeText={setPassword}
-                placeholder={t('auth.signupPasswordPlaceholder')}
-                secureTextEntry
-                autoCapitalize="none"
-                autoComplete="new-password"
-                autoCorrect={false}
-                returnKeyType="next"
-                onSubmitEditing={() => handleInputRef.current?.focus()}
-              />
-            </View>
-
-            <View style={styles.field}>
-              <ThemedText style={[styles.label, { color: labelColor }]}>
-                {t('auth.signupHandle')}
-              </ThemedText>
-              {isCustom ? (
-                <Input
-                  ref={handleInputRef}
-                  value={handle}
-                  onChangeText={setHandle}
-                  placeholder={t('auth.signupCustomHandlePlaceholder')}
-                  autoCapitalize="none"
-                  autoComplete="username"
-                  autoCorrect={false}
-                  returnKeyType={showInviteCode ? 'next' : 'go'}
-                  onSubmitEditing={() => {
-                    if (showInviteCode) inviteInputRef.current?.focus();
-                    else submit();
-                  }}
-                />
-              ) : (
-                <Input
-                  ref={handleInputRef}
-                  value={handle}
-                  onChangeText={setHandle}
-                  placeholder={t('auth.signupHandlePlaceholder')}
-                  autoCapitalize="none"
-                  autoComplete="username"
-                  autoCorrect={false}
-                  returnKeyType={showInviteCode ? 'next' : 'go'}
-                  onSubmitEditing={() => {
-                    if (showInviteCode) inviteInputRef.current?.focus();
-                    else submit();
-                  }}
-                  suffix={handleSuffixSlot}
-                />
-              )}
-              <ThemedText style={[styles.helper, { color: helperColor }]}>
-                {isCustom ? t('auth.signupCustomHandleHelper') : t('auth.signupHandleHelper')}
-              </ThemedText>
-            </View>
-
-            {showInviteCode ? (
-              <View style={styles.field}>
-                <ThemedText style={[styles.label, { color: labelColor }]}>
-                  {t('auth.signupInviteCode')}
-                </ThemedText>
-                <Input
-                  ref={inviteInputRef}
-                  value={inviteCode}
-                  onChangeText={setInviteCode}
-                  placeholder={t('auth.signupInviteCodePlaceholder')}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  returnKeyType="go"
-                  onSubmitEditing={submit}
-                />
-              </View>
-            ) : (
-              <Pressable
-                onPress={() => setShowInviteCode(true)}
-                accessibilityRole="button"
-                style={({ pressed }) => pressed && { opacity: activeOpacity.default }}
-              >
-                <ThemedText style={styles.inlineLink}>{t('auth.signupInviteCodeToggle')}</ThemedText>
-              </Pressable>
-            )}
-          </View>
+          <SignupFields
+            isCustom={isCustom}
+            hasSuffixChoice={hasSuffixChoice}
+            handleSuffix={handleSuffix}
+            suffixItems={suffixItems}
+            providerItems={providerItems}
+            providerDisplayLabel={providerDisplayLabel}
+            customPdsUrl={customPdsUrl}
+            onChangeCustomPdsUrl={setCustomPdsUrl}
+            email={email}
+            onChangeEmail={setEmail}
+            password={password}
+            onChangePassword={setPassword}
+            handle={handle}
+            onChangeHandle={setHandle}
+            inviteCode={inviteCode}
+            onChangeInviteCode={setInviteCode}
+            showInviteCode={showInviteCode}
+            onShowInviteCode={() => setShowInviteCode(true)}
+            onSubmit={submit}
+            passwordInputRef={passwordInputRef}
+            handleInputRef={handleInputRef}
+            inviteInputRef={inviteInputRef}
+            customPdsUrlInputRef={customPdsUrlInputRef}
+            borderColor={borderColor}
+            labelColor={labelColor}
+            helperColor={helperColor}
+            inputBackground={inputBackground}
+          />
 
           <Pressable
             style={({ pressed }) => [
@@ -363,43 +230,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xxl,
     width: '100%',
     maxWidth: 480,
-  },
-  fields: { gap: spacing.lg },
-  field: { gap: spacing.xs },
-  label: {
-    fontSize: fontSize.sm,
-    fontWeight: fontWeight.semibold,
-  },
-  dropdownTrigger: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  dropdownTriggerLabel: {
-    fontSize: fontSize.base,
-    fontWeight: fontWeight.medium,
-  },
-  suffixTrigger: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingLeft: spacing.xs,
-    paddingVertical: spacing.xs,
-  },
-  suffixLabel: {
-    fontSize: fontSize.base,
-  },
-  helper: {
-    fontSize: fontSize.sm,
-  },
-  inlineLink: {
-    color: semanticColors.systemBlue,
-    fontSize: fontSize.sm,
-    fontWeight: fontWeight.semibold,
   },
   primaryButton: {
     paddingVertical: spacing.md,

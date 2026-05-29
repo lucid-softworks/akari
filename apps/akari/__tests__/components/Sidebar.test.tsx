@@ -18,7 +18,9 @@ jest.mock('@/hooks/queries/useUnreadNotificationsCount');
 jest.mock('@/hooks/queries/useAccounts');
 jest.mock('@/hooks/queries/useCurrentAccount');
 jest.mock('@/hooks/useTranslation', () => {
-  const en = require('@/translations/en.json');
+  // Translations moved from a single en.json to a per-namespace directory
+  // (@/translations/en) that re-exports a `translations` map.
+  const en = require('@/translations/en');
 
   const flatten = (object: Record<string, unknown>, prefix = ''): Record<string, string> => {
     return Object.entries(object).reduce<Record<string, string>>((acc, [key, value]) => {

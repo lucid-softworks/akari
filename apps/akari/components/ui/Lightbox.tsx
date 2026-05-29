@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   type FlatListProps,
   type ListRenderItem,
@@ -11,6 +10,7 @@ import {
   Pressable,
   Share,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -31,7 +31,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { LightboxInfoPanel, type LightboxExif } from '@/components/ui/LightboxInfoPanel';
 import { Modal } from '@/components/ui/Modal';
-import { fontSize, fontWeight, hexToRgba, radius, spacing } from '@/constants/tokens';
+import { fontSize, radius, spacing } from '@/constants/tokens';
 import { useConfirm } from '@/hooks/useConfirm';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -68,7 +68,6 @@ const SWIPE_DOWN_CLOSE_THRESHOLD = 120;
 const SWIPE_DOWN_VELOCITY_THRESHOLD = 800;
 const DOUBLE_TAP_ZOOM = 2.5;
 const CHROME_FG = '#ffffff';
-const CHROME_TINT_BG = hexToRgba('#000000', 0.35);
 
 /**
  * Full-screen photo lightbox. Pager-style multi-image swipe, real
@@ -88,7 +87,7 @@ export function Lightbox({
   const { t } = useTranslation();
   const confirm = useConfirm();
   const insets = useSafeAreaInsets();
-  const { width: screenW, height: screenH } = Dimensions.get('window');
+  const { width: screenW, height: screenH } = useWindowDimensions();
 
   const items = useMemo<LightboxImage[]>(() => {
     if (images && images.length > 0) return images;
@@ -324,9 +323,9 @@ export function Lightbox({
             ) : null}
             {isMulti ? (
               <View style={styles.dotsRow}>
-                {items.map((_, i) => (
+                {items.map((item, i) => (
                   <View
-                    key={i}
+                    key={item.url}
                     style={[
                       styles.dot,
                       i === currentIndex && styles.dotActive,

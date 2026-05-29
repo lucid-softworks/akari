@@ -1,7 +1,7 @@
 name: lint
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, labeled, reopened]
     paths-ignore:
       - '**/*.md'
@@ -13,10 +13,11 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    # Only run for org members OR if external PR is labeled as safe
-    if: |
-      github.event.pull_request.head.repo.full_name == github.repository ||
-      contains(github.event.pull_request.labels.*.name, 'safe-to-run-ci')
+    # `pull_request` exposes no secrets to fork PRs and uses a read-only token,
+    # so this is safe to run on every PR (no org-member / label gate needed).
+    # `npm run lint` also enforces translation key parity via the
+    # akari/translation-key-parity oxlint rule (replaces the old
+    # translation-validation workflow).
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

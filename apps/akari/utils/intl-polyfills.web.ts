@@ -17,4 +17,8 @@
  * entirely. The native build (`intl-polyfills.ts`) still loads
  * FormatJS so Hermes gets its missing Intl features.
  */
+// This empty export is the required shape for an intentionally-empty module
+// that short-circuits the native FormatJS polyfill imports on web (see file
+// header). The disable keeps unicorn from "removing the empty braces".
+// oxlint-disable-next-line require-module-specifiers
 export {};

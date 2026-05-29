@@ -87,6 +87,8 @@ const EMPTY_MENU_ITEMS: readonly MenuItem[] = [];
 const numberFormatters = new Map<string, Intl.NumberFormat>();
 const joinedDateFormatters = new Map<string, Intl.DateTimeFormat>();
 
+const EMPTY_MENU_ITEMS: readonly MenuItem[] = [];
+
 const formatNumber = (num: number, locale: string): string => {
   let formatter = numberFormatters.get(locale);
   if (!formatter) {

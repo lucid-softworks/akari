@@ -2,122 +2,57 @@ import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import ProfileScreen from '@/app/(tabs)/profile';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useProfile } from '@/hooks/queries/useProfile';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useBorderColor } from '@/hooks/useBorderColor';
 import { useToast } from '@/contexts/ToastContext';
+import { useConfirm } from '@/hooks/useConfirm';
+import { searchProfilePosts } from '@/components/profile/profileActions';
 import * as Clipboard from 'expo-clipboard';
 
-let mockLatestDropdownMeasure: jest.Mock | null = null;
-
 jest.mock('@/hooks/queries/useCurrentAccount');
+jest.mock('@/hooks/queries/useIsGuest');
 jest.mock('@/hooks/queries/useProfile');
 jest.mock('@/hooks/useTranslation');
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn(),
-}));
-jest.mock('@/hooks/useThemeColor');
-jest.mock('@/hooks/useBorderColor');
 jest.mock('@/contexts/ToastContext');
+jest.mock('@/hooks/useConfirm');
+jest.mock('@/components/profile/profileActions', () => ({
+  searchProfilePosts: jest.fn(),
+}));
 jest.mock('expo-clipboard', () => ({
   setStringAsync: jest.fn(),
 }));
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn() },
+jest.mock('expo-haptics', () => ({
+  impactAsync: jest.fn(),
+  ImpactFeedbackStyle: { Light: 'light' },
 }));
 
-jest.mock('@/utils/tabScrollRegistry', () => ({
-  tabScrollRegistry: {
-    register: jest.fn(),
-  },
-}));
-
-jest.mock('react-native/Libraries/Components/ScrollView/ScrollView', () => {
-  const ReactLib = require('react');
-  const { View } = jest.requireActual('react-native');
-  const scrollToMock = jest.fn();
-
-  const ScrollViewMock = ReactLib.forwardRef((props: any, ref: any) => {
-    ReactLib.useImperativeHandle(ref, () => ({
-      scrollTo: scrollToMock,
-    }));
-
-    return ReactLib.createElement(View, props, props.children);
-  });
-
-  return {
-    __esModule: true,
-    default: ScrollViewMock,
-    ScrollView: ScrollViewMock,
-    scrollToMock,
-  };
-});
-
-const { scrollToMock } = require('react-native/Libraries/Components/ScrollView/ScrollView') as {
-  scrollToMock: jest.Mock;
-};
-
+// The profile dropdown is now a shared `Menu` rendered inside ProfileHeader,
+// driven by the `menuItems` prop the screen builds. Mock ProfileHeader to
+// surface each menu item as a pressable so we can exercise the actions.
 jest.mock('@/components/ProfileHeader', () => {
-  const { Text, TouchableOpacity } = require('react-native');
-  return {
-    ProfileHeader: ({ onDropdownToggle, dropdownRef }: any) => {
-      if (dropdownRef && !dropdownRef.current) {
-        mockLatestDropdownMeasure = jest.fn((callback: any) => callback(0, 0, 0, 40, 0, 100));
-        dropdownRef.current = {
-          measure: mockLatestDropdownMeasure,
-        };
-      }
-
-      return (
-        <TouchableOpacity onPress={() => onDropdownToggle(true)}>
-          <Text>open dropdown</Text>
-        </TouchableOpacity>
-      );
-    },
-  };
-});
-
-jest.mock('@/components/ProfileDropdown', () => {
   const { Text, TouchableOpacity, View } = require('react-native');
   return {
-    ProfileDropdown: ({
-      isVisible,
-      onCopyLink,
-      onSearchPosts,
-      onAddToLists,
-      onMuteAccount,
-      onBlockPress,
-      onReportAccount,
-      style,
-    }: any) => {
-      if (!isVisible) return null;
-
-      return (
-        <View testID="profile-dropdown" style={style}>
-          <TouchableOpacity onPress={onCopyLink}>
-            <Text>profile.copyLink</Text>
+    ProfileHeader: ({ menuItems }: any) => (
+      <View>
+        {(menuItems ?? []).map((item: any) => (
+          <TouchableOpacity key={item.key} onPress={item.onPress}>
+            <Text>{item.label}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onSearchPosts}>
-            <Text>common.search</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onAddToLists}>
-            <Text>profile.addToLists</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onMuteAccount}>
-            <Text>profile.muteAccount</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onBlockPress}>
-            <Text>common.block</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onReportAccount}>
-            <Text>profile.reportAccount</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    },
+        ))}
+      </View>
+    ),
   };
+});
+
+jest.mock('@/components/GuestSignInRequired', () => {
+  const { Text } = require('react-native');
+  return { GuestSignInRequired: ({ title }: any) => <Text>guest:{title}</Text> };
+});
+
+jest.mock('@/components/skeletons', () => {
+  const { Text } = require('react-native');
+  return { ProfileHeaderSkeleton: () => <Text>profile-skeleton</Text> };
 });
 
 jest.mock('@/components/ProfileTabs', () => {
@@ -157,102 +92,31 @@ jest.mock('@/components/ProfileTabs', () => {
   };
 });
 
-jest.mock('@/components/profile/PostsTab', () => {
+const tabPaneMock = (name: string) => {
   const { Text, View } = require('react-native');
-  return {
-    PostsTab: ({ handle, ListHeaderComponent, StickyTabComponent }: any) => (
-      <View>
-        {ListHeaderComponent ? (typeof ListHeaderComponent === 'function' ? <ListHeaderComponent /> : ListHeaderComponent) : null}
-        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
-        <Text>posts {handle}</Text>
-      </View>
-    ),
-  };
-});
+  return ({ handle, ListHeaderComponent, StickyTabComponent }: any) => (
+    <View>
+      {ListHeaderComponent ?? null}
+      {StickyTabComponent ?? null}
+      <Text>{`${name} ${handle}`}</Text>
+    </View>
+  );
+};
 
-jest.mock('@/components/profile/LikesTab', () => {
-  const { Text, View } = require('react-native');
-  return {
-    LikesTab: ({ handle, StickyTabComponent }: any) => (
-      <View>
-        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
-        <Text>likes {handle}</Text>
-      </View>
-    ),
-  };
-});
-
-jest.mock('@/components/profile/RepliesTab', () => {
-  const { Text, View } = require('react-native');
-  return {
-    RepliesTab: ({ handle, StickyTabComponent }: any) => (
-      <View>
-        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
-        <Text>replies {handle}</Text>
-      </View>
-    ),
-  };
-});
-
-jest.mock('@/components/profile/MediaTab', () => {
-  const { Text, View } = require('react-native');
-  return {
-    MediaTab: ({ handle, StickyTabComponent }: any) => (
-      <View>
-        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
-        <Text>media {handle}</Text>
-      </View>
-    ),
-  };
-});
-
-jest.mock('@/components/profile/VideosTab', () => {
-  const { Text, View } = require('react-native');
-  return {
-    VideosTab: ({ handle, StickyTabComponent }: any) => (
-      <View>
-        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
-        <Text>videos {handle}</Text>
-      </View>
-    ),
-  };
-});
-
-jest.mock('@/components/profile/FeedsTab', () => {
-  const { Text, View } = require('react-native');
-  return {
-    FeedsTab: ({ handle, StickyTabComponent }: any) => (
-      <View>
-        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
-        <Text>feeds {handle}</Text>
-      </View>
-    ),
-  };
-});
-
-jest.mock('@/components/profile/StarterpacksTab', () => {
-  const { Text, View } = require('react-native');
-  return {
-    StarterpacksTab: ({ handle, StickyTabComponent }: any) => (
-      <View>
-        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
-        <Text>starterpacks {handle}</Text>
-      </View>
-    ),
-  };
-});
-
-jest.mock('@/components/profile/ReposTab', () => {
-  const { Text, View } = require('react-native');
-  return {
-    ReposTab: ({ handle, StickyTabComponent }: any) => (
-      <View>
-        {StickyTabComponent ? (typeof StickyTabComponent === 'function' ? <StickyTabComponent /> : StickyTabComponent) : null}
-        <Text>repos {handle}</Text>
-      </View>
-    ),
-  };
-});
+jest.mock('@/components/profile/PostsTab', () => ({ PostsTab: tabPaneMock('posts') }));
+jest.mock('@/components/profile/RepliesTab', () => ({ RepliesTab: tabPaneMock('replies') }));
+jest.mock('@/components/profile/LikesTab', () => ({ LikesTab: tabPaneMock('likes') }));
+jest.mock('@/components/profile/MediaTab', () => ({ MediaTab: tabPaneMock('media') }));
+jest.mock('@/components/profile/VideosTab', () => ({ VideosTab: tabPaneMock('videos') }));
+jest.mock('@/components/profile/FeedsTab', () => ({ FeedsTab: tabPaneMock('feeds') }));
+jest.mock('@/components/profile/ReposTab', () => ({ ReposTab: tabPaneMock('repos') }));
+jest.mock('@/components/profile/StarterpacksTab', () => ({ StarterpacksTab: tabPaneMock('starterpacks') }));
+jest.mock('@/components/profile/RepostsTab', () => ({ RepostsTab: tabPaneMock('reposts') }));
+jest.mock('@/components/profile/ResumeTab', () => ({ ResumeTab: tabPaneMock('resume') }));
+jest.mock('@/components/profile/PhotosTab', () => ({ PhotosTab: tabPaneMock('photos') }));
+jest.mock('@/components/profile/RpgItemsTab', () => ({ RpgItemsTab: tabPaneMock('rpgItems') }));
+jest.mock('@/components/profile/RecipesTab', () => ({ RecipesTab: tabPaneMock('recipes') }));
+jest.mock('@/components/profile/LinksTab', () => ({ LinksTab: tabPaneMock('links') }));
 
 jest.mock('@/components/ThemedView', () => {
   const { View } = require('react-native');
@@ -265,43 +129,52 @@ jest.mock('@/components/ThemedText', () => {
 });
 
 const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
+const mockUseIsGuest = useIsGuest as jest.Mock;
 const mockUseProfile = useProfile as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
-const mockUseSafeAreaInsets = useSafeAreaInsets as jest.Mock;
-const mockUseThemeColor = useThemeColor as jest.Mock;
-const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseToast = useToast as jest.Mock;
+const mockUseConfirm = useConfirm as jest.Mock;
+const mockSearchProfilePosts = searchProfilePosts as jest.Mock;
 const mockClipboardSetStringAsync = Clipboard.setStringAsync as jest.Mock;
-const { router } = require('expo-router');
-const mockRouterPush = router.push as jest.Mock;
 
 let mockShowToast: jest.Mock;
+let mockConfirm: jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockLatestDropdownMeasure = null;
   mockUseTranslation.mockReturnValue({ t: (key: string) => key });
-  mockUseSafeAreaInsets.mockReturnValue({ top: 0 });
-  mockUseProfile.mockReturnValue({ data: {} });
-  mockUseThemeColor.mockReturnValue('#fff');
-  mockUseBorderColor.mockReturnValue('#ccc');
+  mockUseProfile.mockReturnValue({ data: undefined, isLoading: false, refetch: jest.fn() });
+  mockUseIsGuest.mockReturnValue(false);
   mockClipboardSetStringAsync.mockResolvedValue(undefined);
   mockShowToast = jest.fn();
   mockUseToast.mockReturnValue({ showToast: mockShowToast, hideToast: jest.fn() });
-  scrollToMock.mockClear();
-  mockRouterPush.mockClear();
+  mockConfirm = jest.fn();
+  mockUseConfirm.mockReturnValue(mockConfirm);
 });
 
 describe('ProfileScreen', () => {
-  it('shows loading state when handle is missing', () => {
-    mockUseCurrentAccount.mockReturnValue({ data: {} });
+  it('shows the sign-in CTA for guests', () => {
+    mockUseIsGuest.mockReturnValue(true);
+    mockUseCurrentAccount.mockReturnValue({ data: undefined, isLoading: false });
+    const { getByText } = render(<ProfileScreen />);
+    expect(getByText('guest:common.profile')).toBeTruthy();
+  });
+
+  it('shows the skeleton while the account or profile is loading', () => {
+    mockUseCurrentAccount.mockReturnValue({ data: undefined, isLoading: true });
+    const { getByText } = render(<ProfileScreen />);
+    expect(getByText('profile-skeleton')).toBeTruthy();
+  });
+
+  it('shows the loading empty state when the handle is missing', () => {
+    mockUseCurrentAccount.mockReturnValue({ data: {}, isLoading: false });
     const { getByText } = render(<ProfileScreen />);
     expect(getByText('common.loading')).toBeTruthy();
   });
 
-  it('renders all tab content and registers scroll handler', () => {
-    mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
-    mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' } });
+  it('renders all tab content when switching tabs', () => {
+    mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' }, isLoading: false });
+    mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' }, isLoading: false, refetch: jest.fn() });
 
     const { getByText, getAllByText } = render(<ProfileScreen />);
 
@@ -337,50 +210,32 @@ describe('ProfileScreen', () => {
     // 'unknown' is not in TAB_ORDER, so no new pane renders — the previously
     // visited tabs remain mounted (just inactive).
     expect(getByText('starterpacks alice')).toBeTruthy();
-
-    // Profile now uses FlatList in PostsTab, scroll management handled there
   });
 
-  it('positions dropdown using measurement and closes for all actions', async () => {
-    mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' } });
+  it('copies the profile link and shows a success toast from the overflow menu', async () => {
+    mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' }, isLoading: false });
+    mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' }, isLoading: false, refetch: jest.fn() });
 
-    const { getByText, getByTestId, queryByTestId } = render(<ProfileScreen />);
-
-    fireEvent.press(getByText('open dropdown'));
-
-    // Production no longer measures the trigger; it now uses a Modal/sheet. So
-    // measure() is never invoked and no positional style is passed. Just
-    // assert the dropdown becomes visible.
-    expect(getByTestId('profile-dropdown')).toBeTruthy();
+    const { getByText } = render(<ProfileScreen />);
 
     fireEvent.press(getByText('profile.copyLink'));
 
-    await waitFor(() => {
-      expect(queryByTestId('profile-dropdown')).toBeNull();
-    });
-
-    expect(mockClipboardSetStringAsync).toHaveBeenCalledWith('https://bsky.app/profile/alice');
-    expect(mockShowToast).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'profile.linkCopied', type: 'success' })
+    await waitFor(() =>
+      expect(mockClipboardSetStringAsync).toHaveBeenCalledWith('https://bsky.app/profile/alice'),
     );
+    expect(mockShowToast).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'profile.linkCopied', type: 'success' }),
+    );
+  });
 
-    fireEvent.press(getByText('open dropdown'));
+  it('triggers a profile post search from the overflow menu', () => {
+    mockUseCurrentAccount.mockReturnValue({ data: { handle: 'alice' }, isLoading: false });
+    mockUseProfile.mockReturnValue({ data: { displayName: 'Alice' }, isLoading: false, refetch: jest.fn() });
+
+    const { getByText } = render(<ProfileScreen />);
+
     fireEvent.press(getByText('common.search'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/search?query=from:alice');
-    expect(queryByTestId('profile-dropdown')).toBeNull();
 
-    const remainingActions = [
-      'profile.addToLists',
-      'profile.muteAccount',
-      'common.block',
-      'profile.reportAccount',
-    ];
-
-    remainingActions.forEach((action) => {
-      fireEvent.press(getByText('open dropdown'));
-      fireEvent.press(getByText(action));
-      expect(queryByTestId('profile-dropdown')).toBeNull();
-    });
+    expect(mockSearchProfilePosts).toHaveBeenCalledWith({ handle: 'alice' });
   });
 });
-

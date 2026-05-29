@@ -1,7 +1,7 @@
 name: test
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, labeled, reopened]
     paths-ignore:
       - '**/*.md'
@@ -17,12 +17,11 @@ jobs:
       pull-requests: write
       checks: write
     runs-on: ubuntu-latest
-    # Only run for org members OR if external PR is labeled as safe
-    if: |
-      github.event.pull_request.head.repo.full_name == github.repository ||
-      contains(github.event.pull_request.labels.*.name, 'safe-to-run-ci')
+    # `pull_request` exposes no secrets to fork PRs and uses a read-only token,
+    # so tests run on every PR. The coverage-comment step is guarded below
+    # since posting a comment needs a writable token (same-repo PRs only).
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24.9.0
@@ -32,6 +31,8 @@ jobs:
       - name: Merge coverage reports
         run: node ./scripts/merge-coverage.cjs
       - name: Report coverage
+        # Fork PRs get a read-only GITHUB_TOKEN, so the comment can't be posted.
+        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: ./.github/actions/report-coverage
         with:
           github-token: ${{ github.token }}

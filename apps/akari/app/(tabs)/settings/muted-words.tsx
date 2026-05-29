@@ -64,7 +64,6 @@ function isExpired(entry: BlueskyMutedWord): boolean {
 
 export default function MutedWordsScreen() {
   const borderColor = useBorderColor();
-  const textColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
   const checkboxBorder = useThemeColor({ light: '#D1D5DB', dark: '#3A3A3C' }, 'text');

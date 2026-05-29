@@ -22,7 +22,7 @@ type UseComposerDraftHandlersOptions = {
   setPosts: React.Dispatch<React.SetStateAction<ThreadPost[]>>;
   setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
   setPostControls: React.Dispatch<React.SetStateAction<PostControls>>;
-  setDraftsSheetVisible: (visible: boolean) => void;
+  closeDraftsSheet: () => void;
   deleteDraft: (id: string) => void;
   runSave: (payload: { posts: ThreadPost[]; controls: PostControls }) => Promise<void>;
   resetAndClose: () => void;
@@ -47,7 +47,7 @@ export function useComposerDraftHandlers({
   setPosts,
   setActiveIndex,
   setPostControls,
-  setDraftsSheetVisible,
+  closeDraftsSheet,
   deleteDraft,
   runSave,
   resetAndClose,
@@ -69,9 +69,9 @@ export function useComposerDraftHandlers({
       setPostControls(draft.controls);
       setCurrentDraftId(draft.id);
       draftIdRef.current = draft.id;
-      setDraftsSheetVisible(false);
+      closeDraftsSheet();
     },
-    [setPosts, setActiveIndex, setPostControls, setCurrentDraftId, draftIdRef, setDraftsSheetVisible],
+    [setPosts, setActiveIndex, setPostControls, setCurrentDraftId, draftIdRef, closeDraftsSheet],
   );
 
   const handleDeleteDraft = useCallback(

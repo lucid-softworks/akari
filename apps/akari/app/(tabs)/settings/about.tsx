@@ -14,7 +14,6 @@ import { SettingsScroll } from '@/components/settings/SettingsScroll';
 import { ThemedView } from '@/components/ThemedView';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useConfirm } from '@/hooks/useConfirm';
-import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const LINKS = {
@@ -26,7 +25,6 @@ const LINKS = {
 
 export default function AboutSettingsScreen() {
   const borderColor = useBorderColor();
-  const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
   const confirm = useConfirm();
 
@@ -119,7 +117,7 @@ export default function AboutSettingsScreen() {
           ]
         : []),
     ],
-    [buildNumber, openExternalLink, showNotImplemented, t, versionDisplay],
+    [buildNumber, openExternalLink, t, versionDisplay],
   );
 
   return (

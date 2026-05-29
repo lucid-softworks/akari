@@ -1,5 +1,22 @@
-import type { BlueskyVerification } from '@/bluesky-api';
+import type { BlueskyEmbed, BlueskyVerification } from '@/bluesky-api';
 import type en from '@/translations/en';
+
+export type Reaction = {
+  value: string;
+  sender: { did: string };
+  createdAt: string;
+};
+
+export type Message = {
+  id: string;
+  text: string;
+  timestamp: string;
+  isFromMe: boolean;
+  senderDid: string;
+  sentAt: string;
+  embed?: BlueskyEmbed;
+  reactions: Reaction[];
+};
 
 export type ConvoMember = {
   did: string;

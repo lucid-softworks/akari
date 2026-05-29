@@ -13,10 +13,6 @@
       "label": "זהות",
       "description": "אשרו מי אתם ב-atproto. תמיד נדרש."
     },
-    "chat": {
-      "label": "הודעות ישירות",
-      "description": "קריאה ושליחה של הודעות צ'אט בשמכם."
-    },
     "profile": {
       "label": "פרופיל",
       "description": "ערכו את שם התצוגה, הביו, האווטאר והבאנר שלכם."
@@ -80,6 +76,18 @@
     "linkatBoard": {
       "label": "לוח Linkat",
       "description": "נהלו את לוח link-in-bio שלכם ב-Linkat."
+    },
+    "bskyChat": {
+      "label": "הודעות ישירות",
+      "description": "קריאה ושליחה של הודעות צ'אט בשמכם."
+    },
+    "bskyAppview": {
+      "label": "גישת Bluesky",
+      "description": "חבילת הרשאות המכסה פידים, פרופילים, התראות, חיפוש, עוקבים, חסימות, רשימות ופוסטים ב-AppView של Bluesky."
+    },
+    "blobs": {
+      "label": "העלאות תמונות ווידאו",
+      "description": "העלו blobs של תמונות ווידאו לחשבון שלכם כדי שתוכלו לצרף מדיה לפוסטים."
     }
   }
 }

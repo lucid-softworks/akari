@@ -24,10 +24,10 @@ export function ImageAttachmentItem({
   onRemove,
   onUpdateAlt,
   removeTestId,
-  textColor,
+  textColor: _textColor,
   iconColor,
-  borderColor,
-  backgroundColor,
+  borderColor: _borderColor,
+  backgroundColor: _backgroundColor,
 }: ImageAttachmentItemProps) {
   const { t } = useTranslation();
 

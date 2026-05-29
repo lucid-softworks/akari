@@ -13,9 +13,17 @@
       "label": "アイデンティティ",
       "description": "atproto 上のあなたが誰かを確認します。常に必須。"
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Bluesky へのアクセス",
+      "description": "Bluesky AppView 上のフィード、プロフィール、通知、検索、フォロー、ブロック、リスト、投稿を網羅する権限のまとまりです。"
+    },
+    "bskyChat": {
       "label": "ダイレクトメッセージ",
       "description": "あなたに代わってチャットメッセージを読み、送信します。"
+    },
+    "blobs": {
+      "label": "画像と動画のアップロード",
+      "description": "画像や動画の blob をアカウントにアップロードして、投稿にメディアを添付できるようにします。"
     },
     "profile": {
       "label": "プロフィール",

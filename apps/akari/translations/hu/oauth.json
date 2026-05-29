@@ -13,9 +13,17 @@
       "label": "Identitás",
       "description": "Erősítsd meg, ki vagy az atprotón. Mindig kötelező."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Bluesky hozzáférés",
+      "description": "Engedélycsomag, amely a Bluesky AppView-on a hírfolyamokat, profilokat, értesítéseket, keresést, követéseket, tiltásokat, listákat és bejegyzéseket fedi le."
+    },
+    "bskyChat": {
       "label": "Közvetlen üzenetek",
       "description": "Csevegőüzenetek olvasása és küldése a nevedben."
+    },
+    "blobs": {
+      "label": "Kép- és videófeltöltések",
+      "description": "Kép- és videóblobok feltöltése a fiókodba, hogy médiát csatolhass a bejegyzésekhez."
     },
     "profile": {
       "label": "Profil",

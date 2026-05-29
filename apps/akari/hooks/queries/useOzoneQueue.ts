@@ -55,9 +55,10 @@ export function useOzoneQueue(filters: OzoneQueueFilters = {}, limit = 25) {
       // row without disturbing the existing shape.
       try {
         const api = apiForAccount(currentAccount);
-        const dids = response.subjectStatuses
-          .map((s) => subjectDid(s.subject))
-          .filter((d): d is string => !!d);
+        const dids = response.subjectStatuses.flatMap((s) => {
+          const did = subjectDid(s.subject);
+          return did ? [did] : [];
+        });
         const avatars = await fetchAvatarsByDid(api, token, dids);
         const enriched: OzoneSubjectStatus[] = response.subjectStatuses.map((s) => {
           const did = subjectDid(s.subject);
@@ -65,7 +66,7 @@ export function useOzoneQueue(filters: OzoneQueueFilters = {}, limit = 25) {
           if (!avatar) return s;
           return {
             ...s,
-            accountStats: { ...(s.accountStats ?? {}), avatar },
+            accountStats: { ...s.accountStats, avatar },
           };
         });
         return { subjectStatuses: enriched, cursor: response.cursor };

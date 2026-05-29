@@ -57,14 +57,19 @@ describe('useFeeds query hook', () => {
     expect(result.current.data).toEqual(feedsResponse);
   });
 
-  it('throws error when token is missing', async () => {
+  it('falls back to the public AppView when token is missing (guest path)', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    const feedsResponse = { feeds: [{ uri: 'a' }], cursor: undefined };
+    mockGetFeeds.mockResolvedValueOnce(feedsResponse);
     const { wrapper } = createWrapper();
 
-    const { result } = renderHook(() => useFeeds('alice'), { wrapper });
+    const { result } = renderHook(() => useFeeds('alice', 10, 'cursor'), { wrapper });
 
-    const { error } = await result.current.refetch();
-    expect((error as Error).message).toBe('No access token');
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+    expect(mockGetFeeds).toHaveBeenCalledWith('', 'alice', 10, 'cursor');
+    expect(result.current.data).toEqual(feedsResponse);
   });
 
   it('throws error when actor is missing', async () => {
@@ -76,16 +81,19 @@ describe('useFeeds query hook', () => {
     expect((error as Error).message).toBe('No actor provided');
   });
 
-  it('throws error when pdsUrl is missing', async () => {
+  it('falls back to the public AppView when pdsUrl is missing (guest path)', async () => {
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    const feedsResponse = { feeds: [{ uri: 'a' }], cursor: undefined };
+    mockGetFeeds.mockResolvedValueOnce(feedsResponse);
     const { wrapper } = createWrapper();
 
-    const { result } = renderHook(() => useFeeds('alice'), { wrapper });
+    const { result } = renderHook(() => useFeeds('alice', 10, 'cursor'), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.isError).toBe(true);
+      expect(result.current.isSuccess).toBe(true);
     });
-    expect((result.current.error as Error).message).toBe('No PDS URL available');
+    expect(mockGetFeeds).toHaveBeenCalledWith('', 'alice', 10, 'cursor');
+    expect(result.current.data).toEqual(feedsResponse);
   });
 });
 

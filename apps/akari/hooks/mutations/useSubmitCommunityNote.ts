@@ -33,6 +33,7 @@ export type RequestCommunityNoteInput = {
  * state is observable. Swap for the real XRPC call when a lexicon ships.
  */
 export function useSubmitCommunityNote() {
+  // oxlint-disable-next-line react-doctor/query-mutation-missing-invalidation -- stub: no backing query to invalidate until a lexicon ships
   return useMutation({
     mutationFn: async (input: SubmitCommunityNoteInput) => {
       await new Promise((r) => setTimeout(r, 350));
@@ -49,6 +50,7 @@ export function useSubmitCommunityNote() {
  * the flag, mirroring X's "Request a Note" affordance.
  */
 export function useRequestCommunityNote() {
+  // oxlint-disable-next-line react-doctor/query-mutation-missing-invalidation -- stub: no backing query to invalidate until a lexicon ships
   return useMutation({
     mutationFn: async (input: RequestCommunityNoteInput) => {
       await new Promise((r) => setTimeout(r, 250));

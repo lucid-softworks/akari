@@ -24,8 +24,8 @@ type SkyblurBodyProps = {
 };
 
 type Segment =
-  | { kind: 'text'; value: string }
-  | { kind: 'blur'; value: string };
+  | { kind: 'text'; value: string; offset: number }
+  | { kind: 'blur'; value: string; offset: number };
 
 /**
  * Splits Skyblur source text into alternating plain-text and bracketed
@@ -38,24 +38,24 @@ function tokenise(text: string): Segment[] {
   while (i < text.length) {
     const open = text.indexOf('[', i);
     if (open === -1) {
-      out.push({ kind: 'text', value: text.slice(i) });
+      out.push({ kind: 'text', value: text.slice(i), offset: i });
       break;
     }
-    if (open > i) out.push({ kind: 'text', value: text.slice(i, open) });
+    if (open > i) out.push({ kind: 'text', value: text.slice(i, open), offset: i });
     const close = text.indexOf(']', open + 1);
     if (close === -1) {
       // Unterminated bracket — treat the rest as plain text so we
       // don't lose characters.
-      out.push({ kind: 'text', value: text.slice(open) });
+      out.push({ kind: 'text', value: text.slice(open), offset: open });
       break;
     }
     const inner = text.slice(open + 1, close);
     if (inner.length === 0) {
       // Empty `[]` — keep verbatim rather than rendering an invisible
       // reveal target.
-      out.push({ kind: 'text', value: '[]' });
+      out.push({ kind: 'text', value: '[]', offset: open });
     } else {
-      out.push({ kind: 'blur', value: inner });
+      out.push({ kind: 'blur', value: inner, offset: open });
     }
     i = close + 1;
   }
@@ -122,15 +122,13 @@ export function SkyblurBody({ text, textStyle, forwardUrl }: SkyblurBodyProps) {
   const segments = useMemo(() => tokenise(text), [text]);
   return (
     <ThemedText style={textStyle}>
-      {segments.map((segment, i) => {
+      {segments.map((segment) => {
         if (segment.kind === 'text') {
-          // oxlint-disable-next-line react-doctor/no-array-index-as-key -- segments are positional and the array has no stable identity beyond index
-          return <React.Fragment key={`t-${i}`}>{segment.value}</React.Fragment>;
+          return <React.Fragment key={`t-${segment.offset}`}>{segment.value}</React.Fragment>;
         }
         return (
           <BlurToken
-            // oxlint-disable-next-line react-doctor/no-array-index-as-key -- same as above
-            key={`b-${i}`}
+            key={`b-${segment.offset}`}
             word={segment.value}
             textStyle={textStyle}
             forwardUrl={forwardUrl}

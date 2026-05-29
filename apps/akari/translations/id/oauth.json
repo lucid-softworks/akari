@@ -13,9 +13,17 @@
       "label": "Identitas",
       "description": "Konfirmasikan siapa kamu di atproto. Selalu wajib."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Akses Bluesky",
+      "description": "Kumpulan izin yang mencakup feed, profil, notifikasi, pencarian, mengikuti, blokir, daftar, dan postingan di Bluesky AppView."
+    },
+    "bskyChat": {
       "label": "Pesan langsung",
       "description": "Membaca dan mengirim pesan obrolan atas namamu."
+    },
+    "blobs": {
+      "label": "Unggahan gambar dan video",
+      "description": "Unggah blob gambar dan video ke akunmu agar kamu bisa melampirkan media ke postingan."
     },
     "profile": {
       "label": "Profil",

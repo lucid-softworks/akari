@@ -1,11 +1,11 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { memo, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Keyboard, Platform, StyleSheet } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import React, { memo, use, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Platform, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SearchEmptyState } from '@/components/search/SearchEmptyState';
-import { SearchListHeader, type SearchSort, type SearchTabType } from '@/components/search/SearchListHeader';
+import { SearchListHeader } from '@/components/search/SearchListHeader';
 import { SearchPostResult } from '@/components/search/SearchPostResult';
 import { SearchProfileResult } from '@/components/search/SearchProfileResult';
 import { ThemedText } from '@/components/ThemedText';
@@ -20,6 +20,7 @@ import { useSearch } from '@/hooks/queries/useSearch';
 import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
 import { useCollapsibleHeader } from '@/hooks/useCollapsibleHeader';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useSearchForm } from '@/hooks/useSearchForm';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { isAppViewRequiredError } from '@/utils/appView';
@@ -35,8 +36,6 @@ type SearchResult = {
 const ESTIMATED_RESULT_ITEM_HEIGHT = 240;
 const DEFAULT_HEADER_HEIGHT = 140;
 
-const isHashtagQuery = (value: string) => value.trim().startsWith('#');
-
 // Memo'd at module scope so the parent's `!appViewEnabled` early return
 // can bail without React reconciling the header subtree, and the header
 // only re-renders when its own props change. react-doctor's
@@ -48,43 +47,17 @@ export default function SearchScreen() {
   const { query: initialQuery } = useLocalSearchParams<{ query?: string }>();
   const isGuest = useIsGuest();
 
-  // The deep-linked `?query=` param seeds four pieces of form state on
-  // first mount and whenever the URL param flips to a new value. Holding
-  // them in a single bag lets the URL sync effect commit atomically
-  // (one render, not four) instead of cascading setState calls.
-  type SearchForm = {
-    query: string;
-    searchQuery: string;
-    activeTab: SearchTabType;
-    sort: SearchSort;
-  };
-  const buildInitialForm = (raw: string | undefined, guest: boolean): SearchForm => {
-    const initial = raw ?? '';
-    const isHashtag = initial && isHashtagQuery(initial);
-    // Guests don't see the "All" tab (it'd collapse to Users since
-    // post search is auth-gated), so default them to "users". Hashtag
-    // searches still go to "posts" — the empty state on that tab
-    // shows the sign-in CTA.
-    const defaultTab: SearchTabType = isHashtag ? 'posts' : guest ? 'users' : 'all';
-    return {
-      query: initial,
-      searchQuery: initial,
-      activeTab: defaultTab,
-      sort: 'top',
-    };
-  };
-  const [form, setForm] = useState<SearchForm>(() => buildInitialForm(initialQuery, isGuest));
-  const { query, searchQuery, activeTab, sort } = form;
-  const setQuery = useCallback((next: string) => setForm((p) => ({ ...p, query: next })), []);
-  const setSearchQuery = useCallback(
-    (next: string) => setForm((p) => ({ ...p, searchQuery: next })),
-    [],
-  );
-  const setActiveTab = useCallback(
-    (next: SearchTabType) => setForm((p) => ({ ...p, activeTab: next })),
-    [],
-  );
-  const setSort = useCallback((next: SearchSort) => setForm((p) => ({ ...p, sort: next })), []);
+  const {
+    query,
+    searchQuery,
+    activeTab,
+    sort,
+    setQuery,
+    setActiveTab,
+    setSort,
+    handleSearch,
+    handleClearQuery,
+  } = useSearchForm(initialQuery, isGuest);
 
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<VirtualizedListHandle<SearchResult>>(null);
@@ -150,56 +123,6 @@ export default function SearchScreen() {
         return true;
     }
   });
-
-  useEffect(() => {
-    if (initialQuery === undefined || initialQuery === searchQuery) {
-      return;
-    }
-    setForm((prev) => {
-      const isHashtag = isHashtagQuery(initialQuery);
-      return {
-        query: initialQuery,
-        searchQuery: initialQuery,
-        activeTab: isHashtag ? 'posts' : prev.activeTab,
-        sort: isHashtag ? 'top' : prev.sort,
-      };
-    });
-  }, [initialQuery, searchQuery]);
-
-  // Mirror the committed search term into the route's `?query=` param so
-  // that navigating to a result and coming back via the browser/back
-  // button restores the search instead of dropping into an empty
-  // state. `router.setParams` updates the URL in place — no new
-  // history entry — and the effect above already short-circuits when
-  // `initialQuery === searchQuery`, so this won't loop.
-  useEffect(() => {
-    const next = searchQuery.trim();
-    const current = (initialQuery ?? '').trim();
-    if (next === current) return;
-    router.setParams({ query: next.length > 0 ? next : undefined });
-  }, [searchQuery, initialQuery]);
-
-  // If the user signs out mid-session while parked on the "All" tab,
-  // SearchTabs drops that entry — leaving the bar with no visibly
-  // selected tab. Slide them down to "Users", which is the closest
-  // equivalent (post search is auth-gated for guests anyway).
-  useEffect(() => {
-    if (isGuest && activeTab === 'all') {
-      setActiveTab('users');
-    }
-  }, [isGuest, activeTab, setActiveTab]);
-
-  const handleSearch = useCallback(() => {
-    if (query.trim()) {
-      setSearchQuery(query.trim());
-      Keyboard.dismiss();
-    }
-  }, [query, setSearchQuery]);
-
-  const handleClearQuery = useCallback(() => {
-    setQuery('');
-    setSearchQuery('');
-  }, [setQuery, setSearchQuery]);
 
   const handleLoadMore = () => {
     // The empty state fills the viewport, so the list's `onEndReached`

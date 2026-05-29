@@ -82,9 +82,12 @@ export function GalleryView({ actor, rkey }: GalleryViewProps) {
   const galleryPhotos = useMemo(() => {
     if (!gallery) return [];
     const bucket = itemsByGallery.get(gallery.uri) ?? [];
-    return bucket
-      .map((item) => photoIndex.get(item.value.item))
-      .filter((p): p is NonNullable<typeof p> => Boolean(p));
+    const resolved: NonNullable<ReturnType<typeof photoIndex.get>>[] = [];
+    for (const item of bucket) {
+      const photo = photoIndex.get(item.value.item);
+      if (photo) resolved.push(photo);
+    }
+    return resolved;
   }, [gallery, itemsByGallery, photoIndex]);
 
   // Resolve all photo blob URLs once so the lightbox can hand the full

@@ -57,7 +57,7 @@ describe('useSignIn mutation hook', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
-    expect(mockCreateSession).toHaveBeenCalledWith('user', 'pass');
+    expect(mockCreateSession).toHaveBeenCalledWith('user', 'pass', undefined);
     expect(mockGetProfile).toHaveBeenCalledWith('token', 'did');
     expect(mockSetAuth.mutateAsync).toHaveBeenCalledWith({
       token: 'token',

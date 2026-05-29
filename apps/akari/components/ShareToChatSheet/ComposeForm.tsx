@@ -41,7 +41,6 @@ export function ComposeForm({
   const { t } = useTranslation();
   const borderColor = useThemeColor({}, 'border');
   const iconColor = useThemeColor({ light: '#687076', dark: '#9BA1A6' }, 'text');
-  const textColor = useThemeColor({}, 'text');
   const tintColor = useThemeColor({}, 'tint');
 
   const match = message.match(BSKY_POST_URL_RX);

@@ -39,7 +39,6 @@ export function GifPicker({ visible, onClose, onSelectGif }: GifPickerProps) {
   const borderColor = useThemeColor({}, 'border');
   const iconColor = useThemeColor({}, 'icon');
   const tintColor = useThemeColor({}, 'tint');
-  const inputBackgroundColor = useThemeColor({}, 'background');
 
   const showGifErrorToast = useCallback(() => {
     showToast({

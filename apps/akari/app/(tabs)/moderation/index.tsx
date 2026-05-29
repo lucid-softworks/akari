@@ -366,7 +366,7 @@ function QueueRow({
             <Badge label={reviewState} />
             {status.takendown ? <Badge label="taken down" tone="danger" /> : null}
             {status.appealed ? <Badge label="appealed" tone="warn" /> : null}
-            {status.tags?.slice(0, 3).map((t) => <Badge key={t} label={t} />)}
+            {status.tags?.slice(0, 3).map((tag) => <Badge key={tag} label={tag} />)}
             {typeof status.priorityScore === 'number' ? (
               <Badge label={`p${status.priorityScore}`} tone="accent" />
             ) : null}

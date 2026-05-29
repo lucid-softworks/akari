@@ -171,7 +171,7 @@ function OauthHandleForm({
   accent,
   secondary,
   labelColor,
-  inputBackground,
+  inputBackground: _inputBackground,
   suggestionBg,
 }: {
   onSuccess: () => void;
@@ -200,8 +200,8 @@ function OauthHandleForm({
   // Auto-focus on mount so the user can start typing immediately after
   // picking OAuth from the modal's choice screen.
   useEffect(() => {
-    const t = setTimeout(() => inputRef.current?.focus(), 200);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => inputRef.current?.focus(), 200);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleChange = useCallback((value: string) => {

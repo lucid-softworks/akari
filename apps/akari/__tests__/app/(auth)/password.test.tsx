@@ -8,7 +8,6 @@ import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
-import { showAlert } from '@/utils/alert';
 import { getPdsUrlFromHandle } from '@/bluesky-api';
 jest.mock('expo-router', () => {
   const ReactLib = require('react');
@@ -53,9 +52,6 @@ const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
 jest.mock('@/hooks/queries/useTypeaheadActors', () => ({
   useTypeaheadActors: () => ({ data: [], isLoading: false }),
 }));
-
-jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
-const mockShowAlert = showAlert as jest.Mock;
 
 jest.mock('@/bluesky-api', () => ({ getPdsUrlFromHandle: jest.fn() }));
 const mockGetPdsUrlFromHandle = getPdsUrlFromHandle as jest.Mock;
@@ -112,31 +108,25 @@ beforeEach(() => {
 });
 
 describe('AuthScreen', () => {
-  it('shows error when fields are empty', () => {
+  it('shows error when fields are empty', async () => {
     const { getByText } = renderScreen();
 
     fireEvent.press(getByText('common.signIn'));
 
-    expect(mockShowAlert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: 'common.error',
-        message: 'auth.fillAllFields',
-      }),
-    );
+    await waitFor(() => {
+      expect(getByText('auth.fillAllFields')).toBeTruthy();
+    });
   });
 
-  it('shows error for invalid handle', () => {
+  it('shows error for invalid handle', async () => {
     const utils = renderScreen();
 
     fillCredentials(utils, { handle: 'invalid handle!', password: 'pass' });
     fireEvent.press(utils.getByText('common.signIn'));
 
-    expect(mockShowAlert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: 'common.error',
-        message: 'auth.invalidBlueskyHandle',
-      }),
-    );
+    await waitFor(() => {
+      expect(utils.getByText('auth.invalidBlueskyHandle')).toBeTruthy();
+    });
   });
 
   it('shows error when PDS server cannot be detected while signing in', async () => {
@@ -147,12 +137,7 @@ describe('AuthScreen', () => {
     fireEvent.press(utils.getByText('common.signIn'));
 
     await waitFor(() => {
-      expect(mockShowAlert).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'common.error',
-          message: 'Could not detect PDS server for this handle',
-        }),
-      );
+      expect(utils.getByText('Could not detect PDS server for this handle')).toBeTruthy();
     });
 
     expect(signInMutate).not.toHaveBeenCalled();
@@ -166,12 +151,7 @@ describe('AuthScreen', () => {
     fireEvent.press(utils.getByText('common.signIn'));
 
     await waitFor(() => {
-      expect(mockShowAlert).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'common.error',
-          message: 'boom',
-        }),
-      );
+      expect(utils.getByText('boom')).toBeTruthy();
     });
   });
 
@@ -183,12 +163,7 @@ describe('AuthScreen', () => {
     fireEvent.press(utils.getByText('common.signIn'));
 
     await waitFor(() => {
-      expect(mockShowAlert).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'common.error',
-          message: 'auth.signInFailed',
-        }),
-      );
+      expect(utils.getByText('auth.signInFailed')).toBeTruthy();
     });
   });
 

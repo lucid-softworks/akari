@@ -14,14 +14,12 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useFeedSettings } from '@/hooks/useFeedSettings';
-import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ContentAndMediaScreen() {
   const borderColor = useBorderColor();
   const iconColor = useThemeColor({}, 'text');
-  const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
   const {
     trendingBarEnabled,
@@ -71,7 +69,7 @@ export default function ContentAndMediaScreen() {
         onPress: () => router.push('/(tabs)/settings/hidden-content'),
       },
     ],
-    [showNotImplemented, t],
+    [t],
   );
 
   return (

@@ -3,6 +3,8 @@ const isGithubActions = Boolean(process.env.GITHUB_ACTIONS);
 module.exports = {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
+  // This package has no tests yet; don't fail the (workspaces-wide) test run.
+  passWithNoTests: true,
   extensionsToTreatAsEsm: ['.ts'],
   transform: {
     '^.+\\.m?tsx?$': [

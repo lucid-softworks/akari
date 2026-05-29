@@ -13,9 +13,17 @@
       "label": "Kimlik",
       "description": "Atproto'da kim olduğunu doğrula. Her zaman gereklidir."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Bluesky erişimi",
+      "description": "Bluesky AppView üzerinde akışlar, profiller, bildirimler, arama, takipler, engellemeler, listeler ve gönderileri kapsayan izin paketi."
+    },
+    "bskyChat": {
       "label": "Doğrudan mesajlar",
       "description": "Senin adına sohbet mesajlarını okur ve gönderir."
+    },
+    "blobs": {
+      "label": "Resim ve video yüklemeleri",
+      "description": "Gönderilere medya ekleyebilmen için hesabına resim ve video blob’ları yükle."
     },
     "profile": {
       "label": "Profil",

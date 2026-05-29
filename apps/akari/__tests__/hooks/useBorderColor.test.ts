@@ -27,12 +27,6 @@ describe('useBorderColor', () => {
 
     renderHook(() => useBorderColor());
 
-    expect(mockUseThemeColor).toHaveBeenCalledWith(
-      {
-        light: '#e8eaed',
-        dark: '#2d3133',
-      },
-      'background',
-    );
+    expect(mockUseThemeColor).toHaveBeenCalledWith({}, 'border');
   });
 });

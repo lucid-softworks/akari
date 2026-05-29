@@ -208,8 +208,6 @@ function TemplateEditorModal({
   const borderColor = useBorderColor();
   const secondary = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
   const accent = useThemeColor({}, 'tint');
-  const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const textColor = useThemeColor({}, 'text');
 
   const [draftName, setDraftName] = useState(template?.name ?? '');
   const [draftSubject, setDraftSubject] = useState(template?.subject ?? '');

@@ -28,7 +28,6 @@ export default function HandleSettingsScreen() {
   const borderColor = useBorderColor();
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const accentColor = useThemeColor({ light: '#7C8CF9', dark: '#7C8CF9' }, 'tint');
-  const textColor = useThemeColor({}, 'text');
   const { t } = useTranslation();
   const { showToast } = useToast();
 

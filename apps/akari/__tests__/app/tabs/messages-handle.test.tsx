@@ -5,12 +5,16 @@ import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet } from '
 import ConversationScreen from '@/app/(tabs)/messages/[convoId]';
 import { useLocalSearchParams } from 'expo-router';
 import { useConversations } from '@/hooks/queries/useConversations';
+import { useConvo } from '@/hooks/queries/useConvo';
 import { useMessages } from '@/hooks/queries/useMessages';
 import { useSendMessage } from '@/hooks/mutations/useSendMessage';
+import { useMessageReaction } from '@/hooks/mutations/useMessageReaction';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { showAlert } from '@/utils/alert';
+import { useConfirm } from '@/hooks/useConfirm';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
 
@@ -23,6 +27,14 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
   router: { back: jest.fn(), push: jest.fn() },
 }));
+
+jest.mock('@tanstack/react-query', () => {
+  const actual = jest.requireActual('@tanstack/react-query');
+  return {
+    ...actual,
+    useQueryClient: () => ({ invalidateQueries: jest.fn() }),
+  };
+});
 
 jest.mock('react-native-safe-area-context', () => {
   const { View } = require('react-native');
@@ -48,26 +60,40 @@ jest.mock('@/components/ui/IconSymbol', () => {
 });
 
 jest.mock('@/hooks/queries/useConversations');
+jest.mock('@/hooks/queries/useConvo');
 jest.mock('@/hooks/queries/useMessages');
 jest.mock('@/hooks/mutations/useSendMessage');
+jest.mock('@/hooks/mutations/useMessageReaction');
+jest.mock('@/hooks/queries/useCurrentAccount');
+jest.mock('@/hooks/queries/useJwtToken');
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
-jest.mock('@/utils/alert');
+jest.mock('@/hooks/useConfirm');
 
 const mockUseLocalSearchParams = useLocalSearchParams as jest.Mock;
 const mockUseConversations = useConversations as jest.Mock;
+const mockUseConvo = useConvo as jest.Mock;
 const mockUseMessages = useMessages as jest.Mock;
 const mockUseSendMessage = useSendMessage as jest.Mock;
+const mockUseMessageReaction = useMessageReaction as jest.Mock;
+const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
+const mockUseJwtToken = useJwtToken as jest.Mock;
 const mockUseBorderColor = useBorderColor as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
-const mockShowAlert = showAlert as jest.Mock;
+const mockUseConfirm = useConfirm as jest.Mock;
+const mockConfirm = jest.fn();
 let keyboardListeners: { show?: () => void; hide?: () => void } = {};
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockUseLocalSearchParams.mockReturnValue({ handle: 'alice' });
+  mockUseLocalSearchParams.mockReturnValue({ convoId: '1', handle: 'alice' });
+  mockUseConvo.mockReturnValue({ data: undefined });
+  mockUseMessageReaction.mockReturnValue({ mutate: jest.fn() });
+  mockUseCurrentAccount.mockReturnValue({ data: { did: 'did:me', handle: 'me', pdsUrl: undefined } });
+  mockUseJwtToken.mockReturnValue({ data: undefined });
+  mockUseConfirm.mockReturnValue(mockConfirm);
   mockUseBorderColor.mockReturnValue('#ccc');
   mockUseThemeColor.mockImplementation((c: any) => {
     if (typeof c === 'string') return c;
@@ -121,7 +147,7 @@ describe('ConversationScreen', () => {
   });
 
   it('renders error state when messages query fails', () => {
-    const conversation = { handle: 'alice', convoId: '1', avatar: 'a', displayName: 'Alice' };
+    const conversation = { handle: 'alice', convoId: '1', avatar: 'a', displayName: 'Alice', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
     mockUseMessages.mockReturnValue({
       data: null,
@@ -139,7 +165,7 @@ describe('ConversationScreen', () => {
   });
 
   it('sends a message and clears input', async () => {
-    const conversation = { handle: 'alice', convoId: '1' };
+    const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
     mockUseMessages.mockReturnValue({
       data: { pages: [{ messages: [] }] },
@@ -163,7 +189,7 @@ describe('ConversationScreen', () => {
   }, 10000);
 
   it('shows alert when sending fails', async () => {
-    const conversation = { handle: 'alice', convoId: '1' };
+    const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
     mockUseMessages.mockReturnValue({
       data: { pages: [{ messages: [] }] },
@@ -182,11 +208,11 @@ describe('ConversationScreen', () => {
     await act(async () => {
       fireEvent.press(getByText('arrow.up.circle.fill'));
     });
-    expect(mockShowAlert).toHaveBeenCalled();
+    expect(mockConfirm).toHaveBeenCalled();
   });
 
   it('loads more messages and shows footer', () => {
-    const conversation = { handle: 'alice', convoId: '1' };
+    const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     const messages: Message[] = [
       { id: 'm1', text: 'hi', timestamp: '10:00', isFromMe: false, sentAt: '' },
     ];
@@ -211,7 +237,7 @@ describe('ConversationScreen', () => {
   });
 
   it('fetches next page when end reached', () => {
-    const conversation = { handle: 'alice', convoId: '1' };
+    const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     const fetchNextPage = jest.fn();
     mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
     mockUseMessages.mockReturnValue({
@@ -234,7 +260,7 @@ describe('ConversationScreen', () => {
   // Header navigation is handled by the parent tab layout
 
   it('returns early when message text is empty', () => {
-    const conversation = { handle: 'alice', convoId: '1' };
+    const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
     mockUseMessages.mockReturnValue({
       data: { pages: [{ messages: [] }] },
@@ -263,7 +289,7 @@ describe('ConversationScreen', () => {
   });
 
   it('shows loading indicator while messages are fetching', () => {
-    const conversation = { handle: 'alice', convoId: '1' };
+    const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
     mockUseMessages.mockReturnValue({
       data: undefined,
@@ -281,7 +307,7 @@ describe('ConversationScreen', () => {
   });
 
   it('applies distinct backgrounds to incoming and outgoing messages', () => {
-    const conversation = { handle: 'alice', convoId: '1' };
+    const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     const messages: Message[] = [
       { id: 'incoming', text: 'incoming message', timestamp: '10:00', isFromMe: false, sentAt: '' },
       { id: 'outgoing', text: 'outgoing message', timestamp: '10:05', isFromMe: true, sentAt: '' },
@@ -315,7 +341,7 @@ describe('ConversationScreen', () => {
   });
 
   it('renders outgoing messages', () => {
-    const conversation = { handle: 'alice', convoId: '1' };
+    const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
     const messages: Message[] = [
       { id: 'm2', text: 'from me', timestamp: 'now', isFromMe: true, sentAt: '' },
     ];
@@ -339,7 +365,7 @@ describe('ConversationScreen', () => {
     Platform.OS = 'android';
 
     try {
-      const conversation = { handle: 'alice', convoId: '1' };
+      const conversation = { handle: 'alice', convoId: '1', isGroup: false, muted: false, members: [{ did: 'did:alice', handle: 'alice' }] };
       mockUseConversations.mockReturnValue({ data: { pages: [{ conversations: [conversation] }] } });
       mockUseMessages.mockReturnValue({
         data: { pages: [{ messages: [] }] },

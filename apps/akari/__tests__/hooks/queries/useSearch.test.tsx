@@ -6,8 +6,6 @@ import { useSearch } from '@/hooks/queries/useSearch';
 import { useJwtToken } from '@/hooks/queries/useJwtToken';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 
-type SearchError = { type: string; message: string };
-
 const mockSearchProfiles = jest.fn();
 const mockSearchPosts = jest.fn();
 

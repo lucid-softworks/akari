@@ -7,6 +7,8 @@ import { useLocalSearchParams } from 'expo-router';
 import { useSearch } from '@/hooks/queries/useSearch';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAppViewEnabled } from '@/hooks/useAppViewEnabled';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { VirtualizedList } from '@/components/ui/VirtualizedList';
 
 jest.mock('@shopify/flash-list', () => require('../../../test-utils/flash-list'));
@@ -18,7 +20,7 @@ jest.mock('expo-image', () => {
 
 jest.mock('expo-router', () => ({
   useLocalSearchParams: jest.fn(),
-  router: { push: jest.fn() },
+  router: { push: jest.fn(), setParams: jest.fn() },
   usePathname: jest.fn(() => '/search'),
 }));
 
@@ -30,16 +32,35 @@ jest.mock('react-native-safe-area-context', () => {
   };
 });
 
-jest.mock('@/components/Labels', () => {
-  const { View } = require('react-native');
-  return { Labels: () => <View /> };
+jest.mock('@/components/search/SearchProfileResult', () => {
+  const { Text, Pressable } = require('react-native');
+  return {
+    SearchProfileResult: ({
+      profile,
+      onPress,
+    }: {
+      profile: { displayName?: string; handle: string };
+      onPress: () => void;
+    }) => (
+      <Pressable onPress={onPress}>
+        <Text>{profile.displayName || profile.handle}</Text>
+      </Pressable>
+    ),
+  };
 });
 
-jest.mock('@/components/PostCard', () => {
+jest.mock('@/components/search/SearchPostResult', () => {
   const { Text } = require('react-native');
   return {
-    PostCard: ({ post }: { post: { text: string } }) => <Text>{post.text}</Text>,
+    SearchPostResult: ({ post }: { post: { record?: { text?: string } } }) => (
+      <Text>{post.record?.text}</Text>
+    ),
   };
+});
+
+jest.mock('@/components/search/SearchEmptyState', () => {
+  const { View } = require('react-native');
+  return { SearchEmptyState: () => <View /> };
 });
 
 jest.mock('@/components/SearchTabs', () => {
@@ -73,6 +94,8 @@ jest.mock('@/components/skeletons', () => {
 jest.mock('@/hooks/queries/useSearch');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
+jest.mock('@/hooks/useAppViewEnabled');
+jest.mock('@/hooks/queries/useIsGuest');
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: { register: jest.fn() },
 }));
@@ -81,12 +104,16 @@ const mockUseLocalSearchParams = useLocalSearchParams as unknown as jest.Mock;
 const mockUseSearch = useSearch as jest.Mock;
 const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
+const mockUseAppViewEnabled = useAppViewEnabled as jest.Mock;
+const mockUseIsGuest = useIsGuest as jest.Mock;
 
 describe('SearchScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseThemeColor.mockImplementation((c: any) => (typeof c === 'string' ? c : c.light ?? '#000'));
     mockUseTranslation.mockReturnValue({ t: (k: string) => k });
+    mockUseAppViewEnabled.mockReturnValue(true);
+    mockUseIsGuest.mockReturnValue(false);
   });
 
   it('trims query and triggers search', async () => {
@@ -161,7 +188,14 @@ describe('SearchScreen', () => {
     const fetchNextPage = jest.fn();
     const refetch = jest.fn();
     mockUseSearch.mockReturnValue({
-      data: { pages: [{ results: [] }] },
+      // A non-empty result set is required: the screen guards
+      // `onEndReached` against empty lists (the empty state fills the
+      // viewport and would otherwise fire pagination spuriously).
+      data: {
+        pages: [
+          { results: [{ type: 'profile', data: { handle: 'alice', displayName: 'Alice' } }] },
+        ],
+      },
       isLoading: false,
       isError: false,
       error: null,

@@ -119,7 +119,7 @@ export default function SystemLogScreen() {
           <ThemedView style={[styles.logCard, { borderColor }]}>
             {entries.map((entry, idx) => (
               <View
-                key={`${entry.ts}-${idx}`}
+                key={`${entry.ts}-${entry.level}-${entry.message}`}
                 style={[
                   styles.row,
                   idx < entries.length - 1 && { borderBottomColor: borderColor, borderBottomWidth: layout.hairline },
