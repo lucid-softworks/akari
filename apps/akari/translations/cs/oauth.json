@@ -13,9 +13,17 @@
       "label": "Identita",
       "description": "Potvrďte, kdo jste na atproto. Vždy povinné."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Přístup k Bluesky",
+      "description": "Sada oprávnění zahrnující kanály, profily, oznámení, vyhledávání, sledování, blokování, seznamy a příspěvky v Bluesky AppView."
+    },
+    "bskyChat": {
       "label": "Přímé zprávy",
       "description": "Čtení a odesílání chatových zpráv vaším jménem."
+    },
+    "blobs": {
+      "label": "Nahrávání obrázků a videí",
+      "description": "Nahrávejte obrázky a videa do svého účtu, abyste mohli k příspěvkům přikládat média."
     },
     "profile": {
       "label": "Profil",

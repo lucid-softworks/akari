@@ -68,30 +68,38 @@ describe('useFeedGenerators query hook', () => {
     expect(fetchResult.data).toEqual({ feeds: [] });
   });
 
-  it('throws error when token is missing', async () => {
+  it('falls back to the public AppView when token is missing (guest path)', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    mockGetFeedGenerators.mockResolvedValue({ feeds: [{ uri: 'feed1' }] });
     const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useFeedGenerators(['feed1']), {
       wrapper,
     });
 
-    const fetchResult = await result.current.refetch();
-    expect((fetchResult.error as Error).message).toBe('No access token');
-    expect(mockGetFeedGenerators).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(mockGetFeedGenerators).toHaveBeenCalledWith('', ['feed1']);
+    expect(result.current.data).toEqual({ feeds: [{ uri: 'feed1' }] });
   });
 
-  it('throws error when PDS URL is missing', async () => {
+  it('falls back to the public AppView when PDS URL is missing (guest path)', async () => {
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockGetFeedGenerators.mockResolvedValue({ feeds: [{ uri: 'feed1' }] });
     const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useFeedGenerators(['feed1']), {
       wrapper,
     });
 
-    const fetchResult = await result.current.refetch();
-    expect((fetchResult.error as Error).message).toBe('No PDS URL available');
-    expect(mockGetFeedGenerators).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(mockGetFeedGenerators).toHaveBeenCalledWith('', ['feed1']);
+    expect(result.current.data).toEqual({ feeds: [{ uri: 'feed1' }] });
   });
 });
 

@@ -42,6 +42,45 @@ describe('useFeed query hook', () => {
   });
 
   it('fetches feed posts and handles pagination', async () => {
+    // A full batch (feed.length >= limit) stops the per-page top-up loop,
+    // so with limit=1 each upstream response becomes its own query page.
+    mockGetFeed
+      .mockResolvedValueOnce({
+        feed: [{ post: { uri: '1' } }],
+        cursor: 'cursor1',
+      })
+      .mockResolvedValueOnce({
+        feed: [{ post: { uri: '2' } }],
+        cursor: undefined,
+      });
+
+    const { wrapper } = createWrapper();
+
+    const { result } = renderHook(() => useFeed('at://feed/1', 1), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.data?.pages[0].feed).toEqual([
+        { post: { uri: '1' } },
+      ]);
+    });
+    expect(mockGetFeed).toHaveBeenCalledWith('token', 'at://feed/1', 1, undefined, []);
+
+    await act(async () => {
+      await result.current.fetchNextPage();
+    });
+
+    await waitFor(() => {
+      expect(result.current.data?.pages[1].feed).toEqual([
+        { post: { uri: '2' } },
+      ]);
+    });
+    expect(mockGetFeed).toHaveBeenLastCalledWith('token', 'at://feed/1', 1, 'cursor1', []);
+  });
+
+  it('tops up a single page by following the upstream cursor until the limit is met', async () => {
+    // A short upstream response (fewer than `limit` items) keeps pulling the
+    // cursor so one query page fills up to `limit` instead of leaving the
+    // screen near-empty.
     mockGetFeed
       .mockResolvedValueOnce({
         feed: [{ post: { uri: '1' } }],
@@ -59,52 +98,49 @@ describe('useFeed query hook', () => {
     await waitFor(() => {
       expect(result.current.data?.pages[0].feed).toEqual([
         { post: { uri: '1' } },
-      ]);
-    });
-    expect(mockGetFeed).toHaveBeenCalledWith('token', 'at://feed/1', 10, undefined);
-
-    await act(async () => {
-      await result.current.fetchNextPage();
-    });
-
-    await waitFor(() => {
-      expect(result.current.data?.pages[1].feed).toEqual([
         { post: { uri: '2' } },
       ]);
     });
-    expect(mockGetFeed).toHaveBeenLastCalledWith('token', 'at://feed/1', 10, 'cursor1');
+    expect(mockGetFeed).toHaveBeenCalledTimes(2);
+    expect(mockGetFeed).toHaveBeenNthCalledWith(1, 'token', 'at://feed/1', 10, undefined, []);
+    expect(mockGetFeed).toHaveBeenNthCalledWith(2, 'token', 'at://feed/1', 10, 'cursor1', []);
   });
 
-  it('returns error when pdsUrl is missing', async () => {
+  it('uses the public AppView (guest path) when pdsUrl is missing', async () => {
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockGetFeed.mockResolvedValueOnce({ feed: [{ post: { uri: '1' } }], cursor: undefined });
     const { wrapper } = createWrapper();
 
-    const { result } = renderHook(() => useFeed('at://feed/1'), { wrapper });
+    const { result } = renderHook(() => useFeed('at://feed/1', 10), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-      expect((result.current.error as Error).message).toBe('No PDS URL available');
+      expect(result.current.data?.pages[0].feed).toEqual([{ post: { uri: '1' } }]);
     });
-    expect(mockGetFeed).not.toHaveBeenCalled();
+    // Guest path passes an empty auth string.
+    expect(mockGetFeed).toHaveBeenCalledWith('', 'at://feed/1', 10, undefined, []);
   });
 
-  it('throws error when token is missing', async () => {
+  it('uses the public AppView (guest path) when token is missing', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    mockGetFeed.mockResolvedValueOnce({ feed: [{ post: { uri: '1' } }], cursor: undefined });
     const { wrapper } = createWrapper();
 
-    const { result } = renderHook(() => useFeed('at://feed/1'), { wrapper });
+    const { result } = renderHook(() => useFeed('at://feed/1', 10), { wrapper });
 
-    const fetchResult = await result.current.fetchNextPage();
-    expect((fetchResult.error as Error).message).toBe('No access token');
+    await waitFor(() => {
+      expect(result.current.data?.pages[0].feed).toEqual([{ post: { uri: '1' } }]);
+    });
+    expect(mockGetFeed).toHaveBeenCalledWith('', 'at://feed/1', 10, undefined, []);
   });
 
-  it('throws error when feed URI is missing', async () => {
+  it('does not fetch when feed URI is missing', async () => {
     const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useFeed(null), { wrapper });
 
     const fetchResult = await result.current.fetchNextPage();
     expect((fetchResult.error as Error).message).toBe('No feed URI provided');
+    expect(mockGetFeed).not.toHaveBeenCalled();
   });
 });
 

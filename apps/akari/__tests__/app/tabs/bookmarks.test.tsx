@@ -55,6 +55,18 @@ jest.mock('@/components/PostCard', () => {
 
 jest.mock('@/hooks/queries/useBookmarks');
 jest.mock('@/hooks/useTranslation');
+// Bookmarks is an auth-only screen: it gates on useIsGuest and renders a
+// sign-in CTA for guests. It also filters by muted words and requires the
+// AppView to be enabled. Mock all three so the list path renders.
+jest.mock('@/hooks/queries/useIsGuest', () => ({
+  useIsGuest: jest.fn(() => false),
+}));
+jest.mock('@/hooks/queries/useMutedWords', () => ({
+  useMutedWords: jest.fn(() => ({ data: [], isLoading: false, isError: false })),
+}));
+jest.mock('@/hooks/useAppViewEnabled', () => ({
+  useAppViewEnabled: jest.fn(() => true),
+}));
 jest.mock('@/utils/tabScrollRegistry', () => ({
   tabScrollRegistry: { register: jest.fn() },
 }));

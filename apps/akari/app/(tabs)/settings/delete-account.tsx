@@ -32,7 +32,6 @@ export default function DeleteAccountScreen() {
   const borderColor = useBorderColor();
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
   const dangerColor = useThemeColor({ light: '#DC2626', dark: '#F87171' }, 'text');
-  const textColor = useThemeColor({}, 'text');
   const { t } = useTranslation();
   const { showToast } = useToast();
 

@@ -13,9 +13,17 @@
       "label": "Identitate",
       "description": "Confirmă cine ești pe atproto. Întotdeauna obligatoriu."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Acces Bluesky",
+      "description": "Set de permisiuni care acoperă fluxurile, profilurile, notificările, căutarea, urmăririle, blocările, listele și postările pe AppView-ul Bluesky."
+    },
+    "bskyChat": {
       "label": "Mesaje directe",
       "description": "Citește și trimite mesaje de chat în numele tău."
+    },
+    "blobs": {
+      "label": "Încărcări de imagini și videoclipuri",
+      "description": "Încarcă bloburi de imagini și videoclipuri în contul tău ca să poți atașa media la postări."
     },
     "profile": {
       "label": "Profil",

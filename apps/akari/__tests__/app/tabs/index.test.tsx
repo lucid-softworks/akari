@@ -5,12 +5,12 @@ import HomeScreen from '@/app/(tabs)/index/index';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
-import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useFeed } from '@/hooks/queries/useFeed';
-import { useFeeds } from '@/hooks/queries/useFeeds';
-import { useSavedFeeds } from '@/hooks/queries/usePreferences';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
 import { useTimeline } from '@/hooks/queries/useTimeline';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
+import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
+import { useSavedFeedsList } from '@/hooks/useSavedFeedsList';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -37,6 +37,10 @@ jest.mock('@/components/PostComposer', () => {
 
 jest.mock('@/components/ReviewComposer', () => ({
   ReviewComposer: () => null,
+}));
+
+jest.mock('@/components/PollComposer', () => ({
+  PollComposer: () => null,
 }));
 
 jest.mock('@/components/TabBar', () => {
@@ -95,6 +99,10 @@ jest.mock('@/hooks/useThemeColor', () => ({
   useThemeColor: () => '#000',
 }));
 
+jest.mock('@/hooks/useBorderColor', () => ({
+  useBorderColor: () => '#ccc',
+}));
+
 jest.mock('@/utils/navigation', () => ({
   useNavigateToPost: () => jest.fn(),
   useNavigateToProfile: () => jest.fn(),
@@ -103,12 +111,12 @@ jest.mock('@/utils/navigation', () => ({
 }));
 
 jest.mock('@/hooks/mutations/useSetSelectedFeed');
-jest.mock('@/hooks/queries/useFeeds');
-jest.mock('@/hooks/queries/usePreferences');
 jest.mock('@/hooks/queries/useSelectedFeed');
 jest.mock('@/hooks/queries/useFeed');
 jest.mock('@/hooks/queries/useTimeline');
-jest.mock('@/hooks/queries/useCurrentAccount');
+jest.mock('@/hooks/queries/useIsGuest');
+jest.mock('@/hooks/queries/useFeedGenerators');
+jest.mock('@/hooks/useSavedFeedsList');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useResponsive');
 jest.mock('@/utils/tabScrollRegistry', () => ({
@@ -116,68 +124,86 @@ jest.mock('@/utils/tabScrollRegistry', () => ({
 }));
 
 const mockUseSetSelectedFeed = useSetSelectedFeed as jest.Mock;
-const mockUseFeeds = useFeeds as jest.Mock;
-const mockUseSavedFeeds = useSavedFeeds as jest.Mock;
+const mockUseSavedFeedsList = useSavedFeedsList as jest.Mock;
 const mockUseSelectedFeed = useSelectedFeed as jest.Mock;
 const mockUseFeed = useFeed as jest.Mock;
 const mockUseTimeline = useTimeline as jest.Mock;
-const mockUseCurrentAccount = useCurrentAccount as jest.Mock;
+const mockUseIsGuest = useIsGuest as jest.Mock;
+const mockUseFeedGenerators = useFeedGenerators as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockUseResponsive = useResponsive as jest.Mock;
+
+// The home screen resolves the feed tab strip through useSavedFeedsList and
+// the actual feed/timeline data through the useHomeFeed hook (which still
+// reads useFeed / useTimeline directly — left unmocked-internally so the
+// empty / loading / posts list logic runs for real over the mocked queries).
+// `feeds` is the flattened tab list: { uri, displayName }[].
+const setSavedFeedsList = (
+  feeds: { uri: string; displayName: string }[],
+  overrides: Partial<{ savedFeedsLoading: boolean; feedsLoading: boolean }> = {},
+) => {
+  mockUseSavedFeedsList.mockReturnValue({
+    allFeedsWithCreated: feeds,
+    savedFeedsLoading: overrides.savedFeedsLoading ?? false,
+    feedsLoading: overrides.feedsLoading ?? false,
+    refetchFeeds: jest.fn(),
+  });
+};
+
+// useFeed is consumed by useHomeFeed; it returns `posts` (render-ready) plus
+// the raw infinite-query fields. Build a matching shape from a page list.
+const setFeed = (
+  pages: { feed: any[] }[],
+  overrides: Partial<{ isLoading: boolean; hasNextPage: boolean; isFetchingNextPage: boolean }> = {},
+) => {
+  const posts = pages.flatMap((page) => page.feed);
+  mockUseFeed.mockReturnValue({
+    data: { pages },
+    posts,
+    isLoading: overrides.isLoading ?? false,
+    fetchNextPage: jest.fn(),
+    hasNextPage: overrides.hasNextPage ?? false,
+    isFetchingNextPage: overrides.isFetchingNextPage ?? false,
+    refetch: jest.fn(),
+  });
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
   mockUseTranslation.mockReturnValue({ t: (k: string) => k });
   mockUseResponsive.mockReturnValue({ isLargeScreen: false });
-  mockUseCurrentAccount.mockReturnValue({ data: { did: 'did', handle: 'user' } });
+  mockUseIsGuest.mockReturnValue(false);
+  mockUseFeedGenerators.mockReturnValue({ data: undefined });
 });
 
 describe('HomeScreen', () => {
+  const buildPost = (uri: string, text: string, handle = 'alice') => ({
+    post: {
+      uri,
+      record: { text },
+      author: { did: `did:${handle}`, handle, displayName: handle, avatar: '' },
+      indexedAt: new Date().toISOString(),
+      likeCount: 0,
+      replyCount: 0,
+      repostCount: 0,
+      embed: null,
+      embeds: [],
+      labels: [],
+      viewer: {},
+      cid: `${uri}-cid`,
+    },
+  });
+
   it('renders posts and handles feed changes', () => {
-    mockUseSavedFeeds.mockReturnValue({
-      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
-      isLoading: false,
-    });
-    mockUseFeeds.mockReturnValue({
-      data: { feeds: [{ uri: 'feed2', displayName: 'Feed Two' }] },
-      isLoading: false,
-      refetch: jest.fn(),
-    });
+    setSavedFeedsList([
+      { uri: 'feed1', displayName: 'Feed One' },
+      { uri: 'feed2', displayName: 'Feed Two' },
+    ]);
     const mutate = jest.fn();
     mockUseSetSelectedFeed.mockReturnValue({ mutate });
     mockUseSelectedFeed.mockReturnValue({ data: 'feed1' });
-    mockUseFeed.mockReturnValue({
-      data: {
-        pages: [
-          {
-            feed: [
-              {
-                post: {
-                  uri: 'p1',
-                  record: { text: 'Post 1' },
-                  author: { handle: 'alice', displayName: 'Alice', avatar: '' },
-                  indexedAt: new Date().toISOString(),
-                  likeCount: 0,
-                  replyCount: 0,
-                  repostCount: 0,
-                  embed: null,
-                  embeds: [],
-                  labels: [],
-                  viewer: {},
-                  cid: 'cid1',
-                },
-              },
-            ],
-          },
-        ],
-      },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-      refetch: jest.fn(),
-    });
-    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+    setFeed([{ feed: [buildPost('p1', 'Post 1')] }]);
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false, refetch: jest.fn() });
 
     const { getByText } = render(<HomeScreen />);
 
@@ -192,22 +218,11 @@ describe('HomeScreen', () => {
   });
 
   it('prompts to select a feed when none is chosen', () => {
-    mockUseSavedFeeds.mockReturnValue({
-      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
-      isLoading: false,
-    });
-    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    setSavedFeedsList([{ uri: 'feed1', displayName: 'Feed One' }]);
     mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
     mockUseSelectedFeed.mockReturnValue({ data: null });
-    mockUseFeed.mockReturnValue({
-      data: { pages: [] },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-      refetch: jest.fn(),
-    });
-    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+    setFeed([]);
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false, refetch: jest.fn() });
 
     const { getByText } = render(<HomeScreen />);
 
@@ -215,22 +230,11 @@ describe('HomeScreen', () => {
   });
 
   it('shows empty state when feed has no posts', () => {
-    mockUseSavedFeeds.mockReturnValue({
-      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
-      isLoading: false,
-    });
-    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    setSavedFeedsList([{ uri: 'feed1', displayName: 'Feed One' }]);
     mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
     mockUseSelectedFeed.mockReturnValue({ data: 'feed1' });
-    mockUseFeed.mockReturnValue({
-      data: { pages: [{ feed: [] }] },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-      refetch: jest.fn(),
-    });
-    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+    setFeed([{ feed: [] }]);
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false, refetch: jest.fn() });
 
     const { getByText } = render(<HomeScreen />);
 
@@ -238,26 +242,11 @@ describe('HomeScreen', () => {
   });
 
   it('shows loading state while feeds are loading', () => {
-    mockUseSavedFeeds.mockReturnValue({
-      data: [],
-      isLoading: true,
-    });
-    mockUseFeeds.mockReturnValue({
-      data: { feeds: [] },
-      isLoading: true,
-      refetch: jest.fn(),
-    });
+    setSavedFeedsList([], { savedFeedsLoading: true, feedsLoading: true });
     mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
     mockUseSelectedFeed.mockReturnValue({ data: null });
-    mockUseFeed.mockReturnValue({
-      data: { pages: [] },
-      isLoading: true,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-      refetch: jest.fn(),
-    });
-    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: true });
+    setFeed([], { isLoading: true });
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: true, refetch: jest.fn() });
 
     const { getByText } = render(<HomeScreen />);
 
@@ -265,46 +254,17 @@ describe('HomeScreen', () => {
   });
 
   it('renders timeline posts when the following feed is selected', () => {
-    mockUseSavedFeeds.mockReturnValue({
-      data: [
-        { type: 'timeline', value: 'following' },
-        { type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } },
-      ],
-      isLoading: false,
-    });
-    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    setSavedFeedsList([
+      { uri: 'following', displayName: 'Following' },
+      { uri: 'feed1', displayName: 'Feed One' },
+    ]);
     mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
     mockUseSelectedFeed.mockReturnValue({ data: 'following' });
-    mockUseFeed.mockReturnValue({
-      data: { pages: [] },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-      refetch: jest.fn(),
-    });
+    setFeed([]);
     mockUseTimeline.mockReturnValue({
-      data: {
-        feed: [
-          {
-            post: {
-              uri: 'timeline-post',
-              record: { text: 'Timeline Post' },
-              author: { handle: 'bob', displayName: 'Bob', avatar: '' },
-              indexedAt: new Date().toISOString(),
-              likeCount: 0,
-              replyCount: 0,
-              repostCount: 0,
-              embed: null,
-              embeds: [],
-              labels: [],
-              viewer: {},
-              cid: 'timeline-post',
-            },
-          },
-        ],
-      },
+      data: { feed: [buildPost('timeline-post', 'Timeline Post', 'bob')] },
       isLoading: false,
+      refetch: jest.fn(),
     });
 
     const { getByText } = render(<HomeScreen />);
@@ -314,45 +274,11 @@ describe('HomeScreen', () => {
   });
 
   it('shows loading indicator when fetching additional posts', () => {
-    mockUseSavedFeeds.mockReturnValue({
-      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
-      isLoading: false,
-    });
-    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    setSavedFeedsList([{ uri: 'feed1', displayName: 'Feed One' }]);
     mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
     mockUseSelectedFeed.mockReturnValue({ data: 'feed1' });
-    mockUseFeed.mockReturnValue({
-      data: {
-        pages: [
-          {
-            feed: [
-              {
-                post: {
-                  uri: 'p1',
-                  record: { text: 'Post 1' },
-                  author: { handle: 'alice', displayName: 'Alice', avatar: '' },
-                  indexedAt: new Date().toISOString(),
-                  likeCount: 0,
-                  replyCount: 0,
-                  repostCount: 0,
-                  embed: null,
-                  embeds: [],
-                  labels: [],
-                  viewer: {},
-                  cid: 'cid1',
-                },
-              },
-            ],
-          },
-        ],
-      },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: true,
-      isFetchingNextPage: true,
-      refetch: jest.fn(),
-    });
-    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+    setFeed([{ feed: [buildPost('p1', 'Post 1')] }], { hasNextPage: true, isFetchingNextPage: true });
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false, refetch: jest.fn() });
 
     const { getByText } = render(<HomeScreen />);
 
@@ -361,45 +287,11 @@ describe('HomeScreen', () => {
   });
 
   it('opens the post composer when the compose button is pressed', () => {
-    mockUseSavedFeeds.mockReturnValue({
-      data: [{ type: 'feed', metadata: { uri: 'feed1', displayName: 'Feed One' } }],
-      isLoading: false,
-    });
-    mockUseFeeds.mockReturnValue({ data: { feeds: [] }, isLoading: false, refetch: jest.fn() });
+    setSavedFeedsList([{ uri: 'feed1', displayName: 'Feed One' }]);
     mockUseSetSelectedFeed.mockReturnValue({ mutate: jest.fn() });
     mockUseSelectedFeed.mockReturnValue({ data: 'feed1' });
-    mockUseFeed.mockReturnValue({
-      data: {
-        pages: [
-          {
-            feed: [
-              {
-                post: {
-                  uri: 'p1',
-                  record: { text: 'Post 1' },
-                  author: { handle: 'alice', displayName: 'Alice', avatar: '' },
-                  indexedAt: new Date().toISOString(),
-                  likeCount: 0,
-                  replyCount: 0,
-                  repostCount: 0,
-                  embed: null,
-                  embeds: [],
-                  labels: [],
-                  viewer: {},
-                  cid: 'cid1',
-                },
-              },
-            ],
-          },
-        ],
-      },
-      isLoading: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-      refetch: jest.fn(),
-    });
-    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false });
+    setFeed([{ feed: [buildPost('p1', 'Post 1')] }]);
+    mockUseTimeline.mockReturnValue({ data: { feed: [] }, isLoading: false, refetch: jest.fn() });
 
     const { getByText, queryByText } = render(<HomeScreen />);
 

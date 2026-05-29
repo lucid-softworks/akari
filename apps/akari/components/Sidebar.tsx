@@ -82,13 +82,16 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
       notifications: unreadNotificationsCount,
       messages: unreadMessagesCount,
     };
-    return visibleTabs
-      .filter((key) => key !== 'moderation' || showModeration)
-      .map((key) => ({
-        id: key,
-        ...tabMeta[key],
-        badge: badgeFor[key],
-      }));
+    return visibleTabs.reduce<NavigationItem[]>((acc, key) => {
+      if (key !== 'moderation' || showModeration) {
+        acc.push({
+          id: key,
+          ...tabMeta[key],
+          badge: badgeFor[key],
+        });
+      }
+      return acc;
+    }, []);
   }, [t, unreadMessagesCount, unreadNotificationsCount, activeAccount?.handle, showModeration, visibleTabs]);
 
   const isActiveRoute = (item: NavigationItem) => {

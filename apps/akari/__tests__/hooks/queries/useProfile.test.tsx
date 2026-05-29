@@ -49,21 +49,34 @@ describe('useProfile query hook', () => {
       expect(result.current.data).toEqual({ handle: 'alice' });
     });
 
-    expect(mockGetProfile).toHaveBeenCalledWith('token', 'alice');
+    // Authenticated AppView path: real token plus the resolved accept-labelers
+    // list (empty when the user has no labeler preferences).
+    expect(mockGetProfile).toHaveBeenCalledWith('token', 'alice', []);
   });
 
-  it('errors when token is missing', async () => {
+  it('uses the public AppView (guest path) when token is missing', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    mockGetProfile.mockResolvedValueOnce({ handle: 'alice' });
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useProfile('alice'), { wrapper });
 
-    let fetched;
-    await act(async () => {
-      fetched = await result.current.refetch();
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ handle: 'alice' });
     });
+    // Guest path passes an empty auth string.
+    expect(mockGetProfile).toHaveBeenCalledWith('', 'alice', []);
+  });
 
-    expect(fetched!.error?.message).toBe('No access token');
-    expect(mockGetProfile).not.toHaveBeenCalled();
+  it('uses the public AppView (guest path) when PDS URL is missing', async () => {
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockGetProfile.mockResolvedValueOnce({ handle: 'alice' });
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useProfile('alice'), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual({ handle: 'alice' });
+    });
+    expect(mockGetProfile).toHaveBeenCalledWith('', 'alice', []);
   });
 
   it('errors when identifier is missing', async () => {
@@ -78,21 +91,4 @@ describe('useProfile query hook', () => {
     expect(fetched!.error?.message).toBe('No identifier provided');
     expect(mockGetProfile).not.toHaveBeenCalled();
   });
-
-  it('errors when PDS URL is missing', async () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-    (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
-
-    const { wrapper } = createWrapper();
-    const { result } = renderHook(() => useProfile('alice'), { wrapper });
-
-    await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-    });
-
-    expect(result.current.error?.message).toBe('No PDS URL available');
-    expect(mockGetProfile).not.toHaveBeenCalled();
-    (console.error as jest.Mock).mockRestore();
-  });
 });
-

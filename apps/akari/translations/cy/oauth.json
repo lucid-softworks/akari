@@ -13,9 +13,17 @@
       "label": "Hunaniaeth",
       "description": "Cadarnhewch pwy ydych ar atproto. Yn ofynnol bob amser."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Mynediad Bluesky",
+      "description": "Casgliad o ganiatâdau sy'n cwmpasu llifoedd, proffiliau, hysbysiadau, chwilio, dilyniadau, blociau, rhestrau a phostiadau ar AppView Bluesky."
+    },
+    "bskyChat": {
       "label": "Negeseuon uniongyrchol",
       "description": "Darllen ac anfon negeseuon sgwrs ar eich rhan."
+    },
+    "blobs": {
+      "label": "Llwytho lluniau a fideos i fyny",
+      "description": "Llwythwch lluniau a fideos i fyny i'ch cyfrif fel y gallwch atodi cyfryngau i bostiadau."
     },
     "profile": {
       "label": "Proffil",

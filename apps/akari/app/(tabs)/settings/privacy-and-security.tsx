@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useMemo } from 'react';
-import { Pressable, StyleSheet, Switch, View } from 'react-native';
+import { StyleSheet, Switch, View } from 'react-native';
 
 import { GuestSignInRequired } from '@/components/GuestSignInRequired';
 import {
@@ -24,7 +24,6 @@ import {
 } from '@/hooks/queries/useProfileRecord';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { useNotifyAudience, type NotifyAudience } from '@/hooks/useNotifyAudience';
-import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useAnalyticsOptOut } from '@/utils/plausible';
@@ -33,7 +32,6 @@ export default function PrivacyAndSecurityScreen() {
   const borderColor = useBorderColor();
   const iconColor = useThemeColor({}, 'text');
   const subduedColor = useThemeColor({ light: '#6B7280', dark: '#9BA1A6' }, 'text');
-  const showNotImplemented = useNotImplementedToast();
   const { t } = useTranslation();
   const { showToast } = useToast();
   const isGuest = useIsGuest();
@@ -98,7 +96,7 @@ export default function PrivacyAndSecurityScreen() {
         onPress: () => router.push('/(tabs)/settings/app-passwords'),
       },
     ],
-    [appPasswordsCount, showNotImplemented, t],
+    [appPasswordsCount, t],
   );
 
   if (isGuest) {

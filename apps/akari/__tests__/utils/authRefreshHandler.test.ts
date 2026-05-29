@@ -141,7 +141,13 @@ describe('installAuthRefreshHandler', () => {
     setCurrentAccount(qc, oauthAccount);
     qc.setQueryData(['accounts'], [oauthAccount]);
 
-    mockRefreshOAuthSession.mockRejectedValueOnce(new Error('refresh token revoked'));
+    // A definitively dead session (the OAuth auth server reports the refresh
+    // token was revoked / already rotated) is what triggers clearing auth. A
+    // bare Error with no status/oauthError is treated as transient and would
+    // (correctly) leave the session intact.
+    mockRefreshOAuthSession.mockRejectedValueOnce(
+      Object.assign(new Error('refresh token revoked'), { oauthError: 'invalid_grant' }),
+    );
 
     // Silence the __DEV__ console.warn the handler emits on failure so the
     // test output stays clean.

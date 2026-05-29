@@ -7,6 +7,7 @@ import { ShareToChatSheet } from '@/components/ShareToChatSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { RepostSheet } from '@/components/post/RepostSheet';
+import { useDialogManager } from '@/contexts/DialogContext';
 import {
   spacing,
   fontSize,
@@ -54,6 +55,10 @@ type PostActionsProps = {
   moreSlot?: React.ReactNode;
   onQuotePress?: () => void;
 };
+
+const REPOST_SHEET_ID = 'post-actions-repost';
+const SHARE_SHEET_ID = 'post-actions-share';
+const SHARE_TO_CHAT_SHEET_ID = 'post-actions-share-to-chat';
 
 // 0.13s ease transition for icon color + wash background on web. Native
 // platforms have no hover, so the transition object is null there.
@@ -156,16 +161,13 @@ export const PostActions = React.memo(function PostActions({
 }: PostActionsProps) {
   const { largerTextBadges, showLikeCount, showRepostCount, showReplyCount } = useAccessibilitySettings();
   const { isGuest, promptSignIn } = useRequireAuth();
+  const dialogManager = useDialogManager();
   const likeMutation = useLikePost();
   const repostMutation = useRepostPost();
   const bookmarkMutation = useBookmarkPost();
   const isLiked = Boolean(likeUri);
   const isReposted = Boolean(repostUri);
-  const [repostSheetVisible, setRepostSheetVisible] = useState(false);
-  const [repostAnchorRect, setRepostAnchorRect] = useState<ActionAnchorRect | null>(null);
   const repostButtonRef = useRef<View>(null);
-  const [shareSheetVisible, setShareSheetVisible] = useState(false);
-  const [shareToChatVisible, setShareToChatVisible] = useState(false);
 
   // Reply/share both use the theme tint — defaults to #5c8aff for dark, picks
   // up the user's custom accent if they've set one.
@@ -195,27 +197,6 @@ export const PostActions = React.memo(function PostActions({
     }
   }, [uri, cid, likeUri, likeMutation, isGuest, promptSignIn]);
 
-  const handleRepostButtonPress = useCallback(() => {
-    if (!uri || !cid) return;
-    if (isGuest) {
-      promptSignIn();
-      return;
-    }
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    // Measure the button on web so the portaled menu anchors next to it
-    // (matching the "..." menu pattern). Native ignores the rect and
-    // renders the bottom sheet.
-    const node = repostButtonRef.current;
-    if (Platform.OS === 'web' && node) {
-      const el = node as unknown as { getBoundingClientRect?: () => DOMRect };
-      if (typeof el.getBoundingClientRect === 'function') {
-        const r = el.getBoundingClientRect();
-        setRepostAnchorRect({ top: r.top, bottom: r.bottom, left: r.left, width: r.width, height: r.height });
-      }
-    }
-    setRepostSheetVisible(true);
-  }, [uri, cid, isGuest, promptSignIn]);
-
   const handleRepostConfirm = useCallback(() => {
     if (!uri || !cid) return;
     if (repostUri) {
@@ -238,9 +219,39 @@ export const PostActions = React.memo(function PostActions({
     onQuotePress();
   }, [onQuotePress]);
 
-  const handleSheetDismiss = useCallback(() => {
-    setRepostSheetVisible(false);
-  }, []);
+  const handleRepostButtonPress = useCallback(() => {
+    if (!uri || !cid) return;
+    if (isGuest) {
+      promptSignIn();
+      return;
+    }
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    // Measure the button on web so the portaled menu anchors next to it
+    // (matching the "..." menu pattern). Native ignores the rect and
+    // renders the bottom sheet.
+    let anchorRect: ActionAnchorRect | null = null;
+    const node = repostButtonRef.current;
+    if (Platform.OS === 'web' && node) {
+      const el = node as unknown as { getBoundingClientRect?: () => DOMRect };
+      if (typeof el.getBoundingClientRect === 'function') {
+        const r = el.getBoundingClientRect();
+        anchorRect = { top: r.top, bottom: r.bottom, left: r.left, width: r.width, height: r.height };
+      }
+    }
+    dialogManager.open({
+      id: REPOST_SHEET_ID,
+      component: (
+        <RepostSheet
+          visible
+          isReposted={isReposted}
+          onDismiss={() => dialogManager.close(REPOST_SHEET_ID)}
+          onRepostPress={handleRepostConfirm}
+          onQuotePress={handleQuoteConfirm}
+          anchorRect={anchorRect}
+        />
+      ),
+    });
+  }, [uri, cid, isGuest, promptSignIn, dialogManager, isReposted, handleRepostConfirm, handleQuoteConfirm]);
 
   const handleBookmarkPress = useCallback(() => {
     if (!uri || !cid) return;
@@ -260,15 +271,39 @@ export const PostActions = React.memo(function PostActions({
     ? `https://bsky.app/profile/${authorHandle}/post/${uri.split('/').pop()}`
     : '';
 
-  const handleSharePress = useCallback(() => {
-    if (!uri) return;
-    setShareSheetVisible(true);
-  }, [uri]);
-
   const handleSendToChat = useCallback(() => {
-    setShareSheetVisible(false);
-    setShareToChatVisible(true);
-  }, []);
+    if (!uri || !cid) return;
+    dialogManager.close(SHARE_SHEET_ID);
+    dialogManager.open({
+      id: SHARE_TO_CHAT_SHEET_ID,
+      component: (
+        <ShareToChatSheet
+          visible
+          onDismiss={() => dialogManager.close(SHARE_TO_CHAT_SHEET_ID)}
+          message={postUrl}
+          postUri={uri}
+          postCid={cid}
+        />
+      ),
+    });
+  }, [uri, cid, postUrl, dialogManager]);
+
+  const handleSharePress = useCallback(() => {
+    if (!uri || !cid) return;
+    dialogManager.open({
+      id: SHARE_SHEET_ID,
+      component: (
+        <SharePostSheet
+          visible
+          onDismiss={() => dialogManager.close(SHARE_SHEET_ID)}
+          onSendToChat={handleSendToChat}
+          postUrl={postUrl}
+          postUri={uri}
+          postCid={cid}
+        />
+      ),
+    });
+  }, [uri, cid, postUrl, dialogManager, handleSendToChat]);
 
   return (
     <>
@@ -343,33 +378,6 @@ export const PostActions = React.memo(function PostActions({
 
         {moreSlot}
       </View>
-      <RepostSheet
-        visible={repostSheetVisible}
-        isReposted={isReposted}
-        onDismiss={handleSheetDismiss}
-        onRepostPress={handleRepostConfirm}
-        onQuotePress={handleQuoteConfirm}
-        anchorRect={repostAnchorRect}
-      />
-      {uri && cid ? (
-        <SharePostSheet
-          visible={shareSheetVisible}
-          onDismiss={() => setShareSheetVisible(false)}
-          onSendToChat={handleSendToChat}
-          postUrl={postUrl}
-          postUri={uri}
-          postCid={cid}
-        />
-      ) : null}
-      {uri && cid ? (
-        <ShareToChatSheet
-          visible={shareToChatVisible}
-          onDismiss={() => setShareToChatVisible(false)}
-          message={postUrl}
-          postUri={uri}
-          postCid={cid}
-        />
-      ) : null}
     </>
   );
 });

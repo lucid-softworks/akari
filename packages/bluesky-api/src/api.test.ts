@@ -64,7 +64,7 @@ describe('BlueskyApi', () => {
     await expect(api.createSession('alice.test', 'password')).resolves.toBe(session);
     await expect(api.refreshSession('refresh')).resolves.toBe(refreshed);
 
-    expect(internal.auth.createSession).toHaveBeenCalledWith('alice.test', 'password');
+    expect(internal.auth.createSession).toHaveBeenCalledWith('alice.test', 'password', undefined);
     expect(internal.auth.refreshSession).toHaveBeenCalledWith('refresh');
   });
 
@@ -83,7 +83,7 @@ describe('BlueskyApi', () => {
     await expect(api.updateProfile('jwt', { displayName: 'Alice' })).resolves.toBe(profile);
     await expect(api.getPreferences('jwt')).resolves.toBe(preferences);
 
-    expect(internal.actors.getProfile).toHaveBeenCalledWith('jwt', 'did:example:alice');
+    expect(internal.actors.getProfile).toHaveBeenCalledWith('jwt', 'did:example:alice', undefined);
     expect(internal.actors.updateProfile).toHaveBeenCalledWith('jwt', { displayName: 'Alice' });
     expect(internal.actors.getPreferences).toHaveBeenCalledWith('jwt');
   });
@@ -143,10 +143,10 @@ describe('BlueskyApi', () => {
     await expect(api.likePost('jwt', 'at://post/1', 'cid', 'did:example')).resolves.toEqual({ uri: 'like' });
     await expect(api.unlikePost('jwt', 'at://like/1', 'did:example')).resolves.toEqual({ success: true });
 
-    expect(internal.feeds.getTimeline).toHaveBeenCalledWith('jwt', 10);
+    expect(internal.feeds.getTimeline).toHaveBeenCalledWith('jwt', 10, undefined);
     expect(internal.feeds.getTrendingTopics).toHaveBeenCalledWith(5);
     expect(internal.feeds.getFeeds).toHaveBeenCalledWith('jwt', 'did:example', 25, undefined);
-    expect(internal.feeds.getFeed).toHaveBeenCalledWith('jwt', 'at://feed/1', 30, undefined);
+    expect(internal.feeds.getFeed).toHaveBeenCalledWith('jwt', 'at://feed/1', 30, undefined, undefined);
     expect(internal.feeds.getFeedGenerators).toHaveBeenCalledWith('jwt', ['at://feed/a']);
     expect(internal.feeds.createPost).toHaveBeenCalledWith('jwt', 'did:example', postInput);
     expect(internal.repos.getActorRepos).toHaveBeenCalledWith('jwt', 'did:example', 15, undefined);

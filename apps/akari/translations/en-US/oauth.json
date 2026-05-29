@@ -13,9 +13,17 @@
       "label": "Identity",
       "description": "Confirm who you are on atproto. Always required."
     },
-    "chat": {
+    "bskyAppview": {
+      "label": "Bluesky access",
+      "description": "Bundle of permissions covering feeds, profiles, notifications, search, follows, blocks, lists, and posts on the Bluesky AppView."
+    },
+    "bskyChat": {
       "label": "Direct messages",
       "description": "Read and send chat messages on your behalf."
+    },
+    "blobs": {
+      "label": "Image and video uploads",
+      "description": "Upload image and video blobs to your account so you can attach media to posts."
     },
     "profile": {
       "label": "Profile",

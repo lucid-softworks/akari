@@ -102,21 +102,25 @@ export default function InteractionSettingsScreen() {
   );
   const listMenuItems = useMemo<MenuItem[]>(
     () =>
-      userLists
-        .filter((list) => list.purpose !== 'app.bsky.graph.defs#modlist')
-        .map((list) => ({
-          key: list.uri,
-          label: list.name,
-          selected: allowedLists.includes(list.uri),
-          onPress: () => toggleAllowedList(list.uri),
-        })),
+      userLists.reduce<MenuItem[]>((acc, list) => {
+        if (list.purpose !== 'app.bsky.graph.defs#modlist') {
+          acc.push({
+            key: list.uri,
+            label: list.name,
+            selected: allowedLists.includes(list.uri),
+            onPress: () => toggleAllowedList(list.uri),
+          });
+        }
+        return acc;
+      }, []),
     [userLists, allowedLists, toggleAllowedList],
   );
   const listsSummary = useMemo(() => {
     if (allowedLists.length === 0) return t('settings.whoCanReplyListsNone');
-    const names = userLists
-      .filter((list) => allowedLists.includes(list.uri))
-      .map((list) => list.name);
+    const names = userLists.reduce<string[]>((acc, list) => {
+      if (allowedLists.includes(list.uri)) acc.push(list.name);
+      return acc;
+    }, []);
     if (names.length === 0) return t('settings.whoCanReplyListsSelected', { count: allowedLists.length });
     return names.join(', ');
   }, [allowedLists, userLists, t]);

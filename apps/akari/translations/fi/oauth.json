@@ -13,10 +13,6 @@
       "label": "Identiteetti",
       "description": "Vahvista, kuka olet atprotossa. Aina pakollinen."
     },
-    "chat": {
-      "label": "Yksityisviestit",
-      "description": "Lukee ja lähettää chat-viestejä puolestasi."
-    },
     "profile": {
       "label": "Profiili",
       "description": "Muokkaa näyttönimeäsi, kuvaustasi, avatariasi ja banneriasi."
@@ -80,6 +76,18 @@
     "linkatBoard": {
       "label": "Linkat-taulu",
       "description": "Hallitse Linkat link-in-bio -tauluasi."
+    },
+    "bskyChat": {
+      "label": "Yksityisviestit",
+      "description": "Lukee ja lähettää chat-viestejä puolestasi."
+    },
+    "bskyAppview": {
+      "label": "Bluesky-käyttöoikeus",
+      "description": "Oikeuksien kokonaisuus, joka kattaa syötteet, profiilit, ilmoitukset, haun, seurattavat, estot, listat ja julkaisut Blueskyn AppView'ssa."
+    },
+    "blobs": {
+      "label": "Kuvien ja videoiden lataukset",
+      "description": "Lataa kuva- ja videoblobeja tilillesi, jotta voit liittää mediaa julkaisuihin."
     }
   }
 }

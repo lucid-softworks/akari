@@ -99,10 +99,10 @@ export function useNotifications(limit: number = 50, reasons?: string[], priorit
         // that.
         const targetUris = Array.from(
           new Set(
-            notifications
-              .filter((n) => n.reason === 'like' || n.reason === 'repost')
-              .map((n) => n.reasonSubject)
-              .filter((uri): uri is string => typeof uri === 'string'),
+            notifications.flatMap((n) => {
+              if (n.reason !== 'like' && n.reason !== 'repost') return [];
+              return typeof n.reasonSubject === 'string' ? [n.reasonSubject] : [];
+            }),
           ),
         );
 

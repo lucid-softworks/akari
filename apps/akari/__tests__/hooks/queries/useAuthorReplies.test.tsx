@@ -71,6 +71,7 @@ describe('useAuthorReplies', () => {
       20,
       undefined,
       'posts_with_replies',
+      [],
     );
 
     await act(async () => {
@@ -84,6 +85,7 @@ describe('useAuthorReplies', () => {
       20,
       'cursor1',
       'posts_with_replies',
+      [],
     );
   });
 
@@ -96,17 +98,28 @@ describe('useAuthorReplies', () => {
     });
   });
 
-  it('returns error when no PDS URL is available', async () => {
+  it('falls back to the guest path when no PDS URL is available', async () => {
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockGetAuthorFeed.mockResolvedValueOnce({
+      feed: [{ post: { uri: 'uri1' } }],
+      cursor: undefined,
+    });
     const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useAuthorReplies('alice'), {
       wrapper,
     });
 
-    await waitFor(() => expect(result.current.isError).toBe(true));
-    expect((result.current.error as Error).message).toBe('No PDS URL available');
-    expect(mockGetAuthorFeed).not.toHaveBeenCalled();
+    await waitFor(() => expect(result.current.data).toHaveLength(1));
+    // Guest path: empty token passed through to the public AppView.
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith(
+      '',
+      'alice',
+      20,
+      undefined,
+      'posts_with_replies',
+      [],
+    );
   });
 });
 

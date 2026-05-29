@@ -4,7 +4,6 @@ import React, { use, useCallback, useMemo, useRef, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { BlueskyFeedItem } from '@/bluesky-api';
 import { FeedFiltersSheet } from '@/components/FeedFiltersSheet';
 import { PollComposer } from '@/components/PollComposer';
 import { PostComposer } from '@/components/PostComposer';
@@ -18,22 +17,17 @@ import { HomeFab } from '@/components/home/HomeFab';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
-import { useFeed } from '@/hooks/queries/useFeed';
 import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
 import { useIsGuest } from '@/hooks/queries/useIsGuest';
-import { useMutedWords } from '@/hooks/queries/useMutedWords';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
-import { useTimeline } from '@/hooks/queries/useTimeline';
 import { useFeedFilters } from '@/hooks/useFeedFilters';
+import { useHomeFeed, type FeedListItem } from '@/hooks/useHomeFeed';
 import { useSavedFeedsList } from '@/hooks/useSavedFeedsList';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
-import { filterFeedItems } from '@/utils/feedFilters';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { TabChromeContext } from '@/app/(tabs)/_layout';
 import { webScreenContainer } from '@/constants/webStyles';
-
-type FeedListItem = { type: 'empty'; state: 'select' | 'loading' | 'empty' } | { type: 'post'; item: BlueskyFeedItem };
 
 // Mirrors the default in `useSelectedFeed` — the bsky discover feed.
 // Guests get this as their only feed entry (saved-feeds prefs require
@@ -43,7 +37,6 @@ const DISCOVER_FEED_URI =
 
 export default function HomeScreen() {
   const { t } = useTranslation();
-  const [refreshing, setRefreshing] = useState(false);
   const [showPostComposer, setShowPostComposer] = useState(false);
   const [showReviewComposer, setShowReviewComposer] = useState(false);
   const dialogManager = useDialogManager();
@@ -122,98 +115,15 @@ export default function HomeScreen() {
     });
   }, [dialogManager, selectedFeed]);
 
-  // `useFeed` fetches (topping short pages up to a full batch) and applies
-  // the muted-word + per-feed filters, so `feedPosts` is render-ready.
   const {
-    data: feedData,
-    posts: feedPosts,
-    isLoading: feedLoading,
-    fetchNextPage,
-    hasNextPage,
+    feedItems,
     isFetchingNextPage,
-    refetch: refetchFeed,
-  } = useFeed(selectedFeed === 'following' ? null : selectedFeed, 20);
-
-  // Get timeline data for "following" feed
-  const {
-    data: timelineData,
-    isLoading: timelineLoading,
-    refetch: refetchTimeline,
-  } = useTimeline(20, selectedFeed === 'following');
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    if (selectedFeed === 'following') {
-      await refetchTimeline();
-    } else if (selectedFeed) {
-      await refetchFeed();
-    } else {
-      await refetchFeeds();
-    }
-    setRefreshing(false);
-  }, [refetchFeed, refetchFeeds, refetchTimeline, selectedFeed]);
-
-  // FlashList on web fires `onEndReached` repeatedly during initial layout
-  // (the rendered cells haven't been measured yet, so it thinks the bottom
-  // is in view and re-fires on each pass). Without a gate that ends up
-  // chaining `fetchNextPage` calls back-to-back, one cursor advance per
-  // layout pass, and you can rack up dozens of getFeed requests on a
-  // page the user hasn't even scrolled.
-  //
-  // Layered gate, all three must hold before pagination is allowed:
-  //   1. `hasScrolledRef`: the ScrollView reported a non-trivial offset
-  //      from the top. Threshold is high enough to not trip on FlashList's
-  //      synthetic mid-layout scroll events.
-  //   2. `userInteractedRef`: flipped on `onScrollBeginDrag`, the
-  //      explicit "user grabbed the list" signal that synthetic scroll
-  //      events don't emit.
-  //   3. Time gate: refuse pagination within 1.5s of mount. Belt-and-
-  //      braces against either of the above being defeated by FlashList
-  //      web's measurement quirks.
-  const mountedAtRef = useRef(Date.now());
-  const hasScrolledRef = useRef(false);
-  const userInteractedRef = useRef(false);
-
-  const handleListScroll = useCallback((event: { nativeEvent: { contentOffset: { y: number } } }) => {
-    if (event.nativeEvent.contentOffset.y > 256) {
-      hasScrolledRef.current = true;
-    }
-  }, []);
-
-  const handleScrollBeginDrag = useCallback(() => {
-    userInteractedRef.current = true;
-  }, []);
-
-  const loadMorePosts = useCallback(() => {
-    if (Date.now() - mountedAtRef.current < 1500) return;
-    if (!hasScrolledRef.current && !userInteractedRef.current) return;
-    if (hasNextPage && !isFetchingNextPage) {
-      void fetchNextPage();
-    }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  // Feed-generator posts come pre-filtered from `useFeed`. The "following"
-  // timeline is a separate source (`useTimeline`), so run the same shared
-  // filter pass over it here.
-  const { data: mutedWords } = useMutedWords();
-  const allPosts = useMemo(() => {
-    if (selectedFeed !== 'following') return feedPosts;
-    return filterFeedItems(timelineData?.feed ?? [], filters, mutedWords);
-  }, [feedPosts, filters, mutedWords, selectedFeed, timelineData]);
-
-  const feedItems = useMemo<FeedListItem[]>(() => {
-    if (!selectedFeed) {
-      return [{ type: 'empty', state: 'select' }];
-    }
-
-    if (allPosts.length === 0) {
-      const hasFetched = selectedFeed === 'following' ? timelineData !== undefined : feedData !== undefined;
-      const isLoading = feedLoading || timelineLoading || isFetchingNextPage || !hasFetched;
-      return [{ type: 'empty', state: isLoading ? 'loading' : 'empty' }];
-    }
-
-    return allPosts.map((item) => ({ type: 'post', item }));
-  }, [allPosts, feedData, feedLoading, isFetchingNextPage, selectedFeed, timelineData, timelineLoading]);
+    refreshing,
+    onRefresh,
+    loadMorePosts,
+    handleListScroll,
+    handleScrollBeginDrag,
+  } = useHomeFeed(selectedFeed, filters, refetchFeeds);
 
   const feedTabs = useMemo(() => {
     if (isGuest) {

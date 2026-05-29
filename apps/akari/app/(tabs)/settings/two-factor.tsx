@@ -15,7 +15,6 @@ import {
   fontWeight,
   layout,
   radius,
-  semanticColors,
   spacing,
 } from '@/constants/tokens';
 import { useToast } from '@/contexts/ToastContext';
@@ -52,6 +51,7 @@ export default function TwoFactorScreen() {
     },
     onSuccess: () => {
       setTokenSent(true);
+      queryClient.invalidateQueries({ queryKey: queryKeys.session.forDid(currentAccount?.did) });
       showToast({ type: 'success', message: t('settings.twoFactorTokenSent') });
     },
     onError: () => showToast({ type: 'error', message: t('common.somethingWentWrong') }),

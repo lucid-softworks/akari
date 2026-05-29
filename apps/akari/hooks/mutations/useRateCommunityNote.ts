@@ -18,6 +18,7 @@ export type CommunityNoteRateInput = {
  * body for the real XRPC call once a lexicon exists.
  */
 export function useRateCommunityNote() {
+  // oxlint-disable-next-line react-doctor/query-mutation-missing-invalidation -- stub: no backing query to invalidate until a lexicon ships
   return useMutation({
     mutationFn: async (input: CommunityNoteRateInput) => {
       await new Promise((r) => setTimeout(r, 350));

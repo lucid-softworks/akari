@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { useState, type Ref } from 'react';
 import { Platform, StyleSheet, TextInput, View, type StyleProp, type TextInputProps, type ViewStyle } from 'react-native';
 
 import { fontSize, hexToRgba, radius, semanticColors, spacing } from '@/constants/tokens';
@@ -13,6 +13,8 @@ type TextareaProps = Omit<TextInputProps, 'style' | 'multiline' | 'textAlignVert
   containerStyle?: StyleProp<ViewStyle>;
   /** Override for the inner `TextInput`. */
   inputStyle?: TextInputProps['style'];
+  /** Forwarded to the inner `TextInput`. */
+  ref?: Ref<TextInput>;
 };
 
 /**
@@ -24,21 +26,27 @@ type TextareaProps = Omit<TextInputProps, 'style' | 'multiline' | 'textAlignVert
  * subtle internal padding so the caret has room to breathe, and the
  * shared systemBlue focus halo from `Input`.
  */
-export const Textarea = forwardRef<TextInput, TextareaProps>(function Textarea(
-  { minHeight = 96, maxHeight, containerStyle, inputStyle, onFocus, onBlur, ...textInputProps },
+export function Textarea({
+  minHeight = 96,
+  maxHeight,
+  containerStyle,
+  inputStyle,
+  onFocus,
+  onBlur,
   ref,
-) {
+  ...textInputProps
+}: TextareaProps) {
   const borderColor = useThemeColor({ light: '#E5E7EB', dark: '#1F212D' }, 'border');
   const backgroundColor = useThemeColor({ light: '#ffffff', dark: '#111827' }, 'background');
   const textColor = useThemeColor({ light: '#374151', dark: '#E2E8F0' }, 'text');
   const placeholderColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
 
   const [isFocused, setIsFocused] = useState(false);
-  const handleFocus: NonNullable<TextInputProps['onFocus']> = (event) => {
+  const focusInput: NonNullable<TextInputProps['onFocus']> = (event) => {
     setIsFocused(true);
     onFocus?.(event);
   };
-  const handleBlur: NonNullable<TextInputProps['onBlur']> = (event) => {
+  const blurInput: NonNullable<TextInputProps['onBlur']> = (event) => {
     setIsFocused(false);
     onBlur?.(event);
   };
@@ -63,8 +71,8 @@ export const Textarea = forwardRef<TextInput, TextareaProps>(function Textarea(
         textAlignVertical="top"
         placeholderTextColor={textInputProps.placeholderTextColor ?? placeholderColor}
         {...textInputProps}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onFocus={focusInput}
+        onBlur={blurInput}
         style={[
           styles.input,
           { color: textColor, minHeight, ...(maxHeight ? { maxHeight } : {}) },
@@ -74,7 +82,7 @@ export const Textarea = forwardRef<TextInput, TextareaProps>(function Textarea(
       />
     </View>
   );
-});
+}
 
 const webFocusRing =
   Platform.OS === 'web'

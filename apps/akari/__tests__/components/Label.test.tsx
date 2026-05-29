@@ -126,27 +126,22 @@ describe('Label Component', () => {
     expect(labelElement).toBeTruthy();
   });
 
-  it('should call useThemeColor with correct parameters for background', () => {
-    render(<Label text="Test" isWarning />);
+  it('should render a warning chip with the warning palette foreground', () => {
+    const { getByText } = render(<Label text="Warning" isWarning />);
 
-    expect(mockUseThemeColor).toHaveBeenCalledWith(
-      {
-        light: '#ffebee',
-        dark: '#2d1b1b',
-      },
-      'background',
-    );
+    // The chip no longer routes through useThemeColor; it picks the warning
+    // palette by color scheme. In light mode the warning foreground is
+    // #b3261e and it is applied to the chip text.
+    const labelElement = getByText('Warning');
+    const flattened = Object.assign({}, ...[labelElement.props.style].flat(Infinity).filter(Boolean));
+    expect(flattened.color).toBe('#b3261e');
   });
 
-  it('should call useThemeColor with correct parameters for text color', () => {
-    render(<Label text="Test" isPositive />);
+  it('should render a positive chip with the positive palette foreground', () => {
+    const { getByText } = render(<Label text="Positive" isPositive />);
 
-    expect(mockUseThemeColor).toHaveBeenCalledWith(
-      {
-        light: '#2e7d32',
-        dark: '#81c784',
-      },
-      'text',
-    );
+    const labelElement = getByText('Positive');
+    const flattened = Object.assign({}, ...[labelElement.props.style].flat(Infinity).filter(Boolean));
+    expect(flattened.color).toBe('#1b5e20');
   });
 });

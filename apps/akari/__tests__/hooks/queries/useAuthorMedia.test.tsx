@@ -52,32 +52,39 @@ describe('useAuthorMedia', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetAuthorFeed).toHaveBeenCalledWith('token', 'alice', 10, undefined, 'posts_with_media');
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith('token', 'alice', 10, undefined, 'posts_with_media', []);
     expect(result.current.data).toEqual([{ uri: '1' }, { uri: '2' }]);
   });
 
-  it('does not run query when token is missing', () => {
+  it('uses the guest path when token is missing', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: { pdsUrl: 'https://pds' } });
-
-    const { wrapper } = createWrapper();
-    renderHook(() => useAuthorMedia('alice', 10), { wrapper });
-
-    expect(mockGetAuthorFeed).not.toHaveBeenCalled();
-  });
-
-  it('returns error when PDS URL is missing', async () => {
-    (useJwtToken as jest.Mock).mockReturnValue({ data: 'token' });
-    (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockGetAuthorFeed.mockResolvedValue({ feed: [{ post: { uri: '1' } }], cursor: undefined });
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useAuthorMedia('alice', 10), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.isError).toBe(true);
+      expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetAuthorFeed).not.toHaveBeenCalled();
-    expect((result.current.error as Error).message).toBe('No PDS URL available');
+    // Guest path: empty token passed through to the public AppView.
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith('', 'alice', 10, undefined, 'posts_with_media', []);
+  });
+
+  it('falls back to the guest path when PDS URL is missing', async () => {
+    (useJwtToken as jest.Mock).mockReturnValue({ data: 'token' });
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockGetAuthorFeed.mockResolvedValue({ feed: [{ post: { uri: '1' } }], cursor: undefined });
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useAuthorMedia('alice', 10), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data).toEqual([{ uri: '1' }]);
+    expect(mockGetAuthorFeed).toHaveBeenCalledWith('', 'alice', 10, undefined, 'posts_with_media', []);
   });
 });

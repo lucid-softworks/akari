@@ -70,6 +70,7 @@ export function RepostSheet({
       cancelAnimationFrame(id);
       window.removeEventListener('click', handler);
     };
+    // oxlint-disable-next-line react-doctor/prefer-use-effect-event -- useEffectEvent is React 19 experimental, not in 19.1 stable runtime.
   }, [visible, onDismiss]);
 
   const menuContent = (

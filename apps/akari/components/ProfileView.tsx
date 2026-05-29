@@ -4,15 +4,17 @@ import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { webScreenContainer } from '@/constants/webStyles';
 
+import { ListPickerSheet } from '@/components/ListPickerSheet';
 import { ProfileTabs } from '@/components/ProfileTabs';
-import { ProfileActionSheets } from '@/components/ProfileView/ProfileActionSheets';
 import { ProfileTabPane } from '@/components/ProfileView/ProfileTabPane';
 import { ProfileViewHeader } from '@/components/ProfileView/ProfileViewHeader';
+import { ReportSheet } from '@/components/ReportSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ProfileHeaderSkeleton } from '@/components/skeletons';
 import { fontSize, fontWeight, semanticColors, spacing } from '@/constants/tokens';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { germButtonVisibleFor, useGermDeclaration } from '@/hooks/queries/useGermDeclaration';
@@ -25,6 +27,9 @@ import type { ProfileTabType } from '@/types/profile';
 type ProfileViewProps = {
   handle: string;
 };
+
+const REPORT_SHEET_DIALOG_ID = 'profile-report';
+const LIST_PICKER_DIALOG_ID = 'profile-list-picker';
 
 const TAB_ORDER: ProfileTabType[] = [
   'posts',
@@ -46,8 +51,7 @@ const TAB_ORDER: ProfileTabType[] = [
 export default function ProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
-  const [showReportSheet, setShowReportSheet] = useState(false);
-  const [showListPicker, setShowListPicker] = useState(false);
+  const dialogManager = useDialogManager();
 
   // Track the active tab's scroll position + measured header height so the
   // next tab can preserve the user's vertical position (banner-visible vs
@@ -121,11 +125,39 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     };
   }, [isOwnProfile, profile?.did, profile?.viewer, targetGerm, viewerDid, viewerGerm]);
 
+  const profileDid = profile?.did;
+
+  const openReportSheet = useCallback(() => {
+    dialogManager.open({
+      id: REPORT_SHEET_DIALOG_ID,
+      component: (
+        <ReportSheet
+          visible
+          onDismiss={() => dialogManager.close(REPORT_SHEET_DIALOG_ID)}
+          subject={profileDid ? { type: 'account', did: profileDid } : null}
+        />
+      ),
+    });
+  }, [dialogManager, profileDid]);
+
+  const openListPicker = useCallback(() => {
+    dialogManager.open({
+      id: LIST_PICKER_DIALOG_ID,
+      component: (
+        <ListPickerSheet
+          visible
+          onDismiss={() => dialogManager.close(LIST_PICKER_DIALOG_ID)}
+          subjectDid={profileDid}
+        />
+      ),
+    });
+  }, [dialogManager, profileDid]);
+
   const menuItems = useProfileMenuItems({
     profile,
     isOwnProfile,
-    setShowReportSheet,
-    setShowListPicker,
+    onOpenReportSheet: openReportSheet,
+    onOpenListPicker: openListPicker,
     onMessageOnGerm: handleMessageOnGerm,
   });
 
@@ -187,12 +219,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
     return (
       <ThemedView style={styles.container}>
         <ScrollView contentContainerStyle={styles.blockedScroll}>{headerComponent}</ScrollView>
-
-        <ProfileActionSheets
-          profile={profile}
-          visibility={{ reportSheet: showReportSheet }}
-          onDismissReportSheet={() => setShowReportSheet(false)}
-        />
       </ThemedView>
     );
   }
@@ -224,13 +250,6 @@ export default function ProfileView({ handle }: ProfileViewProps) {
               );
             })
         : null}
-
-      <ProfileActionSheets
-        profile={profile}
-        visibility={{ reportSheet: showReportSheet, listPicker: showListPicker }}
-        onDismissReportSheet={() => setShowReportSheet(false)}
-        onDismissListPicker={() => setShowListPicker(false)}
-      />
     </ThemedView>
   );
 }

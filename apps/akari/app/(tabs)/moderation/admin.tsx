@@ -67,26 +67,26 @@ export default function AdminScreen() {
           webColumnSideBorders(borderColor),
         ]}
       >
-        {TABS.map((t) => (
+        {TABS.map((tabItem) => (
           <Pressable
-            key={t.value}
-            onPress={() => setTab(t.value)}
+            key={tabItem.value}
+            onPress={() => setTab(tabItem.value)}
             style={({ pressed }) => [styles.tabButton, pressed && { opacity: 0.6 }]}
           >
             <ThemedText
               style={[
                 styles.tabLabel,
-                tab === t.value
+                tab === tabItem.value
                   ? { color: accent, fontWeight: fontWeight.semibold }
                   : { color: secondary },
               ]}
             >
-              {t.label}
+              {tabItem.label}
             </ThemedText>
             <View
               style={[
                 styles.tabIndicator,
-                tab === t.value ? { backgroundColor: accent } : null,
+                tab === tabItem.value ? { backgroundColor: accent } : null,
               ]}
             />
           </Pressable>
@@ -111,7 +111,6 @@ export default function AdminScreen() {
 function SafelinkTab({ borderColor, secondary }: { borderColor: string; secondary: string }) {
   const { t } = useTranslation();
   const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
-  const textColor = useThemeColor({}, 'text');
   const accent = useThemeColor({}, 'tint');
   const dangerColor = useThemeColor({ light: '#dc2626', dark: '#ef4444' }, 'tint');
 
@@ -269,7 +268,6 @@ function SetsTab({ borderColor, secondary }: { borderColor: string; secondary: s
 function SignaturesTab({ borderColor, secondary }: { borderColor: string; secondary: string }) {
   const { t } = useTranslation();
   const accent = useThemeColor({}, 'tint');
-  const textColor = useThemeColor({}, 'text');
   const inputBg = useThemeColor({ light: '#ffffff', dark: '#1c1c1e' }, 'background');
   const [did, setDid] = useState('');
   const [active, setActive] = useState<string | undefined>(undefined);

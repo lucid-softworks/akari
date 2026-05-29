@@ -1,7 +1,7 @@
 import React, {
   createContext,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -56,7 +56,7 @@ type MenuContextValue = {
 const MenuContext = createContext<MenuContextValue | null>(null);
 
 function useMenuContext(componentName: string): MenuContextValue {
-  const ctx = useContext(MenuContext);
+  const ctx = use(MenuContext);
   if (!ctx) {
     throw new Error(`<${componentName}> must be rendered inside a <Menu>.`);
   }

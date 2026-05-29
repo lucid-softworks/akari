@@ -83,7 +83,7 @@ export function useUserStories(identifier: string | undefined) {
 
     return normalized
       .filter((story) => isActive(story, now))
-      .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
+      .toSorted((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
       .flatMap((story) => {
         const did = story.uri.split('/')[2];
         const blob = did ? findStoryImageBlob(story.value) : undefined;

@@ -17,7 +17,10 @@ jest.mock('expo-image', () => {
   return { Image };
 });
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), back: jest.fn() },
+  usePathname: jest.fn(() => '/messages'),
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
@@ -43,6 +46,9 @@ jest.mock('@/components/ui/IconSymbol', () => ({
 }));
 
 jest.mock('@/hooks/queries/useConversations');
+jest.mock('@/hooks/useAppViewEnabled', () => ({
+  useAppViewEnabled: jest.fn(() => true),
+}));
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useResponsive', () => ({
@@ -72,6 +78,7 @@ describe('PendingMessagesScreen', () => {
     const conversations = [
       {
         id: 'pending-1',
+        convoId: 'convo-pending-1',
         handle: 'pending-pal',
         displayName: 'Pending Pal',
         lastMessage: 'hello there',
@@ -79,6 +86,8 @@ describe('PendingMessagesScreen', () => {
         unreadCount: 1,
         status: 'request',
         muted: false,
+        isGroup: false,
+        members: [{ did: 'did:pending', handle: 'pending-pal' }],
       },
     ];
 
@@ -107,7 +116,7 @@ describe('PendingMessagesScreen', () => {
     expect(queryByText('common.viewPendingChats')).toBeNull();
 
     fireEvent.press(getByText('Pending Pal'));
-    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/undefined?handle=pending-pal');
+    expect(mockRouterPush).toHaveBeenNthCalledWith(1, '/(tabs)/messages/convo-pending-1?handle=pending-pal');
 
     const pendingPressables = UNSAFE_root.findAll((node: any) => {
       if (typeof node.props?.onPress !== 'function') return false;

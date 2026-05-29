@@ -21,6 +21,10 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useNotImplementedToast } from '@/hooks/useNotImplementedToast';
 import { useSignIn } from '@/hooks/mutations/useSignIn';
+import { useIsGuest } from '@/hooks/queries/useIsGuest';
+import { useSession } from '@/hooks/queries/useSession';
+import { useProfileRecord } from '@/hooks/queries/useProfileRecord';
+import { useResponsive } from '@/hooks/useResponsive';
 
 jest.mock('expo-constants', () => ({ expoConfig: { version: '1.0.0' } }));
 
@@ -35,6 +39,7 @@ jest.mock('expo-image', () => {
 });
 
 jest.mock('expo-router', () => {
+  const { Text } = require('react-native');
   const push = jest.fn();
   const replace = jest.fn();
   const mockUsePathname = jest.fn(() => '/(tabs)/settings/account');
@@ -43,6 +48,8 @@ jest.mock('expo-router', () => {
     router: { push, replace },
     useRouter: () => ({ push, replace }),
     usePathname: mockUsePathname,
+    // account.tsx renders <Redirect> after wiping all data on sign-out.
+    Redirect: ({ href }: { href: string }) => <Text>redirect:{href}</Text>,
   };
 });
 
@@ -78,10 +85,24 @@ jest.mock('@/hooks/mutations/useSignIn');
 jest.mock('@/hooks/queries/useAccountProfiles');
 jest.mock('@/hooks/queries/useAccounts');
 jest.mock('@/hooks/queries/useCurrentAccount');
+jest.mock('@/hooks/queries/useIsGuest');
+jest.mock('@/hooks/queries/useSession');
+jest.mock('@/hooks/queries/useProfileRecord', () => ({
+  useProfileRecord: jest.fn(() => ({ data: undefined })),
+  isAccountAutomated: jest.fn(() => false),
+}));
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useNotImplementedToast');
+jest.mock('@/hooks/useResponsive');
+
+// The settings index opens the add-account flow through the DialogManager
+// using AddAccountModal; stub it so the test doesn't pull in the OAuth stack.
+jest.mock('@/components/AddAccountModal', () => {
+  const { Text } = require('react-native');
+  return { AddAccountModal: () => <Text>add-account-modal</Text> };
+});
 
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
 
@@ -98,6 +119,10 @@ const mockUseThemeColor = useThemeColor as jest.Mock;
 const mockUseTranslation = useTranslation as jest.Mock;
 const mockUsePathname = usePathname as jest.Mock;
 const mockUseNotImplementedToast = useNotImplementedToast as jest.Mock;
+const mockUseIsGuest = useIsGuest as jest.Mock;
+const mockUseSession = useSession as jest.Mock;
+const mockUseProfileRecord = useProfileRecord as jest.Mock;
+const mockUseResponsive = useResponsive as jest.Mock;
 const mockShowAlert = showAlert as jest.Mock;
 const mockRouterPush = router.push as jest.Mock;
 const mockRouterReplace = router.replace as jest.Mock;
@@ -135,6 +160,12 @@ beforeEach(() => {
   mockUseAddAccount.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
   mockUseSignIn.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
   mockUseNotImplementedToast.mockReturnValue(jest.fn());
+  // Both screens gate on useIsGuest; default to a signed-in (non-guest)
+  // session so the real account/settings content renders.
+  mockUseIsGuest.mockReturnValue(false);
+  mockUseSession.mockReturnValue({ data: undefined });
+  mockUseProfileRecord.mockReturnValue({ data: undefined });
+  mockUseResponsive.mockReturnValue({ isLargeScreen: false, isDesktop: false });
 });
 
 describe('Settings index screen', () => {
@@ -159,11 +190,15 @@ describe('Settings index screen', () => {
     expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/account');
   });
 
-  it('navigates to add account page', () => {
+  it('opens the add-account modal from the switch-account row', () => {
+    // With no other accounts signed in the switch row shows "Add account" and
+    // now opens AddAccountModal through the DialogManager instead of routing
+    // to a dedicated add-account page.
     const { getByText } = renderSettingsIndex();
 
     fireEvent.press(getByText('common.addAccount'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(tabs)/settings/add-account');
+    expect(getByText('add-account-modal')).toBeTruthy();
+    expect(mockRouterPush).not.toHaveBeenCalledWith('/(tabs)/settings/add-account');
   });
 });
 
@@ -224,19 +259,21 @@ describe('AccountSettingsScreen', () => {
     mockUseCurrentAccount.mockReturnValue({ data: account });
     mockUseRemoveAccount.mockReturnValue({ mutate });
 
-    const { getByText } = renderAccountSettings();
+    const { getByText, getAllByText } = renderAccountSettings();
 
+    // Press the row's Remove button, which now opens a ConfirmDialog (via
+    // useConfirm) rather than calling showAlert. Confirm by pressing the
+    // dialog's destructive "Remove" button (the last 'common.remove' in tree).
     fireEvent.press(getByText('common.remove'));
 
-    const alertConfig = mockShowAlert.mock.calls[0][0];
-    const removeButton = alertConfig.buttons?.find((button: any) => button.text === 'common.remove');
-    removeButton?.onPress?.();
+    const removeTexts = getAllByText('common.remove');
+    fireEvent.press(removeTexts[removeTexts.length - 1]);
 
     expect(mutate).toHaveBeenCalledWith(account.did);
     expect(mockRouterReplace).toHaveBeenCalledWith('/');
   });
 
-  it('shows error alert when logout fails', async () => {
+  it('shows an error dialog when logout fails', async () => {
     const mutateAsync = jest.fn().mockRejectedValue(new Error('fail'));
     mockUseWipeAllData.mockReturnValue({ mutateAsync });
 
@@ -245,11 +282,11 @@ describe('AccountSettingsScreen', () => {
     fireEvent.press(getByText('common.signOutAllAccounts'));
 
     await waitFor(() => expect(mutateAsync).toHaveBeenCalled());
-    await waitFor(() =>
-      expect(mockShowAlert).toHaveBeenCalledWith(
-        expect.objectContaining({ title: 'common.error', message: 'common.failedToLogout' })
-      )
-    );
+    // The failure path now surfaces a themed ConfirmDialog (via useConfirm)
+    // instead of the native showAlert.
+    await waitFor(() => expect(getByText('common.error')).toBeTruthy());
+    expect(getByText('common.failedToLogout')).toBeTruthy();
+    expect(mockShowAlert).not.toHaveBeenCalled();
   });
 });
 

@@ -31,7 +31,7 @@ export function useOzoneTeam() {
         return response.members.map((m) => {
           const profile = profiles.get(m.did);
           if (!profile) return m;
-          return { ...m, profile: { ...(m.profile ?? {}), ...profile } };
+          return { ...m, profile: { ...m.profile, ...profile } };
         });
       } catch {
         return response.members;

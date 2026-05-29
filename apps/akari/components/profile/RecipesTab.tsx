@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import type { BlueskyRecipeAttribution, BlueskyRecipeRecord } from '@/bluesky-api';
@@ -7,6 +7,7 @@ import { RecipeModal } from '@/components/RecipeModal';
 import { ThemedCard } from '@/components/ThemedCard';
 import { ThemedText } from '@/components/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { ProfileTabFlatList } from '@/components/profile/ProfileTabFlatList';
 import { useProfileTabRefresh } from '@/components/profile/useProfileTabRefresh';
 import { useAuthorRecipes } from '@/hooks/queries/useAuthorRecipes';
@@ -33,6 +34,8 @@ function formatTime(timeString: string) {
 
   return parts.join(' ') || 'N/A';
 }
+
+const RECIPE_MODAL_DIALOG_ID = 'profile-recipe-modal';
 
 type RecipesTabProps = ProfileTabContentProps & {
   handle: string;
@@ -155,18 +158,23 @@ export function RecipesTab({
   const { t } = useTranslation();
   const { data: recipes, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useAuthorRecipes(handle);
   const handleRefresh = useProfileTabRefresh(refetch, onProfileRefresh);
-  const [selectedRecipe, setSelectedRecipe] = useState<BlueskyRecipeRecord | null>(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const dialogManager = useDialogManager();
 
-  const handleRecipePress = useCallback((recipe: BlueskyRecipeRecord) => {
-    setSelectedRecipe(recipe);
-    setModalVisible(true);
-  }, []);
-
-  const handleCloseModal = useCallback(() => {
-    setModalVisible(false);
-    setSelectedRecipe(null);
-  }, []);
+  const handleRecipePress = useCallback(
+    (recipe: BlueskyRecipeRecord) => {
+      dialogManager.open({
+        id: RECIPE_MODAL_DIALOG_ID,
+        component: (
+          <RecipeModal
+            visible
+            onClose={() => dialogManager.close(RECIPE_MODAL_DIALOG_ID)}
+            recipe={recipe}
+          />
+        ),
+      });
+    },
+    [dialogManager],
+  );
 
   const renderItem = useCallback(
     (item: BlueskyRecipeRecord) => (
@@ -176,28 +184,24 @@ export function RecipesTab({
   );
 
   return (
-    <>
-      <ProfileTabFlatList
-        data={recipes ?? []}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.uri}
-        isLoading={isLoading}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-        fetchNextPage={fetchNextPage}
-        ListHeaderComponent={ListHeaderComponent}
-        StickyTabComponent={StickyTabComponent}
-        emptyText={t('profile.noRecipes')}
-        pinScrollY={pinScrollY}
-        isActive={isActive}
-        onRefresh={handleRefresh}
-        refreshing={isRefetching}
+    <ProfileTabFlatList
+      data={recipes ?? []}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.uri}
+      isLoading={isLoading}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+      ListHeaderComponent={ListHeaderComponent}
+      StickyTabComponent={StickyTabComponent}
+      emptyText={t('profile.noRecipes')}
+      pinScrollY={pinScrollY}
+      isActive={isActive}
+      onRefresh={handleRefresh}
+      refreshing={isRefetching}
       onScrollY={onScrollY}
       onHeaderHeightChange={onHeaderHeightChange}
-      />
-
-      <RecipeModal visible={modalVisible} onClose={handleCloseModal} recipe={selectedRecipe} />
-    </>
+    />
   );
 }
 

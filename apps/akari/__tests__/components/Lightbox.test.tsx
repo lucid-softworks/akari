@@ -66,8 +66,11 @@ describe('Lightbox', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('shows the "n / m" counter when multiple images are provided', () => {
-    const { getByText } = render(
+  it('renders a pagination dot per image when multiple images are provided', () => {
+    // The header "n / m" counter was removed in favour of a bottom dot row;
+    // the multi-image lightbox now shows one dot per image with the current
+    // one highlighted, and the alt text for the starting image.
+    const { getByText, UNSAFE_root } = render(
       <Lightbox
         visible
         onClose={() => {}}
@@ -79,7 +82,18 @@ describe('Lightbox', () => {
         startIndex={0}
       />,
     );
-    expect(getByText('1 / 3')).toBeTruthy();
+
+    // Alt text for the starting image is shown in the footer card.
+    expect(getByText('A')).toBeTruthy();
+
+    // One dot per image; the active dot carries the wider `dotActive` style.
+    const dots = UNSAFE_root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        Array.isArray(node.props.style) &&
+        node.props.style.some((s: unknown) => s && (s as { width?: number }).width === 6),
+    );
+    expect(dots).toHaveLength(3);
   });
 
   it('uses the Share API on native when the share button is pressed', async () => {
@@ -112,12 +126,22 @@ describe('Lightbox', () => {
     const link = { href: '', download: '', click } as unknown as HTMLAnchorElement;
     const appendChild = jest.fn();
     const removeChild = jest.fn();
+    // The Modal engages `useBodyScrollLock` on web, which reads/writes
+    // documentElement/body styles, so the mock document needs those too.
     (global as unknown as { document: Document }).document = {
       createElement: jest.fn(() => link),
-      body: { appendChild, removeChild },
+      documentElement: { style: { overflow: '' } },
+      body: { appendChild, removeChild, style: { cssText: '' } },
     } as unknown as Document;
+    // On web the lightbox attaches keyboard handlers to `window` and the
+    // scroll lock calls scrollTo; the RN test env's `window` shim lacks
+    // these, so provide them.
+    const addEventListener = jest.fn();
+    const removeEventListener = jest.fn();
+    const scrollTo = jest.fn();
+    Object.assign(window, { addEventListener, removeEventListener, scrollTo });
 
-    const { getByTestId } = render(
+    const { getByTestId, unmount } = render(
       <Lightbox visible onClose={() => {}} imageUrl="https://example.com/a.jpg" />,
     );
 
@@ -127,7 +151,14 @@ describe('Lightbox', () => {
     expect(link.download).toBe('image.jpg');
     expect(click).toHaveBeenCalled();
 
+    // Unmount while the web globals are still in place so the scroll-lock /
+    // keyboard cleanup effects don't trip over a half-torn-down environment.
+    unmount();
+
     delete (global as { document?: Document }).document;
+    delete (window as { addEventListener?: unknown }).addEventListener;
+    delete (window as { removeEventListener?: unknown }).removeEventListener;
+    delete (window as { scrollTo?: unknown }).scrollTo;
     Platform.OS = originalOS;
   });
 

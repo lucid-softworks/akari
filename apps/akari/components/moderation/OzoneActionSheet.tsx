@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -10,6 +9,11 @@ import {
 import { OZONE_EVENT_TYPES, type OzoneSubject } from 'bluesky-ozone';
 
 import { Image } from '@/components/Image';
+import { ActionPicker } from '@/components/moderation/OzoneActionPicker';
+import { AddRemoveFields } from '@/components/moderation/OzoneAddRemoveFields';
+import { EmailFields } from '@/components/moderation/OzoneEmailFields';
+import { SheetFooter } from '@/components/moderation/OzoneSheetFooter';
+import { ACTION_OPTIONS, type OzoneActionType } from '@/components/moderation/ozoneActions';
 import { Dialog } from '@/components/ui/Dialog';
 import { ThemedText } from '@/components/ThemedText';
 import { fontSize, fontWeight, opacity, radius, spacing } from '@/constants/tokens';
@@ -34,51 +38,6 @@ type OzoneActionSheetProps = {
   /** Notified after a successful emit so the caller can show a toast etc. */
   onSuccess?: (event: { type: OzoneActionType; comment: string }) => void;
 };
-
-type OzoneActionType =
-  | 'comment'
-  | 'acknowledge'
-  | 'escalate'
-  | 'resolveAppeal'
-  | 'takedown'
-  | 'reverseTakedown'
-  | 'tag'
-  | 'label'
-  | 'mute'
-  | 'unmute'
-  | 'muteReporter'
-  | 'unmuteReporter'
-  | 'email';
-
-type ActionOption = {
-  id: OzoneActionType;
-  label: string;
-  description: string;
-  /**
-   * Destructive actions get red styling in the chip grid AND on the
-   * submit button. Only takedown / mute* qualify — they restrict
-   * what the subject can do. Escalate / label / tag don't (they're
-   * just routing or annotation), and the `reverse*` / `unmute*`
-   * counterparts are restorative.
-   */
-  destructive?: boolean;
-};
-
-const ACTION_OPTIONS: ActionOption[] = [
-  { id: 'comment', label: 'Comment', description: 'Add an internal mod note.' },
-  { id: 'acknowledge', label: 'Acknowledge', description: 'Mark as reviewed without taking action.' },
-  { id: 'escalate', label: 'Escalate', description: 'Send to senior reviewers.' },
-  { id: 'resolveAppeal', label: 'Resolve appeal', description: 'Close out an appealed subject.' },
-  { id: 'takedown', label: 'Takedown', description: 'Hide the subject from the AppView.', destructive: true },
-  { id: 'reverseTakedown', label: 'Reverse takedown', description: 'Restore a previously taken-down subject.' },
-  { id: 'tag', label: 'Tag', description: 'Attach or remove operator tags.' },
-  { id: 'label', label: 'Label', description: 'Apply or remove labels.' },
-  { id: 'mute', label: 'Mute', description: 'Stop receiving reports about this subject.', destructive: true },
-  { id: 'unmute', label: 'Unmute', description: 'Re-enable reports.' },
-  { id: 'muteReporter', label: 'Mute reporter', description: 'Stop accepting reports from this reporter.', destructive: true },
-  { id: 'unmuteReporter', label: 'Unmute reporter', description: 'Restore reports from this reporter.' },
-  { id: 'email', label: 'Email', description: 'Send the subject an email through Ozone.' },
-];
 
 /**
  * Modal action picker for the moderation queue. Pick an event type, fill
@@ -256,41 +215,14 @@ export function OzoneActionSheet({
               </View>
               <ScrollView style={styles.bodyScroll} contentContainerStyle={styles.body}>
               <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.action')}</ThemedText>
-              <View style={styles.actionGrid}>
-                {ACTION_OPTIONS.map((opt) => {
-                  const active = opt.id === action;
-                  // Destructive chips read in red whether active or
-                  // inactive — inactive uses red text + red-tinted
-                  // border so the option is recognisable in the grid
-                  // before you tap it; active uses a stronger red
-                  // background to match the submit button.
-                  const accent = opt.destructive ? dangerColor : tint;
-                  return (
-                    <Pressable
-                      key={opt.id}
-                      onPress={() => setAction(opt.id)}
-                      style={[
-                        styles.actionChip,
-                        { borderColor: opt.destructive ? `${accent}66` : borderColor },
-                        active && { borderColor: accent, backgroundColor: `${accent}20` },
-                      ]}
-                    >
-                      <ThemedText
-                        style={[
-                          styles.actionChipLabel,
-                          opt.destructive ? { color: accent } : null,
-                          active ? { color: accent, fontWeight: fontWeight.semibold } : null,
-                        ]}
-                      >
-                        {opt.label}
-                      </ThemedText>
-                    </Pressable>
-                  );
-                })}
-              </View>
-              <ThemedText style={[styles.helper, { color: secondary }]}>
-                {ACTION_OPTIONS.find((o) => o.id === action)?.description}
-              </ThemedText>
+              <ActionPicker
+                action={action}
+                onSelect={setAction}
+                borderColor={borderColor}
+                secondary={secondary}
+                tint={tint}
+                dangerColor={dangerColor}
+              />
 
               <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.comment')}</ThemedText>
               <TextInput
@@ -303,120 +235,58 @@ export function OzoneActionSheet({
               />
 
               {showLabels ? (
-                <>
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.labelsToAdd')}</ThemedText>
-                  <ChipMultiSelect
-                    options={labelOptions?.labels ?? []}
-                    selected={selectedLabelsAdd}
-                    onChange={setSelectedLabelsAdd}
-                    borderColor={borderColor}
-                    secondary={secondary}
-                    tint={tint}
-                  />
-                  <TextInput
-                    value={labelsAddOther}
-                    onChangeText={setLabelsAddOther}
-                    placeholder="Other labels, comma-separated"
-                    placeholderTextColor={secondary}
-                    style={[styles.input, { color: text, borderColor }]}
-                  />
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.labelsToRemove')}</ThemedText>
-                  <ChipMultiSelect
-                    options={labelOptions?.labels ?? []}
-                    selected={selectedLabelsRemove}
-                    onChange={setSelectedLabelsRemove}
-                    borderColor={borderColor}
-                    secondary={secondary}
-                    tint={tint}
-                  />
-                  <TextInput
-                    value={labelsRemoveOther}
-                    onChangeText={setLabelsRemoveOther}
-                    placeholder="Other labels, comma-separated"
-                    placeholderTextColor={secondary}
-                    style={[styles.input, { color: text, borderColor }]}
-                  />
-                </>
+                <AddRemoveFields
+                  addLabel={t('moderation.actionSheet.labelsToAdd')}
+                  removeLabel={t('moderation.actionSheet.labelsToRemove')}
+                  otherPlaceholder="Other labels, comma-separated"
+                  options={labelOptions?.labels ?? []}
+                  selectedAdd={selectedLabelsAdd}
+                  onChangeAdd={setSelectedLabelsAdd}
+                  selectedRemove={selectedLabelsRemove}
+                  onChangeRemove={setSelectedLabelsRemove}
+                  addOther={labelsAddOther}
+                  onChangeAddOther={setLabelsAddOther}
+                  removeOther={labelsRemoveOther}
+                  onChangeRemoveOther={setLabelsRemoveOther}
+                  borderColor={borderColor}
+                  secondary={secondary}
+                  tint={tint}
+                  text={text}
+                />
               ) : null}
 
               {showTags ? (
-                <>
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.tagsToAdd')}</ThemedText>
-                  <ChipMultiSelect
-                    options={labelOptions?.tags ?? []}
-                    selected={selectedTagsAdd}
-                    onChange={setSelectedTagsAdd}
-                    borderColor={borderColor}
-                    secondary={secondary}
-                    tint={tint}
-                  />
-                  <TextInput
-                    value={tagsAddOther}
-                    onChangeText={setTagsAddOther}
-                    placeholder="Other tags, comma-separated"
-                    placeholderTextColor={secondary}
-                    style={[styles.input, { color: text, borderColor }]}
-                  />
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.tagsToRemove')}</ThemedText>
-                  <ChipMultiSelect
-                    options={labelOptions?.tags ?? []}
-                    selected={selectedTagsRemove}
-                    onChange={setSelectedTagsRemove}
-                    borderColor={borderColor}
-                    secondary={secondary}
-                    tint={tint}
-                  />
-                  <TextInput
-                    value={tagsRemoveOther}
-                    onChangeText={setTagsRemoveOther}
-                    placeholder="Other tags, comma-separated"
-                    placeholderTextColor={secondary}
-                    style={[styles.input, { color: text, borderColor }]}
-                  />
-                </>
+                <AddRemoveFields
+                  addLabel={t('moderation.actionSheet.tagsToAdd')}
+                  removeLabel={t('moderation.actionSheet.tagsToRemove')}
+                  otherPlaceholder="Other tags, comma-separated"
+                  options={labelOptions?.tags ?? []}
+                  selectedAdd={selectedTagsAdd}
+                  onChangeAdd={setSelectedTagsAdd}
+                  selectedRemove={selectedTagsRemove}
+                  onChangeRemove={setSelectedTagsRemove}
+                  addOther={tagsAddOther}
+                  onChangeAddOther={setTagsAddOther}
+                  removeOther={tagsRemoveOther}
+                  onChangeRemoveOther={setTagsRemoveOther}
+                  borderColor={borderColor}
+                  secondary={secondary}
+                  tint={tint}
+                  text={text}
+                />
               ) : null}
 
               {showEmail ? (
-                <>
-                  {templates && templates.length > 0 ? (
-                    <>
-                      <ThemedText style={[styles.sectionLabel, { color: secondary }]}>
-                        {t('moderation.actionSheet.template')}
-                      </ThemedText>
-                      <View style={styles.actionGrid}>
-                        {templates.map((tpl) => (
-                          <Pressable
-                            key={tpl.id}
-                            onPress={() => {
-                              if (typeof tpl.subject === 'string') setEmailSubject(tpl.subject);
-                              if (typeof tpl.contentMarkdown === 'string') setEmailBody(tpl.contentMarkdown);
-                            }}
-                            style={[styles.actionChip, { borderColor }]}
-                          >
-                            <ThemedText style={styles.actionChipLabel}>{tpl.name}</ThemedText>
-                          </Pressable>
-                        ))}
-                      </View>
-                    </>
-                  ) : null}
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.emailSubject')}</ThemedText>
-                  <TextInput
-                    value={emailSubject}
-                    onChangeText={setEmailSubject}
-                    placeholder="Email subject line"
-                    placeholderTextColor={secondary}
-                    style={[styles.input, { color: text, borderColor }]}
-                  />
-                  <ThemedText style={[styles.sectionLabel, { color: secondary }]}>{t('moderation.actionSheet.emailBody')}</ThemedText>
-                  <TextInput
-                    value={emailBody}
-                    onChangeText={setEmailBody}
-                    placeholder="Email body (Markdown supported)"
-                    placeholderTextColor={secondary}
-                    multiline
-                    style={[styles.input, styles.inputMultiline, { color: text, borderColor }]}
-                  />
-                </>
+                <EmailFields
+                  templates={templates}
+                  emailSubject={emailSubject}
+                  onChangeEmailSubject={setEmailSubject}
+                  emailBody={emailBody}
+                  onChangeEmailBody={setEmailBody}
+                  borderColor={borderColor}
+                  secondary={secondary}
+                  text={text}
+                />
               ) : null}
 
               {showDuration ? (
@@ -443,29 +313,15 @@ export function OzoneActionSheet({
               </ScrollView>
             </View>
 
-            <View style={[styles.footer, { borderTopColor: borderColor }]}>
-              <Pressable
-                onPress={onClose}
-                style={[styles.footerButton, { borderColor }]}
-                disabled={emit.isPending}
-              >
-                <ThemedText style={styles.footerButtonLabel}>{t('moderation.actionSheet.cancel')}</ThemedText>
-              </Pressable>
-              <Pressable
-                onPress={onSubmit}
-                disabled={emit.isPending}
-                style={[
-                  styles.footerButton,
-                  styles.footerButtonPrimary,
-                  { backgroundColor: isDestructive ? dangerColor : tint },
-                  emit.isPending && { opacity: 0.6 },
-                ]}
-              >
-                <ThemedText style={[styles.footerButtonLabel, styles.footerButtonLabelPrimary]}>
-                  {emit.isPending ? 'Submitting…' : 'Submit'}
-                </ThemedText>
-              </Pressable>
-            </View>
+            <SheetFooter
+              onCancel={onClose}
+              onSubmit={onSubmit}
+              isPending={emit.isPending}
+              isDestructive={isDestructive}
+              borderColor={borderColor}
+              tint={tint}
+              dangerColor={dangerColor}
+            />
       </View>
     </Dialog>
   );
@@ -545,10 +401,11 @@ function SubjectPreview({
 }
 
 function csv(value: string): string[] {
-  return value
-    .split(',')
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0);
+  return value.split(',').reduce<string[]>((acc, s) => {
+    const trimmed = s.trim();
+    if (trimmed.length > 0) acc.push(trimmed);
+    return acc;
+  }, []);
 }
 
 function dedupeStrings(values: string[]): string[] {
@@ -561,67 +418,6 @@ function dedupeStrings(values: string[]): string[] {
     out.push(v);
   }
   return out;
-}
-
-/**
- * Multi-select chip row. Renders one toggle per option, syncing selection
- * into a Set so the caller can preserve insertion order without re-
- * deriving each render.
- */
-function ChipMultiSelect({
-  options,
-  selected,
-  onChange,
-  borderColor,
-  secondary,
-  tint,
-}: {
-  options: string[];
-  selected: Set<string>;
-  onChange: (next: Set<string>) => void;
-  borderColor: string;
-  secondary: string;
-  tint: string;
-}) {
-  const { t } = useTranslation();
-  if (options.length === 0) {
-    return (
-      <ThemedText style={[styles.helper, { color: secondary }]}>
-        {t('moderation.actionSheet.noLabelOptions')}
-      </ThemedText>
-    );
-  }
-  return (
-    <View style={styles.actionGrid}>
-      {options.map((opt) => {
-        const isOn = selected.has(opt);
-        return (
-          <Pressable
-            key={opt}
-            onPress={() => {
-              const next = new Set(selected);
-              if (isOn) next.delete(opt);
-              else next.add(opt);
-              onChange(next);
-            }}
-            style={[
-              styles.actionChip,
-              { borderColor: isOn ? tint : borderColor, backgroundColor: isOn ? `${tint}20` : 'transparent' },
-            ]}
-          >
-            <ThemedText
-              style={[
-                styles.actionChipLabel,
-                isOn ? { color: tint, fontWeight: fontWeight.semibold } : null,
-              ]}
-            >
-              {opt}
-            </ThemedText>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
 }
 
 const styles = StyleSheet.create({
@@ -702,25 +498,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },
-  actionGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-  },
-  actionChip: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.full,
-    borderWidth: 1,
-  },
-  actionChipLabel: {
-    fontSize: fontSize.sm,
-  },
-  helper: {
-    fontSize: fontSize.sm,
-    marginTop: 2,
-    lineHeight: 18,
-  },
   input: {
     borderWidth: 1,
     borderRadius: radius.md,
@@ -735,30 +512,5 @@ const styles = StyleSheet.create({
   error: {
     marginTop: spacing.sm,
     fontSize: fontSize.sm,
-  },
-  footer: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.xl,
-    borderTopWidth: 1,
-  },
-  footerButton: {
-    flex: 1,
-    paddingVertical: spacing.md,
-    borderWidth: 1,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  footerButtonPrimary: {
-    borderColor: 'transparent',
-  },
-  footerButtonLabel: {
-    fontSize: fontSize.base,
-    fontWeight: fontWeight.semibold,
-  },
-  footerButtonLabelPrimary: {
-    color: '#ffffff',
   },
 });

@@ -26,6 +26,11 @@ import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 
 const ESTIMATED_CONVERSATION_HEIGHT = 88;
 
+const CONVERSATION_SKELETON_KEYS = Array.from(
+  { length: 10 },
+  (_, index) => `conversation-skeleton-${index}`,
+);
+
 type MessagesListScreenProps = {
   status?: 'request' | 'accepted';
   titleKey: CommonTranslationPath;
@@ -207,9 +212,8 @@ export function MessagesListScreen({
         ListEmptyComponent={
           conversationsLoading && !conversationsData ? (
             <ThemedView style={styles.skeletonContainer}>
-              {Array.from({ length: 10 }).map((_, index) => (
-                // oxlint-disable-next-line react-doctor/no-array-index-as-key -- placeholder skeletons; fixed-length [0..9] with no identity beyond position
-                <ConversationSkeleton key={`conversation-skeleton-${index}`} />
+              {CONVERSATION_SKELETON_KEYS.map((skeletonKey) => (
+                <ConversationSkeleton key={skeletonKey} />
               ))}
             </ThemedView>
           ) : error ? (

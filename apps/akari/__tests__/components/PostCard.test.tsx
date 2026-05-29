@@ -23,6 +23,12 @@ jest.mock('react', () => {
 
 jest.mock('@/hooks/mutations/useLikePost');
 jest.mock('@/hooks/mutations/useBookmarkPost');
+// PostActions now gates like/repost/reply behind useRequireAuth — a guest
+// gets promptSignIn() instead of the mutation. Treat the test viewer as an
+// authenticated (non-guest) user so the action handlers run.
+jest.mock('@/hooks/useRequireAuth', () => ({
+  useRequireAuth: () => ({ isGuest: false, promptSignIn: jest.fn() }),
+}));
 jest.mock('@/hooks/mutations/usePostTranslation');
 jest.mock('@/hooks/queries/useLibreTranslateLanguages');
 jest.mock('@/hooks/queries/useLiveNow');

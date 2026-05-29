@@ -1,5 +1,5 @@
 import { Image } from '@/components/Image';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -19,6 +19,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { TmdbSearchPicker, type SelectedMedia } from '@/components/TmdbSearchPicker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { spacing, radius, fontSize, fontWeight, opacity, layout, activeOpacity } from '@/constants/tokens';
+import { useDialogManager } from '@/contexts/DialogContext';
 import { useToast } from '@/contexts/ToastContext';
 import { useCreateReview } from '@/hooks/mutations/useCreateReview';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -28,6 +29,8 @@ type ReviewComposerProps = {
   visible: boolean;
   onClose: () => void;
 };
+
+const TMDB_PICKER_DIALOG_ID = 'review-tmdb-picker';
 
 // 10-star rating scale. The value (1..10) doubles as the React key — order
 // is fixed and the value is the star's identity, not an array index.
@@ -67,8 +70,8 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
   const [reviewText, setReviewText] = useState('');
   const [isRevisit, setIsRevisit] = useState(false);
   const [containsSpoilers, setContainsSpoilers] = useState(false);
-  const [tmdbPickerVisible, setTmdbPickerVisible] = useState(false);
 
+  const dialogManager = useDialogManager();
   const createReviewMutation = useCreateReview();
   const { showToast } = useToast();
   const { top, bottom } = useSafeAreaInsets();
@@ -129,14 +132,28 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
     }
   };
 
-  const handleMediaSelect = (media: SelectedMedia) => {
+  const handleMediaSelect = useCallback((media: SelectedMedia) => {
     setSelectedMedia(media);
-  };
+  }, []);
 
   const handleMediaTypeChange = (type: 'movie' | 'tv_show') => {
     setMediaType(type);
     setSelectedMedia(null);
   };
+
+  const openTmdbPicker = useCallback(() => {
+    dialogManager.open({
+      id: TMDB_PICKER_DIALOG_ID,
+      component: (
+        <TmdbSearchPicker
+          visible
+          onClose={() => dialogManager.close(TMDB_PICKER_DIALOG_ID)}
+          onSelect={handleMediaSelect}
+          mediaType={mediaType}
+        />
+      ),
+    });
+  }, [dialogManager, handleMediaSelect, mediaType]);
 
 
   return (
@@ -198,7 +215,6 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                     mediaType === 'movie' && [styles.toggleButtonActive, { backgroundColor: tintColor }],
                     { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
                   onPress={() => handleMediaTypeChange('movie')}
-                  
                 >
                   <ThemedText
                     style={[
@@ -215,7 +231,6 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                     mediaType === 'tv_show' && [styles.toggleButtonActive, { backgroundColor: tintColor }],
                     { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
                   onPress={() => handleMediaTypeChange('tv_show')}
-                  
                 >
                   <ThemedText
                     style={[
@@ -265,9 +280,8 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                     </View>
                   </View>
                   <Pressable
-                    onPress={() => setTmdbPickerVisible(true)}
+                    onPress={openTmdbPicker}
                     style={({ pressed }) => [styles.changeButton, { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
-                    
                   >
                     <ThemedText style={[styles.changeButtonText, { color: tintColor }]}>{t('reviews.change')}</ThemedText>
                   </Pressable>
@@ -275,8 +289,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
               ) : (
                 <Pressable
                   style={({ pressed }) => [styles.searchButton, { borderColor }, pressed && { opacity: activeOpacity.subtle }]}
-                  onPress={() => setTmdbPickerVisible(true)}
-                  
+                  onPress={openTmdbPicker}
                 >
                   <IconSymbol name="magnifyingglass" size={18} color={iconColor} />
                   <ThemedText style={[styles.searchButtonText, { color: iconColor }]}>
@@ -342,14 +355,6 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-
-        {/* TMDB Search Picker */}
-        <TmdbSearchPicker
-          visible={tmdbPickerVisible}
-          onClose={() => setTmdbPickerVisible(false)}
-          onSelect={handleMediaSelect}
-          mediaType={mediaType}
-        />
       </ThemedView>
     </Modal>
   );

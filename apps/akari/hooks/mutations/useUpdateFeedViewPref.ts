@@ -34,7 +34,7 @@ export function useUpdateFeedViewPref() {
       const nextEntry: BlueskyFeedViewPref = {
         $type: PREF_TYPE,
         feed,
-        ...(existing ?? {}),
+        ...existing,
         ...patch,
       };
 

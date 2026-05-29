@@ -73,12 +73,16 @@ describe('useAuthorLikes query hook', () => {
       'alice',
       20,
       undefined,
+      undefined,
+      [],
     );
     expect(mockGetAuthorFeed).toHaveBeenCalledWith(
       'token',
       'alice',
       20,
       'cursor1',
+      undefined,
+      [],
     );
   });
 
