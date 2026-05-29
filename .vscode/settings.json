@@ -25,5 +25,6 @@
     "Unlikes",
     "unliking",
     "xrpc"
-  ]
+  ],
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

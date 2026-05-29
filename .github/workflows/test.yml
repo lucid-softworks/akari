@@ -39,7 +39,11 @@ jobs:
           key: node-modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
       - if: steps.node-modules.outputs.cache-hit != 'true'
         run: npm ci
-      - run: npm run test:coverage --workspaces --if-present
+      # Run every workspace's coverage in parallel via turbo (the npm
+      # `--workspaces` form runs them one at a time, so akari waited on each
+      # package). The .turbo cache isn't persisted across CI runs, so every
+      # workspace still runs every time here -- just concurrently now.
+      - run: npx turbo run test:coverage
       - name: Merge coverage reports
         run: node ./scripts/merge-coverage.cjs
       - name: Report coverage
