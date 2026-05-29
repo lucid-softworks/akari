@@ -9,6 +9,7 @@
     "prelint": "npm run generate-docs",
     "dev": "vite",
     "build": "vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "preview": "vite preview",
     "lint": "tsc --noEmit"
   },

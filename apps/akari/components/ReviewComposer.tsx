@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Switch,
   TextInput,
+  type TextStyle,
   View,
 } from 'react-native';
 import { Modal } from '@/components/ui/Modal';
@@ -319,7 +320,7 @@ export function ReviewComposer({ visible, onClose }: ReviewComposerProps) {
                     color: textColor,
                     borderColor,
                   },
-                  Platform.OS === 'web' && { outline: 'none' },
+                  Platform.OS === 'web' && ({ outline: 'none' } as TextStyle),
                 ]}
                 value={reviewText}
                 onChangeText={setReviewText}

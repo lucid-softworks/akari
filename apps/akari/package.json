@@ -23,6 +23,7 @@
     "web:production": "APP_VARIANT=production expo start --web",
     "preview-web": "npx expo export -p web && npx serve dist -l 8088 --single",
     "build": "APP_VARIANT=${APP_VARIANT:-development} expo export",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "build:preview": "APP_VARIANT=preview expo export",
     "build:production": "APP_VARIANT=production expo export",
     "sync-oauth-meta": "node ./scripts/sync-oauth-meta.js",

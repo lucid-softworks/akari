@@ -38,3 +38,7 @@ jobs:
       - if: steps.node-modules.outputs.cache-hit != 'true'
         run: npm ci
       - run: npm run lint
+      # Type-check every workspace (tsc --noEmit). oxlint and the app's
+      # babel-jest both skip type errors, so without this a type error would
+      # only surface in an editor or at runtime.
+      - run: npm run typecheck

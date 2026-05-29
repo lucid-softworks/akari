@@ -7,6 +7,7 @@
   "types": "src/api.ts",
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "npm run test:run",
     "test:run": "jest --runInBand",
     "test:coverage": "jest --coverage",

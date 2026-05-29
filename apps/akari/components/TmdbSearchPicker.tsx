@@ -7,6 +7,7 @@ import {
   Pressable,
   StyleSheet,
   TextInput,
+  type TextStyle,
   View,
 } from 'react-native';
 import { Modal } from '@/components/ui/Modal';
@@ -245,7 +246,7 @@ export function TmdbSearchPicker({ visible, onClose, onSelect, mediaType }: Tmdb
               style={[
                 styles.searchInput,
                 { color: textColor },
-                Platform.OS === 'web' && { outline: 'none' },
+                Platform.OS === 'web' && ({ outline: 'none' } as TextStyle),
               ]}
               value={searchQuery}
               onChangeText={setSearchQuery}
