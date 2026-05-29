@@ -12,7 +12,7 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     # `pull_request` exposes no secrets to fork PRs and uses a read-only token,
     # so this is safe to run on every PR (no org-member / label gate needed).
     # `npm run lint` also enforces translation key parity via the

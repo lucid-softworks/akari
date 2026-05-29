@@ -18,7 +18,7 @@ on:
 jobs:
   prepare:
     name: Resolve release metadata
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       contents: read
     env:
@@ -64,7 +64,7 @@ jobs:
   native-build:
     name: EAS Production Build (${{ matrix.label }})
     needs: prepare
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       contents: write
     strategy:
@@ -164,7 +164,7 @@ jobs:
   publish-update-and-web:
     name: EAS Update + Web Deploy
     needs: [prepare, native-build]
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       contents: write
     env:
@@ -232,7 +232,7 @@ jobs:
   finalize-release:
     name: Publish GitHub Release
     needs: [prepare, native-build, publish-update-and-web]
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       contents: write
     env:
