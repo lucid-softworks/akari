@@ -19,7 +19,7 @@ on:
 jobs:
   deploy:
     name: Deploy mainline preview to EAS Hosting
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       contents: read
     steps:
