@@ -47,5 +47,5 @@ module.exports = {
     'node_modules/.+\\.mjs$': '<rootDir>/../../scripts/jest-transform-mjs.cjs',
   },
   transformIgnorePatterns: ['node_modules/(?!until-async/|.+\\.mjs$)'],
-  ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
+  ...(isGithubActions ? { reporters: ['default', 'github-actions', ['jest-junit', { outputName: 'junit.xml' }]] } : {}),
 };

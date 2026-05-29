@@ -39,5 +39,5 @@ module.exports = {
     // load; the WebRTC stream player only mounts on real devices.
     '^react-native-webrtc$': '<rootDir>/__mocks__/react-native-webrtc.js',
   },
-  ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
+  ...(isGithubActions ? { reporters: ['default', 'github-actions', ['jest-junit', { outputName: 'junit.xml' }]] } : {}),
 };
