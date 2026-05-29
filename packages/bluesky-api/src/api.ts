@@ -323,6 +323,24 @@ export class BlueskyApi extends BlueskyApiClient {
     return this.actors.setAccountAutomated(accessJwt, userDid, automated);
   }
 
+  /** Publish or update the user's live status (`app.bsky.actor.status`). */
+  async setActorStatus(
+    accessJwt: string,
+    userDid: string,
+    input: {
+      durationMinutes: number;
+      external?: { uri: string; title: string; description: string };
+      createdAt?: string;
+    },
+  ): Promise<void> {
+    return this.actors.setActorStatus(accessJwt, userDid, input);
+  }
+
+  /** End the user's live broadcast by deleting their `app.bsky.actor.status` record. */
+  async clearActorStatus(accessJwt: string, userDid: string): Promise<void> {
+    return this.actors.clearActorStatus(accessJwt, userDid);
+  }
+
   /**
    * Lists Tangled repos created by the requested actor.
    * @param accessJwt - Valid session token authorised to query the actor's records.

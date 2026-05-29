@@ -68,6 +68,7 @@ const OwnProfileHeader = memo(function OwnProfileHeader({
         viewer: profile.viewer,
         labels: profile.labels,
         verification: profile.verification,
+        status: profile.status,
       }}
       isOwnProfile={true}
       menuItems={menuItems}

@@ -278,4 +278,117 @@ export class BlueskyActors extends BlueskyApiClient {
   async setAccountAutomated(accessJwt: string, userDid: string, automated: boolean) {
     return this.setProfileSelfLabel(accessJwt, userDid, 'automated', automated);
   }
+
+  /**
+   * Publishes (or updates) the user's live status by writing the
+   * `app.bsky.actor.status` record at rkey `self`. atproto models this as a
+   * single-record collection, so going live and editing an existing live
+   * status are the same `putRecord`.
+   *
+   * Uses `swapRecord` for optimistic concurrency: we read the current
+   * record's CID and pass it as the swap target. A concurrent write (the
+   * status auto-published from another client, say) makes the PDS reject
+   * with `InvalidSwap`; we re-read and retry a few times before giving up.
+   *
+   * The optional external embed is the live link card. The AppView only
+   * surfaces the badge when the link's host is in the live-now allowlist, so
+   * callers should validate the host before calling.
+   */
+  async setActorStatus(
+    accessJwt: string,
+    userDid: string,
+    input: {
+      /** Status duration in minutes (lexicon minimum is 1). */
+      durationMinutes: number;
+      /** External link card for the live content. */
+      external?: { uri: string; title: string; description: string };
+      /** Override the record's createdAt (used when editing to keep the original). */
+      createdAt?: string;
+    },
+  ): Promise<void> {
+    const collection = 'app.bsky.actor.status';
+    const record: Record<string, unknown> = {
+      $type: collection,
+      status: 'app.bsky.actor.status#live',
+      durationMinutes: input.durationMinutes,
+      createdAt: input.createdAt ?? new Date().toISOString(),
+    };
+    if (input.external) {
+      record.embed = {
+        $type: 'app.bsky.embed.external',
+        external: { $type: 'app.bsky.embed.external#external', ...input.external },
+      };
+    }
+
+    const maxAttempts = 5;
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+      const existing = await this.getStatusRecord(accessJwt, userDid);
+      try {
+        await this.makeAuthenticatedRequest('/com.atproto.repo.putRecord', accessJwt, {
+          method: 'POST',
+          body: {
+            repo: userDid,
+            collection,
+            rkey: 'self',
+            record,
+            swapRecord: existing?.cid ?? null,
+          },
+        });
+        return;
+      } catch (error) {
+        const e = error as { errorCode?: string };
+        if (e.errorCode === 'InvalidSwap' && attempt < maxAttempts - 1) continue;
+        throw error;
+      }
+    }
+  }
+
+  /**
+   * Ends the user's live broadcast by deleting the `app.bsky.actor.status`
+   * record. A missing record (already cleared / never set) is treated as
+   * success.
+   */
+  async clearActorStatus(accessJwt: string, userDid: string): Promise<void> {
+    try {
+      await this.makeAuthenticatedRequest('/com.atproto.repo.deleteRecord', accessJwt, {
+        method: 'POST',
+        body: {
+          repo: userDid,
+          collection: 'app.bsky.actor.status',
+          rkey: 'self',
+        },
+      });
+    } catch (error) {
+      const e = error as { errorCode?: string; status?: number };
+      if (e.errorCode === 'RecordNotFound' || e.status === 404) return;
+      throw error;
+    }
+  }
+
+  /**
+   * Reads the user's `app.bsky.actor.status` record at rkey `self`.
+   * Returns `null` when no status record exists.
+   */
+  private async getStatusRecord(
+    accessJwt: string,
+    userDid: string,
+  ): Promise<{ uri: string; cid: string; value: Record<string, unknown> } | null> {
+    try {
+      return await this.makeAuthenticatedRequest<{
+        uri: string;
+        cid: string;
+        value: Record<string, unknown>;
+      }>('/com.atproto.repo.getRecord', accessJwt, {
+        params: {
+          repo: userDid,
+          collection: 'app.bsky.actor.status',
+          rkey: 'self',
+        },
+      });
+    } catch (error) {
+      const e = error as { errorCode?: string; status?: number };
+      if (e.errorCode === 'RecordNotFound' || e.status === 404) return null;
+      throw error;
+    }
+  }
 }
