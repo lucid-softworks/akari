@@ -36,7 +36,20 @@ jobs:
           node-version: 24.9.0
           cache: npm
 
+      # Cache node_modules itself (not just the ~/.npm download cache) so a
+      # lockfile-unchanged run skips the ~100s npm ci extract/link/postinstall.
+      - name: Cache node_modules
+        id: node-modules
+        uses: useblacksmith/cache@v5
+        with:
+          path: |
+            node_modules
+            apps/*/node_modules
+            packages/*/node_modules
+          key: node-modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.node-modules.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Build documentation site
