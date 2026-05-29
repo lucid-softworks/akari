@@ -43,6 +43,12 @@ jest.mock('@/components/ui/IconSymbol', () => ({
 }));
 
 jest.mock('@/hooks/queries/useConversations');
+jest.mock('@/hooks/queries/useIsGuest', () => ({
+  useIsGuest: jest.fn(() => false),
+}));
+jest.mock('@/hooks/useAppViewEnabled', () => ({
+  useAppViewEnabled: jest.fn(() => true),
+}));
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/utils/tabScrollRegistry', () => ({
@@ -75,6 +81,8 @@ describe('MessagesScreen', () => {
         unreadCount: 3,
         status: 'accepted',
         muted: false,
+        isGroup: false,
+        members: [],
       },
       {
         id: '2',
@@ -85,6 +93,8 @@ describe('MessagesScreen', () => {
         unreadCount: 150,
         status: 'accepted',
         muted: false,
+        isGroup: false,
+        members: [],
         avatar: 'https://example.com/avatar.png',
       },
       {
@@ -96,6 +106,8 @@ describe('MessagesScreen', () => {
         unreadCount: 2,
         status: 'request',
         muted: false,
+        isGroup: false,
+        members: [],
       },
     ];
     mockUseConversations.mockReturnValue({
@@ -150,6 +162,8 @@ describe('MessagesScreen', () => {
         unreadCount: 0,
         status: 'accepted',
         muted: false,
+        isGroup: false,
+        members: [],
       },
     ];
     mockUseConversations.mockReturnValue({

@@ -145,7 +145,7 @@ describe('useConversations', () => {
       ],
       cursor: 'cursor',
     });
-    expect(options.queryKey).toEqual(['conversations', 10, undefined, undefined, 'did:me']);
+    expect(options.queryKey).toEqual(['conversations', 10, undefined, undefined, 'did:me', true]);
     expect(options.initialPageParam).toBeUndefined();
     expect(options.enabled).toBe(true);
     expect(options.staleTime).toBe(30 * 1000);
@@ -160,7 +160,7 @@ describe('useConversations', () => {
     await options.queryFn({ pageParam: undefined });
 
     expect(mockListConversations).toHaveBeenCalledWith('token', 50, undefined, undefined, undefined);
-    expect(options.queryKey).toEqual(['conversations', 50, undefined, undefined, 'did:me']);
+    expect(options.queryKey).toEqual(['conversations', 50, undefined, undefined, 'did:me', true]);
     expect(options.enabled).toBe(true);
   });
 
@@ -171,7 +171,7 @@ describe('useConversations', () => {
     await options.queryFn({ pageParam: 'cursor-1' });
 
     expect(mockListConversations).toHaveBeenCalledWith('token', 25, 'cursor-1', 'unread', 'request');
-    expect(options.queryKey).toEqual(['conversations', 25, 'unread', 'request', 'did:me']);
+    expect(options.queryKey).toEqual(['conversations', 25, 'unread', 'request', 'did:me', true]);
   });
 
   it('throws when no token is available and disables the query', async () => {

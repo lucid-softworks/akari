@@ -52,6 +52,15 @@ jest.mock('@/contexts/LanguageContext', () => ({
   LanguageProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+// Leaf chrome rendered inside the provider tree. None are relevant to what
+// this layout test asserts (font gate, theme, stack screens, web devtools),
+// and several reach for native modules (netinfo, OAuth storage) that aren't
+// wired up under jest — stub them to inert nodes.
+jest.mock('@/components/OfflineBanner', () => ({ OfflineBanner: () => null }));
+jest.mock('@/components/OAuthAccountBinder', () => ({ OAuthAccountBinder: () => null }));
+jest.mock('@/components/DevServerBanner', () => ({ DevServerBanner: () => null }));
+jest.mock('@/components/ExternalLinkConfirmHost', () => ({ ExternalLinkConfirmHost: () => null }));
+
 jest.mock('@/utils/secureStorageBootstrap', () => ({
   bootstrapSecureStorage: jest.fn(() => Promise.resolve()),
 }));
@@ -70,8 +79,22 @@ jest.mock('expo-router', () => {
   const Stack = ({ children }: { children: React.ReactNode }) => <>{children}</>;
   // @ts-ignore
   Stack.Screen = Screen;
-  return { Stack };
+  return {
+    Stack,
+    // PlausibleAutoPageview (rendered inside the provider tree) reads the
+    // current route via these hooks; stub them so the layout renders.
+    useSegments: jest.fn(() => []),
+    usePathname: jest.fn(() => '/'),
+  };
 });
+
+// The analytics provider hooks into router state and fires network pageviews;
+// stub it to a passthrough provider + no-op auto-pageview so the layout under
+// test doesn't pull in the real Plausible wiring.
+jest.mock('@/utils/plausible', () => ({
+  PlausibleProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  PlausibleAutoPageview: () => null,
+}));
 
 const setPlatform = (os: string) => {
   Object.defineProperty(Platform, 'OS', {

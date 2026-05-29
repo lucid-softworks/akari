@@ -3,15 +3,11 @@ import { render, fireEvent, act, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import DebugScreen from '@/app/debug';
-import { showAlert } from '@/utils/alert';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 jest.mock('react-native-safe-area-context', () => {
   return { SafeAreaView: ({ children }: { children: React.ReactNode }) => <>{children}</> };
 });
-
-jest.mock('@/utils/alert');
-const mockShowAlert = showAlert as jest.Mock;
 
 jest.mock('@/hooks/useColorScheme');
 const mockUseColorScheme = useColorScheme as jest.Mock;
@@ -161,29 +157,25 @@ describe('DebugScreen', () => {
     getAllSpy.mockRestore();
   });
 
-  it('invalidates and clears all queries through alerts', () => {
+  it('invalidates and clears all queries through confirm dialogs', () => {
     const client = new QueryClient();
     const invalidateSpy = jest.spyOn(client, 'invalidateQueries');
     const clearSpy = jest.spyOn(client, 'clear');
 
     const { getByText } = renderScreen(client);
 
+    // Opening the dialog renders a ConfirmDialog via the global
+    // DialogManager; pressing its action button runs the onPress handler.
     fireEvent.press(getByText('debug.invalidateAll'));
-    const invalidateArgs = mockShowAlert.mock.calls[0][0];
-    for (const button of invalidateArgs.buttons ?? []) {
-      if (button.text === 'Invalidate') {
-        act(() => button.onPress?.());
-      }
-    }
+    act(() => {
+      fireEvent.press(getByText('Invalidate'));
+    });
     expect(invalidateSpy).toHaveBeenCalled();
 
     fireEvent.press(getByText('debug.clearAll'));
-    const clearArgs = mockShowAlert.mock.calls[1][0];
-    for (const button of clearArgs.buttons ?? []) {
-      if (button.text === 'Clear') {
-        act(() => button.onPress?.());
-      }
-    }
+    act(() => {
+      fireEvent.press(getByText('Clear'));
+    });
     expect(clearSpy).toHaveBeenCalled();
   });
 });

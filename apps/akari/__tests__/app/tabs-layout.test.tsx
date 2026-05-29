@@ -153,10 +153,15 @@ describe('TabLayout', () => {
     expect(indicator.props.color).toBe('#7C8CF9');
   });
 
-  it('redirects to signin when not authenticated', () => {
+  it('renders the tab shell (no redirect) when not authenticated', () => {
+    // Unauthenticated users now see the same tab shell as authenticated ones;
+    // individual screens render public reads or a sign-in empty state and
+    // write actions are gated by useIsGuest. There is no longer a redirect.
     mockUseAuthStatus.mockReturnValue({ data: { isAuthenticated: false }, isLoading: false });
-    const { getByText } = render(<TabLayout />);
-    expect(getByText('redirect:/(auth)/signin')).toBeTruthy();
+    const { queryByText } = render(<TabLayout />);
+    expect(queryByText('redirect:/(auth)/signin')).toBeNull();
+    // The mobile header for the home tab is still rendered.
+    expect(queryByText('Home')).toBeTruthy();
   });
 
   it('renders large screen layout with sidebar', () => {
@@ -177,6 +182,8 @@ describe('TabLayout', () => {
       'notifications',
       'bookmarks',
       'profile',
+      'community-notes',
+      'moderation',
       'settings',
     ]);
   });
@@ -231,6 +238,8 @@ describe('TabLayout', () => {
       'notifications',
       'bookmarks',
       'profile',
+      'community-notes',
+      'moderation',
       'settings',
     ]);
   });
@@ -299,20 +308,28 @@ describe('TabLayout', () => {
 
     const preventDefault = jest.fn();
 
+    // Sheets now open through the DialogManager, so the AccountSwitcherSheet
+    // isn't rendered until the long press opens the dialog.
+    expect(mockAccountSwitcherSheet.mock.calls.length).toBe(0);
+
     act(() => {
       listeners?.({} as any).tabLongPress?.({ preventDefault } as any);
     });
 
-    expect(mockAccountSwitcherSheet.mock.calls.length).toBeGreaterThanOrEqual(2);
+    expect(mockAccountSwitcherSheet.mock.calls.length).toBeGreaterThanOrEqual(1);
     const latestCall = mockAccountSwitcherSheet.mock.calls.at(-1);
     expect(latestCall?.[0].visible).toBe(true);
+
+    const callCountWhileOpen = mockAccountSwitcherSheet.mock.calls.length;
 
     act(() => {
       latestCall?.[0].onClose();
     });
 
-    const closeCall = mockAccountSwitcherSheet.mock.calls.at(-1);
-    expect(closeCall?.[0].visible).toBe(false);
+    // Closing removes the dialog from the manager, so the sheet is no longer
+    // rendered (the dialog element is unmounted rather than re-rendered with
+    // visible: false).
+    expect(mockAccountSwitcherSheet.mock.calls.length).toBe(callCountWhileOpen);
   });
 
   it('hides the mobile header on the profile tab', () => {

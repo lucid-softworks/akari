@@ -15,7 +15,6 @@ import { useUpdateProfile } from '@/hooks/mutations/useUpdateProfile';
 import { router } from 'expo-router';
 import { HandleHistoryModal } from '@/components/HandleHistoryModal';
 import { ProfileEditModal } from '@/components/ProfileEditModal';
-import { showAlert } from '@/utils/alert';
 
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/contexts/LanguageContext');
@@ -31,7 +30,11 @@ jest.mock('@/components/HandleHistoryModal', () => ({ HandleHistoryModal: jest.f
 jest.mock('@/components/ProfileEditModal', () => ({ ProfileEditModal: jest.fn(() => null) }));
 jest.mock('@/components/KeytraceClaims', () => ({ KeytraceClaims: jest.fn(() => null) }));
 jest.mock('@/components/VerificationBadge', () => ({ VerificationBadge: jest.fn(() => null) }));
-jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
+// Profile save success/error feedback migrated from the showAlert util to
+// the themed useConfirm() dialog (opened via the DialogManager). Mock the
+// hook so we can assert on the confirm call directly.
+const mockConfirm = jest.fn();
+jest.mock('@/hooks/useConfirm', () => ({ useConfirm: () => mockConfirm }));
 jest.mock('@/components/ui/IconSymbol', () => {
   const ReactLib = require('react');
   const { Text } = require('react-native');
@@ -48,7 +51,6 @@ const mockUseBlockUser = useBlockUser as jest.Mock;
 const mockUseUpdateProfile = useUpdateProfile as jest.Mock;
 const mockHandleHistoryModal = HandleHistoryModal as jest.Mock;
 const mockProfileEditModal = ProfileEditModal as jest.Mock;
-const mockShowAlert = showAlert as jest.Mock;
 
 const baseProfile = {
   handle: 'alice',
@@ -67,7 +69,7 @@ describe('ProfileHeader', () => {
     mockUseFollowUser.mockReturnValue({ mutateAsync: jest.fn() });
     mockUseBlockUser.mockReturnValue({ mutateAsync: jest.fn() });
     mockUseUpdateProfile.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
-    mockShowAlert.mockReset();
+    mockConfirm.mockReset();
   });
 
   it('opens handle history modal when handle is pressed', () => {
@@ -125,15 +127,15 @@ describe('ProfileHeader', () => {
       await save({ displayName: 'Alice', description: 'bio' });
     });
     expect(updateMutate).toHaveBeenCalledWith({ displayName: 'Alice', description: 'bio' });
-    expect(mockShowAlert).toHaveBeenCalledWith(
+    expect(mockConfirm).toHaveBeenCalledWith(
       expect.objectContaining({ title: 'common.success' }),
     );
-    mockShowAlert.mockClear();
+    mockConfirm.mockClear();
     updateMutate.mockRejectedValueOnce(new Error('err'));
     await act(async () => {
       await save({ displayName: 'Alice', description: 'bio' });
     });
-    expect(mockShowAlert).toHaveBeenCalledWith(
+    expect(mockConfirm).toHaveBeenCalledWith(
       expect.objectContaining({ title: 'common.error' }),
     );
   });

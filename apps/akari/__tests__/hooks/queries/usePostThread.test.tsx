@@ -57,12 +57,16 @@ describe('usePostThread', () => {
       expect(result.current.data).toEqual(mockThread);
     });
 
+    // Authenticated path builds a client rooted at the PDS, proxying to the
+    // default bsky AppView DID, and passes the (empty) accept-labelers list.
     expect(jest.mocked(BlueskyApi)).toHaveBeenCalledWith('https://pds', 'did:web:api.bsky.app');
-    expect(mockGetPostThread).toHaveBeenCalledWith('token', 'at://post/1');
+    expect(mockGetPostThread).toHaveBeenCalledWith('token', 'at://post/1', []);
   });
 
-  it('returns error when pdsUrl is missing', async () => {
+  it('uses the public AppView (guest path) when pdsUrl is missing', async () => {
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    const mockThread = { thread: { post: { uri: 'at://post/1' } } };
+    mockGetPostThread.mockResolvedValueOnce(mockThread);
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => usePostThread('at://post/1'), {
@@ -70,26 +74,28 @@ describe('usePostThread', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.error).toBeInstanceOf(Error);
-      expect((result.current.error as Error).message).toBe('No PDS URL available');
+      expect(result.current.data).toEqual(mockThread);
     });
 
-    expect(mockGetPostThread).not.toHaveBeenCalled();
+    // Guest path passes an empty auth string.
+    expect(mockGetPostThread).toHaveBeenCalledWith('', 'at://post/1', []);
   });
 
-  it('throws error when token is missing', async () => {
+  it('uses the public AppView (guest path) when token is missing', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    const mockThread = { thread: { post: { uri: 'at://post/1' } } };
+    mockGetPostThread.mockResolvedValueOnce(mockThread);
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => usePostThread('at://post/1'), {
       wrapper,
     });
 
-    const fetchResult = await result.current.refetch();
+    await waitFor(() => {
+      expect(result.current.data).toEqual(mockThread);
+    });
 
-    expect(fetchResult.error).toBeInstanceOf(Error);
-    expect((fetchResult.error as Error).message).toBe('No access token or post URI');
-    expect(mockGetPostThread).not.toHaveBeenCalled();
+    expect(mockGetPostThread).toHaveBeenCalledWith('', 'at://post/1', []);
   });
 
   it('does not fetch when post URI is missing', async () => {
@@ -104,6 +110,6 @@ describe('usePostThread', () => {
 
     const fetchResult = await result.current.refetch();
     expect(fetchResult.error).toBeInstanceOf(Error);
-    expect((fetchResult.error as Error).message).toBe('No access token or post URI');
+    expect((fetchResult.error as Error).message).toBe('No post URI');
   });
 });

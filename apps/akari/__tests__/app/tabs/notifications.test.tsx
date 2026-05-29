@@ -49,6 +49,12 @@ jest.mock('@/components/ui/IconSymbol', () => {
 });
 
 jest.mock('@/hooks/queries/useNotifications');
+jest.mock('@/hooks/queries/useIsGuest', () => ({
+  useIsGuest: jest.fn(() => false),
+}));
+jest.mock('@/hooks/useAppViewEnabled', () => ({
+  useAppViewEnabled: jest.fn(() => true),
+}));
 jest.mock('@/hooks/useBorderColor');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');

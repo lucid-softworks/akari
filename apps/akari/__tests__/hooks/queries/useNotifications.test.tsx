@@ -224,7 +224,7 @@ describe('useNotifications', () => {
     const { unmount } = renderHook(() => useNotifications(), { wrapper });
 
     const query = queryClient.getQueryCache().find({
-      queryKey: ['notifications', 'list', 50, undefined, undefined, 'did:me'],
+      queryKey: ['notifications', 'list', 50, undefined, undefined, 'did:me', true],
     });
     expect(query).toBeDefined();
     await expect((query!.options.queryFn as any)?.({ pageParam: undefined })).rejects.toThrow(
@@ -246,7 +246,7 @@ describe('useNotifications', () => {
     });
 
     const query = queryClient.getQueryCache().find({
-      queryKey: ['notifications', 'list', 50, undefined, undefined, 'did:me'],
+      queryKey: ['notifications', 'list', 50, undefined, undefined, 'did:me', true],
     });
     expect(query).toBeDefined();
     await expect((query!.options.queryFn as any)?.({ pageParam: undefined })).rejects.toThrow(

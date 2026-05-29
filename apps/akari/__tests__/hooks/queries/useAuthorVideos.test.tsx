@@ -52,7 +52,7 @@ describe('useAuthorVideos', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockGetAuthorVideos).toHaveBeenCalledWith('token', 'alice', 10, undefined);
+    expect(mockGetAuthorVideos).toHaveBeenCalledWith('token', 'alice', 10, undefined, []);
     expect(result.current.data).toEqual([{ uri: '1' }, { uri: '2' }]);
   });
 
@@ -82,20 +82,26 @@ describe('useAuthorVideos', () => {
       expect(result.current.data).toEqual([{ uri: 'at://1' }, { uri: 'at://2' }]);
     });
 
-    expect(mockGetAuthorVideos).toHaveBeenNthCalledWith(1, 'token', 'alice', 20, undefined);
-    expect(mockGetAuthorVideos).toHaveBeenNthCalledWith(2, 'token', 'alice', 20, 'cursor1');
+    expect(mockGetAuthorVideos).toHaveBeenNthCalledWith(1, 'token', 'alice', 20, undefined, []);
+    expect(mockGetAuthorVideos).toHaveBeenNthCalledWith(2, 'token', 'alice', 20, 'cursor1', []);
   });
 
-  it('returns error when PDS URL missing', async () => {
+  it('falls back to the guest path when PDS URL is missing', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: 'token' });
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockGetAuthorVideos.mockResolvedValueOnce({
+      feed: [{ post: { uri: 'at://1' } }],
+      cursor: undefined,
+    });
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useAuthorVideos('alice'), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.error?.message).toBe('No PDS URL available');
+      expect(result.current.data).toEqual([{ uri: 'at://1' }]);
     });
+    // Guest path: empty token passed through to the public AppView.
+    expect(mockGetAuthorVideos).toHaveBeenCalledWith('', 'alice', 20, undefined, []);
   });
 
   it('does not run query without identifier', async () => {
@@ -111,17 +117,22 @@ describe('useAuthorVideos', () => {
     expect(mockGetAuthorVideos).not.toHaveBeenCalled();
   });
 
-  it('does not run query without token', async () => {
+  it('uses the guest path when no token is available', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: { pdsUrl: 'https://pds' } });
+    mockGetAuthorVideos.mockResolvedValueOnce({
+      feed: [{ post: { uri: 'at://1' } }],
+      cursor: undefined,
+    });
 
     const { wrapper } = createWrapper();
     const { result } = renderHook(() => useAuthorVideos('alice'), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.data).toBeUndefined();
+      expect(result.current.data).toEqual([{ uri: 'at://1' }]);
     });
-    expect(mockGetAuthorVideos).not.toHaveBeenCalled();
+    // Guest path: empty token passed through to the public AppView.
+    expect(mockGetAuthorVideos).toHaveBeenCalledWith('', 'alice', 20, undefined, []);
   });
 });
 

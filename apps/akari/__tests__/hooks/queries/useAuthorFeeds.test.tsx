@@ -66,16 +66,20 @@ describe('useAuthorFeeds query hook', () => {
     });
   });
 
-  it('throws error when token is missing', async () => {
+  it('falls back to the public AppView when token is missing (guest path)', async () => {
     (useJwtToken as jest.Mock).mockReturnValue({ data: undefined });
+    mockGetAuthorFeeds.mockResolvedValueOnce({ feeds: [{ uri: 'a' }], cursor: undefined });
     const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useAuthorFeeds('alice', 5), {
       wrapper,
     });
 
-    const fetchResult = await result.current.fetchNextPage();
-    expect((fetchResult.error as Error).message).toBe('No access token');
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+    expect(mockGetAuthorFeeds).toHaveBeenCalledWith('', 'alice', 5, undefined);
+    expect(result.current.data).toEqual([{ uri: 'a' }]);
   });
 
   it('throws error when identifier is missing', async () => {
@@ -91,8 +95,9 @@ describe('useAuthorFeeds query hook', () => {
     );
   });
 
-  it('throws error when pdsUrl is missing', async () => {
+  it('falls back to the public AppView when pdsUrl is missing (guest path)', async () => {
     (useCurrentAccount as jest.Mock).mockReturnValue({ data: {} });
+    mockGetAuthorFeeds.mockResolvedValueOnce({ feeds: [{ uri: 'a' }], cursor: undefined });
     const { wrapper } = createWrapper();
 
     const { result } = renderHook(() => useAuthorFeeds('alice', 5), {
@@ -100,9 +105,10 @@ describe('useAuthorFeeds query hook', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-      expect((result.current.error as Error).message).toBe('No PDS URL available');
+      expect(result.current.isSuccess).toBe(true);
     });
+    expect(mockGetAuthorFeeds).toHaveBeenCalledWith('', 'alice', 5, undefined);
+    expect(result.current.data).toEqual([{ uri: 'a' }]);
   });
 });
 
