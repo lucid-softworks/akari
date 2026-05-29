@@ -27,6 +27,11 @@ import { useTabConfig } from '@/hooks/useTabConfig';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useDialogManager } from '@/contexts/DialogContext';
+
+const ACCOUNT_SWITCHER = 'account-switcher';
+const LAYOUT_CHAT_ACTIONS = 'layout-chat-actions';
+const LAYOUT_CHAT_REPORT = 'layout-chat-report';
 
 /**
  * Native-only large-screen layout (iPad / large Android). Sidebar +
@@ -96,7 +101,6 @@ type WebTabLayoutProps = {
   visibleTabs: TabKey[];
   contentSafeAreaInsets: { top: number; right: number; bottom: number; left: number };
   safeAreaInsetsTop: number;
-  accountSwitcher: React.ReactNode;
 };
 
 const WEB_TAB_ORDER: TabKey[] = [
@@ -142,7 +146,6 @@ function WebTabLayout({
   visibleTabs,
   contentSafeAreaInsets,
   safeAreaInsetsTop,
-  accountSwitcher,
 }: WebTabLayoutProps) {
   const { push } = useRouter();
   const pathname = usePathname();
@@ -326,7 +329,6 @@ function WebTabLayout({
           ) : null}
         </ThemedView>
       </SafeAreaInsetsContext.Provider>
-      {accountSwitcher}
     </TabChromeContext.Provider>
   );
 }
@@ -365,9 +367,7 @@ export default function TabLayout() {
   const { data: currentAccount } = useCurrentAccount();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
-  const [isAccountSwitcherVisible, setAccountSwitcherVisible] = useState(false);
-  const [chatActionsSheetVisible, setChatActionsSheetVisible] = useState(false);
-  const [chatReportSheetVisible, setChatReportSheetVisible] = useState(false);
+  const dialogManager = useDialogManager();
   const safeAreaInsets = useSafeAreaInsets();
   const pathname = usePathname();
   const { back } = useRouter();
@@ -450,13 +450,49 @@ export default function TabLayout() {
       return;
     }
 
-    setAccountSwitcherVisible(true);
-  }, [isLargeScreen]);
+    dialogManager.open({
+      id: ACCOUNT_SWITCHER,
+      component: (
+        <AccountSwitcherSheet visible onClose={() => dialogManager.close(ACCOUNT_SWITCHER)} />
+      ),
+    });
+  }, [isLargeScreen, dialogManager]);
 
-  const handleCloseAccountSwitcher = useCallback(() => {
-    setAccountSwitcherVisible(false);
-  }, []);
 
+  const chatPeerDid = messageThreadConvo?.isGroup ? undefined : messageThreadConvo?.members[0]?.did;
+
+  const openChatReport = useCallback(() => {
+    if (!chatPeerDid) return;
+    dialogManager.open({
+      id: LAYOUT_CHAT_REPORT,
+      component: (
+        <ReportSheet
+          visible
+          onDismiss={() => dialogManager.close(LAYOUT_CHAT_REPORT)}
+          subject={{ type: 'account', did: chatPeerDid }}
+        />
+      ),
+    });
+  }, [dialogManager, chatPeerDid]);
+
+  const openChatActions = useCallback(() => {
+    if (!messageThreadConvo) return;
+    dialogManager.open({
+      id: LAYOUT_CHAT_ACTIONS,
+      component: (
+        <ChatActionsSheet
+          visible
+          onDismiss={() => dialogManager.close(LAYOUT_CHAT_ACTIONS)}
+          convoId={messageThreadConvo.convoId}
+          isMuted={messageThreadConvo.muted}
+          isGroup={messageThreadConvo.isGroup}
+          peerDid={chatPeerDid}
+          onReportPress={openChatReport}
+          onLeft={() => back()}
+        />
+      ),
+    });
+  }, [dialogManager, messageThreadConvo, chatPeerDid, openChatReport, back]);
 
   // Initialize push notifications
   usePushNotifications();
@@ -532,30 +568,8 @@ export default function TabLayout() {
           headerIconColor={headerIconColor}
           headerTextColor={headerTextColor}
           onBackPress={() => back()}
-          onChatOptionsPress={() => setChatActionsSheetVisible(true)}
+          onChatOptionsPress={openChatActions}
         />
-      ) : null}
-
-      {messageThreadConvo ? (
-        <>
-          <ChatActionsSheet
-            visible={chatActionsSheetVisible}
-            onDismiss={() => setChatActionsSheetVisible(false)}
-            convoId={messageThreadConvo.convoId}
-            isMuted={messageThreadConvo.muted}
-            isGroup={messageThreadConvo.isGroup}
-            peerDid={messageThreadConvo.isGroup ? undefined : messageThreadConvo.members[0]?.did}
-            onReportPress={() => setChatReportSheetVisible(true)}
-            onLeft={() => back()}
-          />
-          {!messageThreadConvo.isGroup && messageThreadConvo.members[0]?.did ? (
-            <ReportSheet
-              visible={chatReportSheetVisible}
-              onDismiss={() => setChatReportSheetVisible(false)}
-              subject={{ type: 'account', did: messageThreadConvo.members[0].did }}
-            />
-          ) : null}
-        </>
       ) : null}
     </>
   );
@@ -573,9 +587,6 @@ export default function TabLayout() {
         visibleTabs={visibleTabs}
         contentSafeAreaInsets={contentSafeAreaInsets}
         safeAreaInsetsTop={safeAreaInsets.top}
-        accountSwitcher={
-          <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
-        }
       />
     );
   }
@@ -627,7 +638,6 @@ export default function TabLayout() {
           </Tabs>
         </View>
       </SafeAreaInsetsContext.Provider>
-      <AccountSwitcherSheet visible={isAccountSwitcherVisible} onClose={handleCloseAccountSwitcher} />
     </>
   );
 }

@@ -114,6 +114,11 @@ jest.mock('@testing-library/react-native', () => {
   const actual = jest.requireActual('@testing-library/react-native');
   const React = require('react');
   const { QueryClient, QueryClientProvider } = require('@tanstack/react-query');
+  // Components open sheets/modals through the DialogManager, so every render
+  // needs a DialogProvider up the tree or useDialogManager() throws. Provide
+  // it globally with the real provider; tests that wrap in their own
+  // DialogProvider just nest harmlessly (their inner provider wins).
+  const { DialogProvider } = require('@/contexts/DialogContext');
 
   const wrap = (fn) => (ui, options = {}) => {
     const userWrapper = options.wrapper;
@@ -124,7 +129,11 @@ jest.mock('@testing-library/react-native', () => {
       const inner = userWrapper
         ? React.createElement(userWrapper, null, children)
         : children;
-      return React.createElement(QueryClientProvider, { client }, inner);
+      return React.createElement(
+        QueryClientProvider,
+        { client },
+        React.createElement(DialogProvider, null, inner),
+      );
     };
     return fn(ui, { ...options, wrapper: Wrapper });
   };

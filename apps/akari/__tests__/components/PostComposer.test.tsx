@@ -14,7 +14,12 @@ jest.mock('@/hooks/mutations/useCreatePost');
 jest.mock('@/hooks/useThemeColor');
 jest.mock('@/hooks/useTranslation');
 jest.mock('@/hooks/useResponsive');
-jest.mock('@/components/GifPicker', () => ({ GifPicker: jest.fn(() => null) }));
+// Render a queryable marker so "open" = mounted (the picker now opens via the
+// DialogManager rather than an always-mounted `visible` prop).
+jest.mock('@/components/GifPicker', () => {
+  const React = require('react');
+  return { GifPicker: jest.fn(() => React.createElement('gif-picker', { testID: 'gif-picker' })) };
+});
 jest.mock('@/components/ui/IconSymbol', () => ({ IconSymbol: jest.fn(() => null) }));
 jest.mock('expo-image', () => ({ Image: jest.fn(() => null) }));
 jest.mock('expo-image-picker', () => ({
@@ -253,6 +258,15 @@ describe('PostComposer', () => {
       <PostComposer visible onClose={jest.fn()} />,
     );
 
+    // Capture the (stable) gif-select callback while the gif button is still
+    // enabled (0 images), then close the picker. The callback enforces the
+    // 4-image cap regardless of when it's invoked.
+    fireEvent.press(getByLabelText('gif.addGif'));
+    const gifSelect = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0].onSelectGif;
+    act(() => {
+      gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0].onClose();
+    });
+
     await act(async () => {
       fireEvent.press(getByLabelText('post.addPhoto'));
     });
@@ -276,8 +290,8 @@ describe('PostComposer', () => {
     expect(altInputs).toHaveLength(4);
 
     act(() => {
-      const latestCall = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0];
-      latestCall.onSelectGif({
+      // At the 4-image cap this is a no-op.
+      gifSelect({
         uri: 'gif.gif',
         alt: '',
         mimeType: 'image/gif',
@@ -318,13 +332,15 @@ describe('PostComposer', () => {
   it('manages gif picker visibility and selection callbacks', () => {
     mockUseCreatePost.mockReturnValue({ mutateAsync: jest.fn(), isPending: false });
 
-    const { getByLabelText, getByPlaceholderText } = render(
+    const { getByLabelText, getByPlaceholderText, queryByTestId } = render(
       <PostComposer visible onClose={jest.fn()} />,
     );
 
+    // Tapping the GIF button opens the picker through the DialogManager.
     fireEvent.press(getByLabelText('gif.addGif'));
+    expect(queryByTestId('gif-picker')).toBeTruthy();
 
-    let gifCall = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0];
+    const gifCall = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0];
     expect(gifCall.visible).toBe(true);
     expect(typeof gifCall.onSelectGif).toBe('function');
     expect(typeof gifCall.onClose).toBe('function');
@@ -334,13 +350,11 @@ describe('PostComposer', () => {
     });
     expect(getByPlaceholderText('post.imageAltTextPlaceholder')).toBeTruthy();
 
-    gifCall = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0];
+    // Closing unmounts the picker.
     act(() => {
       gifCall.onClose();
     });
-
-    gifCall = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0];
-    expect(gifCall.visible).toBe(false);
+    expect(queryByTestId('gif-picker')).toBeNull();
   });
 
   it('handles denied permissions and canceled picker results', async () => {
@@ -474,7 +488,7 @@ describe('PostComposer', () => {
     });
 
     const onClose = jest.fn();
-    const { getByLabelText, getByPlaceholderText, queryByPlaceholderText, getByText } = render(
+    const { getByLabelText, getByPlaceholderText, queryByPlaceholderText, queryByTestId, getByText } = render(
       <PostComposer visible onClose={onClose} />,
     );
 
@@ -486,8 +500,7 @@ describe('PostComposer', () => {
       fireEvent.press(getByLabelText('post.addPhoto'));
     });
     fireEvent.press(getByLabelText('gif.addGif'));
-    let gifCall = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0];
-    expect(gifCall.visible).toBe(true);
+    expect(queryByTestId('gif-picker')).toBeTruthy();
 
     await act(async () => {
       fireEvent.press(getByText('common.cancel'));
@@ -497,8 +510,8 @@ describe('PostComposer', () => {
     expect(getByPlaceholderText('post.postPlaceholder').props.value).toBe('');
     expect(queryByPlaceholderText('post.imageAltTextPlaceholder')).toBeNull();
 
-    gifCall = gifPickerMock.mock.calls[gifPickerMock.mock.calls.length - 1][0];
-    expect(gifCall.visible).toBe(false);
+    // Cancelling resets the composer and closes its sheets.
+    expect(queryByTestId('gif-picker')).toBeNull();
   });
 
   it('shows character count warnings near and over limit', () => {

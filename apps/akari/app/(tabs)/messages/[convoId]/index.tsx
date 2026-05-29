@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,6 +14,7 @@ import { ReactionsDialog } from '@/components/chat/ReactionsDialog';
 import { ReportSheet } from '@/components/ReportSheet';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useDialogManager, type DialogManager } from '@/contexts/DialogContext';
 import { fontSize, fontWeight, opacity, spacing } from '@/constants/tokens';
 import { webColumnSideBorders } from '@/constants/webStyles';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
@@ -35,6 +36,44 @@ type MessageError = {
   type: 'permission' | 'network' | 'unknown';
   message: string;
 };
+
+const CONVO_CHAT_ACTIONS = 'convo-chat-actions';
+const CONVO_CHAT_REPORT = 'convo-chat-report';
+
+function openConvoChatReport(dialogManager: DialogManager, peerDid: string) {
+  dialogManager.open({
+    id: CONVO_CHAT_REPORT,
+    component: (
+      <ReportSheet
+        visible
+        onDismiss={() => dialogManager.close(CONVO_CHAT_REPORT)}
+        subject={{ type: 'account', did: peerDid }}
+      />
+    ),
+  });
+}
+
+function openConvoChatActions(
+  dialogManager: DialogManager,
+  conversation: { convoId: string; muted: boolean; isGroup: boolean },
+  peerDid: string | undefined,
+) {
+  dialogManager.open({
+    id: CONVO_CHAT_ACTIONS,
+    component: (
+      <ChatActionsSheet
+        visible
+        onDismiss={() => dialogManager.close(CONVO_CHAT_ACTIONS)}
+        convoId={conversation.convoId}
+        isMuted={conversation.muted}
+        isGroup={conversation.isGroup}
+        peerDid={peerDid}
+        onReportPress={() => peerDid && openConvoChatReport(dialogManager, peerDid)}
+        onLeft={() => router.back()}
+      />
+    ),
+  });
+}
 
 export default function ConversationScreen() {
   // The path segment is the convoId. For backward compat with legacy
@@ -100,11 +139,11 @@ export default function ConversationScreen() {
   // The (tabs) layout already hosts a ChatActionsSheet wired to the
   // mobile header's options button. On web large-screen there's no
   // mobile chrome, so the sticky chat header rendered below owns its
-  // own copy of the sheet (and the nested ReportSheet) — both are
-  // gated to `showWebThreadHeader` to avoid double-mounting on
-  // viewports where the mobile chrome is already in play.
-  const [chatActionsSheetVisible, setChatActionsSheetVisible] = useState(false);
-  const [chatReportSheetVisible, setChatReportSheetVisible] = useState(false);
+  // own copy of the sheet (and the nested ReportSheet), opened via the
+  // shared DialogManager. Both are gated to `showWebThreadHeader` (at
+  // the trigger) to avoid double-mounting on viewports where the
+  // mobile chrome is already in play.
+  const dialogManager = useDialogManager();
 
   // Flatten all pages of messages into a single array. API returns
   // newest-first — keep order for an inverted FlatList.
@@ -177,6 +216,11 @@ export default function ConversationScreen() {
     }
   };
 
+  const peerDid = conversation?.isGroup ? undefined : conversation?.members[0]?.did;
+  const openChatActions = useCallback(() => {
+    if (conversation) openConvoChatActions(dialogManager, conversation, peerDid);
+  }, [dialogManager, conversation, peerDid]);
+
   const webBorders = Platform.OS === 'web' ? webColumnSideBorders(borderColor) : null;
 
   // Web large-screen has no chrome above the chat thread — the
@@ -243,7 +287,7 @@ export default function ConversationScreen() {
           borderColor={borderColor}
           textColor={textColor}
           iconColor={iconColor}
-          onOptionsPress={() => setChatActionsSheetVisible(true)}
+          onOptionsPress={openChatActions}
         />
       ) : null}
 
@@ -310,28 +354,6 @@ export default function ConversationScreen() {
           setEmojiPickerFor(null);
         }}
       />
-
-      {showWebThreadHeader && conversation ? (
-        <>
-          <ChatActionsSheet
-            visible={chatActionsSheetVisible}
-            onDismiss={() => setChatActionsSheetVisible(false)}
-            convoId={conversation.convoId}
-            isMuted={conversation.muted}
-            isGroup={conversation.isGroup}
-            peerDid={conversation.isGroup ? undefined : conversation.members[0]?.did}
-            onReportPress={() => setChatReportSheetVisible(true)}
-            onLeft={() => router.back()}
-          />
-          {!conversation.isGroup && conversation.members[0]?.did ? (
-            <ReportSheet
-              visible={chatReportSheetVisible}
-              onDismiss={() => setChatReportSheetVisible(false)}
-              subject={{ type: 'account', did: conversation.members[0].did }}
-            />
-          ) : null}
-        </>
-      ) : null}
     </KeyboardAvoidingView>
   );
 }

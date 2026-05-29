@@ -17,8 +17,8 @@ type ProfileShape = NonNullable<ReturnType<typeof useProfile>['data']>;
 type UseProfileMenuItemsArgs = {
   profile: ProfileShape | undefined;
   isOwnProfile: boolean;
-  setShowReportSheet: (open: boolean) => void;
-  setShowListPicker: (open: boolean) => void;
+  onOpenReportSheet: () => void;
+  onOpenListPicker: () => void;
   /** Optional: when present, a Germ "message on Germ" row is appended for non-self profiles. */
   onMessageOnGerm?: () => void;
 };
@@ -35,8 +35,8 @@ type UseProfileMenuItemsArgs = {
 export function useProfileMenuItems({
   profile,
   isOwnProfile,
-  setShowReportSheet,
-  setShowListPicker,
+  onOpenReportSheet,
+  onOpenListPicker,
   onMessageOnGerm,
 }: UseProfileMenuItemsArgs): MenuItem[] {
   const { t } = useTranslation();
@@ -100,8 +100,8 @@ export function useProfileMenuItems({
   }, [profile?.handle]);
 
   const handleAddToLists = useCallback(() => {
-    setShowListPicker(true);
-  }, [setShowListPicker]);
+    onOpenListPicker();
+  }, [onOpenListPicker]);
 
   const handleBlockPress = useCallback(() => {
     if (isGuest) {
@@ -161,8 +161,8 @@ export function useProfileMenuItems({
       promptSignIn();
       return;
     }
-    setShowReportSheet(true);
-  }, [setShowReportSheet, isGuest, promptSignIn]);
+    onOpenReportSheet();
+  }, [onOpenReportSheet, isGuest, promptSignIn]);
 
   return useMemo<MenuItem[]>(() => {
     const wrap = (destructive: boolean, fn: () => void) => () => {

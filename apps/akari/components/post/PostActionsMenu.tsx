@@ -29,6 +29,10 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DEFAULT_POST_CONTROLS, type PostControls } from '@/utils/postControls';
 
+const REPORT_SHEET_ID = 'post-actions-report';
+const LIST_PICKER_SHEET_ID = 'post-actions-list-picker';
+const CONTROLS_SHEET_ID = 'post-actions-controls';
+
 type PostActionsMenuProps = {
   canTranslate: boolean;
   postText?: string;
@@ -73,16 +77,14 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
 }: PostActionsMenuProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [showReportSheet, setShowReportSheet] = useState(false);
-  const [showListPicker, setShowListPicker] = useState(false);
-  const [showControlsSheet, setShowControlsSheet] = useState(false);
   const [showDebugInspector, setShowDebugInspector] = useState(false);
   const dialogManager = useDialogManager();
   const postControlsMutation = usePostControls();
   // Fetch existing threadgate/postgate state when the user is the author —
-  // only enabled while the sheet is open to skip the network round-trip on
-  // every menu render.
-  const existingControls = useExistingPostControls(showControlsSheet ? postUri : undefined);
+  // only enabled while the controls sheet is open to skip the network
+  // round-trip on every menu render.
+  const controlsSheetOpen = dialogManager.isOpen(CONTROLS_SHEET_ID);
+  const existingControls = useExistingPostControls(controlsSheetOpen ? postUri : undefined);
 
   const restingColor = useThemeColor({}, 'textTertiary');
 
@@ -192,6 +194,89 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     );
   }, [feedUri, postUri, feedContext, feedInteractionMutation, showToast, t]);
 
+  const handleSaveControls = useCallback(
+    (next: PostControls) => {
+      if (!postUri) return;
+      postControlsMutation.mutate(
+        { postUri, controls: next },
+        {
+          onSuccess: () => showToast({ message: t('post.controls.updated'), type: 'success' }),
+          onError: () => showToast({ message: t('common.error'), type: 'error' }),
+        },
+      );
+      dialogManager.close(CONTROLS_SHEET_ID);
+    },
+    [postUri, postControlsMutation, showToast, t, dialogManager],
+  );
+
+  const renderControlsSheet = useCallback(
+    (initialControls: PostControls) => (
+      <PostControlsSheet
+        visible
+        // Prefill with the post's current threadgate/postgate state so the
+        // user can tweak rather than redo from scratch. Falls back to
+        // defaults if the records are missing or still loading.
+        initialControls={initialControls}
+        onDismiss={() => dialogManager.close(CONTROLS_SHEET_ID)}
+        onSave={handleSaveControls}
+      />
+    ),
+    [dialogManager, handleSaveControls],
+  );
+
+  const handleOpenControls = useCallback(() => {
+    if (!postUri) return;
+    dialogManager.open({
+      id: CONTROLS_SHEET_ID,
+      component: renderControlsSheet(existingControls.data ?? DEFAULT_POST_CONTROLS),
+    });
+  }, [postUri, dialogManager, renderControlsSheet, existingControls.data]);
+
+  // The threadgate/postgate query only enables once the controls sheet is
+  // open, so its data usually lands after the sheet first mounts. Re-render
+  // the open sheet with the freshly loaded controls so the prefill matches
+  // the post's real state (PostControlsSheet re-syncs its draft when
+  // initialControls changes).
+  React.useEffect(() => {
+    if (!controlsSheetOpen || !postUri) return;
+    if (!existingControls.data) return;
+    dialogManager.open({
+      id: CONTROLS_SHEET_ID,
+      component: renderControlsSheet(existingControls.data),
+    });
+  }, [controlsSheetOpen, postUri, existingControls.data, dialogManager, renderControlsSheet]);
+
+  const handleOpenReport = useCallback(() => {
+    const subject = postUri && postCid
+      ? ({ type: 'post', uri: postUri, cid: postCid } as const)
+      : authorDid
+        ? ({ type: 'account', did: authorDid } as const)
+        : null;
+    dialogManager.open({
+      id: REPORT_SHEET_ID,
+      component: (
+        <ReportSheet
+          visible
+          onDismiss={() => dialogManager.close(REPORT_SHEET_ID)}
+          subject={subject}
+        />
+      ),
+    });
+  }, [postUri, postCid, authorDid, dialogManager]);
+
+  const handleOpenListPicker = useCallback(() => {
+    dialogManager.open({
+      id: LIST_PICKER_SHEET_ID,
+      component: (
+        <ListPickerSheet
+          visible
+          onDismiss={() => dialogManager.close(LIST_PICKER_SHEET_ID)}
+          subjectDid={authorDid}
+        />
+      ),
+    });
+  }, [authorDid, dialogManager]);
+
   const handleOpenAddNote = useCallback(() => {
     if (!postUri) return;
     const id = 'add-community-note';
@@ -240,7 +325,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
         key: 'editControls',
         icon: 'bubble.left.and.bubble.right',
         label: t('post.controls.edit'),
-        onPress: () => setShowControlsSheet(true),
+        onPress: handleOpenControls,
         disabled: !postUri,
       });
     }
@@ -249,7 +334,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
       key: 'addToLists',
       icon: 'list.bullet',
       label: t('profile.addToLists'),
-      onPress: () => setShowListPicker(true),
+      onPress: handleOpenListPicker,
       disabled: !authorDid,
     });
 
@@ -295,7 +380,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
       icon: 'exclamationmark.triangle',
       label: t('profile.reportPost'),
       destructive: true,
-      onPress: () => setShowReportSheet(true),
+      onPress: handleOpenReport,
     });
 
     // Dev-only inspector. __DEV__ is a Metro/Babel compile-time constant,
@@ -324,6 +409,8 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     onTranslatePress,
     handleCopyText,
     handlePinPost,
+    handleOpenControls,
+    handleOpenListPicker,
     handleShowMore,
     handleShowLess,
     handleMuteThread,
@@ -332,6 +419,7 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
     handleHideAccount,
     handleOpenRequestNote,
     handleOpenAddNote,
+    handleOpenReport,
   ]);
 
   return (
@@ -350,36 +438,6 @@ export const PostActionsMenu = React.memo(function PostActionsMenu({
         </MenuTrigger>
       </Menu>
 
-      <ReportSheet
-        visible={showReportSheet}
-        onDismiss={() => setShowReportSheet(false)}
-        subject={postUri && postCid ? { type: 'post', uri: postUri, cid: postCid } : authorDid ? { type: 'account', did: authorDid } : null}
-      />
-      <ListPickerSheet
-        visible={showListPicker}
-        onDismiss={() => setShowListPicker(false)}
-        subjectDid={authorDid}
-      />
-      {postUri ? (
-        <PostControlsSheet
-          visible={showControlsSheet}
-          // Prefill with the post's current threadgate/postgate state so the
-          // user can tweak rather than redo from scratch. Falls back to
-          // defaults if the records are missing or still loading.
-          initialControls={existingControls.data ?? DEFAULT_POST_CONTROLS}
-          onDismiss={() => setShowControlsSheet(false)}
-          onSave={(next: PostControls) => {
-            postControlsMutation.mutate(
-              { postUri, controls: next },
-              {
-                onSuccess: () => showToast({ message: t('post.controls.updated'), type: 'success' }),
-                onError: () => showToast({ message: t('common.error'), type: 'error' }),
-              },
-            );
-            setShowControlsSheet(false);
-          }}
-        />
-      ) : null}
       {__DEV__ ? (
         <PostDebugInspector
           visible={showDebugInspector}
