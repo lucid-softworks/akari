@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# Pre-push gate: validate commit subjects, then lint, type-check, and test
+# every workspace before anything leaves the machine, so CI failures are
+# caught locally first. Uses turbo, so unchanged workspaces are served from
+# cache and repeat pushes are fast.
+#
+# This is a native git hook (no husky). It is wired up via `core.hooksPath`,
+# which the root package.json `prepare` script points at `.githooks` on
+# `npm install` / `npm ci`. To configure it manually:
+#
+#     git config core.hooksPath .githooks
+#
+set -e
+
+# Run from the repository root regardless of where `git push` was invoked.
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+# --- 1. Conventional Commits on the commits being pushed -------------------
+# PRs are squash-merged with the PR title as the commit subject, and that
+# title is validated in CI (semantic-pr-title) against Conventional Commits.
+# The title itself only exists on GitHub, so as the closest local proxy we
+# validate every non-merge commit being pushed against the same spec.
+# git feeds "<local ref> <local sha> <remote ref> <remote sha>" lines on stdin.
+types='feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert|i18n'
+conv_re="^(${types})(\([^)]+\))?!?: [^A-Z].+"
+
+bad_commits=''
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+  # Skip deleted refs (local sha is all zeros).
+  case "$local_sha" in
+    *[!0]*) : ;;
+    *) continue ;;
+  esac
+
+  # New branch (remote sha all zeros): the new commits are everything not yet
+  # on any origin ref. Existing branch: just the range remote..local.
+  case "$remote_sha" in
+    *[!0]*) range="${remote_sha}..${local_sha}" ;;
+    *) range="${local_sha} --not --remotes=origin" ;;
+  esac
+
+  for sha in $(git rev-list --no-merges $range 2>/dev/null); do
+    subject=$(git log -1 --format=%s "$sha")
+    if ! printf '%s' "$subject" | grep -Eq "$conv_re"; then
+      bad_commits="${bad_commits}
+  $(git rev-parse --short "$sha")  ${subject}"
+    fi
+  done
+done
+
+if [ -n "$bad_commits" ]; then
+  printf '\n\033[31m✖ commit subject(s) are not Conventional Commits — push aborted.\033[0m\n'
+  printf '%s\n' "$bad_commits"
+  printf '\nExpected: <type>[(scope)][!]: <lowercase subject>\n'
+  printf 'Types: %s\n' "$(echo "$types" | tr '|' ' ')"
+  printf 'Reword with `git commit --amend` or `git rebase -i` and push again.\n'
+  exit 1
+fi
+
+# --- 2. Lint ---------------------------------------------------------------
+printf '\n\033[1m▶ pre-push: linting all workspaces...\033[0m\n'
+if ! npx turbo run lint; then
+  printf '\n\033[31m✖ lint failed — push aborted.\033[0m Fix the errors above and push again.\n'
+  exit 1
+fi
+
+# --- 3. Type-check ---------------------------------------------------------
+printf '\n\033[1m▶ pre-push: type-checking...\033[0m\n'
+if ! npx turbo run typecheck; then
+  printf '\n\033[31m✖ typecheck failed — push aborted.\033[0m Fix the type errors above and push again.\n'
+  exit 1
+fi
+
+# --- 4. Test ---------------------------------------------------------------
+printf '\n\033[1m▶ pre-push: running tests...\033[0m\n'
+if ! npx turbo run test; then
+  printf '\n\033[31m✖ tests failed — push aborted.\033[0m Fix the failures above and push again.\n'
+  exit 1
+fi
+
+printf '\n\033[32m✔ pre-push checks passed.\033[0m\n'

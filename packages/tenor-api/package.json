@@ -7,12 +7,17 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "jest --config ./jest.config.cjs",
     "test:run": "jest --config ./jest.config.cjs",
     "test:coverage": "jest --config ./jest.config.cjs --coverage",
     "lint": "oxlint src"
   },
-  "keywords": ["tenor", "api", "gif"],
+  "keywords": [
+    "tenor",
+    "api",
+    "gif"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {},

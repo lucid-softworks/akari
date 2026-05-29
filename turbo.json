@@ -10,6 +10,7 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "typecheck": {},
     "dev": {
       "cache": false,
       "persistent": true
@@ -39,10 +40,6 @@
     },
     "test:coverage": {
       "outputs": ["coverage/**"]
-    },
-    "akari#test:coverage": {
-      "outputs": ["coverage/**"],
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/*/src/**"]
     },
     "merge-coverage": {
       "dependsOn": ["^test:coverage", "test:coverage"],
