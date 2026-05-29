@@ -1,0 +1,44 @@
+name: semantic-pr-title
+
+# Validates that the PR title follows Conventional Commits. PRs are
+# squash-merged, so the title becomes the commit subject on main and feeds
+# release-please's changelog/versioning. Uses `pull_request` (not
+# pull_request_target): the action only reads the title from the event
+# payload, so no secrets or PR-code checkout are involved.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  validate:
+    name: validate title
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Conventional Commit types allowed in the title.
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+            i18n
+          # Allow any scope (e.g. feat(poll):, fix(composer):).
+          requireScope: false
+          # Subject should not start with an uppercase letter.
+          subjectPattern: ^(?![A-Z]).+$
+          subjectPatternError: |
+            The subject "{subject}" must start with a lowercase letter,
+            e.g. "feat: add live status" not "feat: Add live status".
