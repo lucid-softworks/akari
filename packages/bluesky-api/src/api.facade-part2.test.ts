@@ -74,37 +74,36 @@ class TestApi extends BlueskyApi {
       'sifa',
     ];
 
-    const self = this;
     const store = this as unknown as Record<string, Record<string, unknown>>;
 
     for (const name of submoduleNames) {
       const submodule = store[name];
       if (!submodule) continue;
 
-      submodule.makeAuthenticatedRequest = async function <T>(
+      submodule.makeAuthenticatedRequest = async <T>(
         endpoint: string,
         accessJwt: string,
         options: RequestOptions = {},
-      ): Promise<T> {
-        self.authCalls.push({ endpoint, accessJwt, options });
-        return (self.responses.shift() as T) ?? (undefined as T);
+      ): Promise<T> => {
+        this.authCalls.push({ endpoint, accessJwt, options });
+        return (this.responses.shift() as T) ?? (undefined as T);
       };
 
-      submodule.makeRequest = async function <T>(
+      submodule.makeRequest = async <T>(
         endpoint: string,
         options: RequestOptions = {},
-      ): Promise<T> {
-        self.requestCalls.push({ endpoint, options });
-        return (self.responses.shift() as T) ?? (undefined as T);
+      ): Promise<T> => {
+        this.requestCalls.push({ endpoint, options });
+        return (this.responses.shift() as T) ?? (undefined as T);
       };
 
-      submodule.uploadBlob = async function (
+      submodule.uploadBlob = async (
         accessJwt: string,
         blob: Blob,
         mimeType: string,
-      ): Promise<BlueskyUploadBlobResponse> {
-        self.uploadBlobCalls.push({ accessJwt, blob, mimeType });
-        const response = self.uploadBlobResponses.shift();
+      ): Promise<BlueskyUploadBlobResponse> => {
+        this.uploadBlobCalls.push({ accessJwt, blob, mimeType });
+        const response = this.uploadBlobResponses.shift();
         if (!response) {
           throw new Error('No uploadBlob response configured');
         }
