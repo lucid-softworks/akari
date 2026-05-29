@@ -56,6 +56,9 @@ describe('BlueskyActors', () => {
       accessJwt: 'jwt-token',
       options: {
         params: { actor: 'did:example:alice' },
+        headers: {
+          'atproto-accept-labelers': 'did:plc:ar7c4by46qjdydhdevvrndac;redact',
+        },
       },
     });
   });

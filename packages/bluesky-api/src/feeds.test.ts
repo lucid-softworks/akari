@@ -155,6 +155,9 @@ describe('BlueskyFeeds', () => {
           feed: 'at://feed/123',
           limit: '30',
         },
+        headers: {
+          'atproto-accept-labelers': 'did:plc:ar7c4by46qjdydhdevvrndac;redact',
+        },
       },
     });
   });
@@ -193,6 +196,9 @@ describe('BlueskyFeeds', () => {
         params: {
           limit: '40',
           cursor: 'cursor-abc',
+        },
+        headers: {
+          'atproto-accept-labelers': 'did:plc:ar7c4by46qjdydhdevvrndac;redact',
         },
       },
     });
@@ -267,7 +273,12 @@ describe('BlueskyFeeds', () => {
     expect(feeds.authCalls[0]).toEqual({
       endpoint: '/app.bsky.feed.getPostThread',
       accessJwt: 'jwt',
-      options: { params: { uri: 'at://post/3' } },
+      options: {
+        params: { uri: 'at://post/3' },
+        headers: {
+          'atproto-accept-labelers': 'did:plc:ar7c4by46qjdydhdevvrndac;redact',
+        },
+      },
     });
   });
 
@@ -295,6 +306,9 @@ describe('BlueskyFeeds', () => {
           cursor: 'cursor-1',
           filter: 'posts_with_media',
         },
+        headers: {
+          'atproto-accept-labelers': 'did:plc:ar7c4by46qjdydhdevvrndac;redact',
+        },
       },
     });
   });
@@ -316,6 +330,9 @@ describe('BlueskyFeeds', () => {
           limit: '5',
           cursor: 'cursor-2',
           filter: 'posts_with_video',
+        },
+        headers: {
+          'atproto-accept-labelers': 'did:plc:ar7c4by46qjdydhdevvrndac;redact',
         },
       },
     });
