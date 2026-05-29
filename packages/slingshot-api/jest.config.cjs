@@ -30,5 +30,5 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!**/*.d.ts'],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
-  ...(isGithubActions ? { reporters: ['default', 'github-actions'] } : {}),
+  ...(isGithubActions ? { reporters: ['default', 'github-actions', ['jest-junit', { outputName: 'junit.xml' }]] } : {}),
 };
