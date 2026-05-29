@@ -26,7 +26,19 @@ jobs:
         with:
           node-version: 24.9.0
           cache: npm
-      - run: npm ci
+      # Cache node_modules itself (not just the ~/.npm download cache) so a
+      # lockfile-unchanged run skips the ~100s npm ci extract/link/postinstall.
+      - name: Cache node_modules
+        id: node-modules
+        uses: useblacksmith/cache@v5
+        with:
+          path: |
+            node_modules
+            apps/*/node_modules
+            packages/*/node_modules
+          key: node-modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
+      - if: steps.node-modules.outputs.cache-hit != 'true'
+        run: npm ci
       - run: npm run test:coverage --workspaces --if-present
       - name: Merge coverage reports
         run: node ./scripts/merge-coverage.cjs
