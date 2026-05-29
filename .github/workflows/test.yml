@@ -16,7 +16,7 @@ jobs:
       contents: write
       pull-requests: write
       checks: write
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     # `pull_request` exposes no secrets to fork PRs and uses a read-only token,
     # so tests run on every PR. The coverage-comment step is guarded below
     # since posting a comment needs a writable token (same-repo PRs only).
