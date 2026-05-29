@@ -25,6 +25,21 @@ jest.mock('react-native-mmkv', () => {
 const { initialiseSecureStorage } = require('./utils/secureStorage');
 initialiseSecureStorage('jest-test-key');
 
+// PDS resolution fires a real fetch to plc.directory / bsky.social. Hooks
+// like usePdsUrl mount incidentally deep in component trees (ProfileHeader,
+// bookmarks, ...), so tests don't know to mock them; the request then 404s
+// and logs *after* the test finishes ("Cannot log after tests are done"),
+// besides being slow and flaky. Resolve to a fixed URL in tests; specs that
+// care about PDS resolution can override these mocks.
+jest.mock('@/bluesky-api', () => {
+  const actual = jest.requireActual('@/bluesky-api');
+  return {
+    ...actual,
+    getPdsUrlFromDid: jest.fn(async () => 'https://pds.test'),
+    getPdsUrlFromHandle: jest.fn(async () => 'https://pds.test'),
+  };
+});
+
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
   Reanimated.default.call = () => {};
