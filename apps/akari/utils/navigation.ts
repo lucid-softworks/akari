@@ -58,8 +58,8 @@ export function useNavigateToPost() {
     }
 
     if (isSamePath(target, pathname)) return;
-    // @ts-expect-error collapsed-index-segment URL not in generated types
-    router.push(target);
+    // collapsed-index-segment URL isn't modeled in the generated route types
+    router.push(target as never);
   };
 }
 
@@ -91,8 +91,8 @@ export function useNavigateToProfile() {
     }
 
     if (isSamePath(target, pathname)) return;
-    // @ts-expect-error collapsed-index-segment URL not in generated types
-    router.push(target);
+    // collapsed-index-segment URL isn't modeled in the generated route types
+    router.push(target as never);
   };
 }
 
@@ -152,8 +152,8 @@ export function useNavigateToFeed() {
     }
 
     if (isSamePath(target, pathname)) return;
-    // @ts-expect-error collapsed-index-segment URL not in generated types
-    router.push(target);
+    // collapsed-index-segment URL isn't modeled in the generated route types
+    router.push(target as never);
   };
 }
 
@@ -189,8 +189,8 @@ export function useNavigateToGallery() {
     }
 
     if (isSamePath(target, pathname)) return;
-    // @ts-expect-error collapsed-index-segment URL not in generated types
-    router.push(target);
+    // collapsed-index-segment URL isn't modeled in the generated route types
+    router.push(target as never);
   };
 }
 

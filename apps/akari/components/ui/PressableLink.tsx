@@ -1,6 +1,6 @@
 import { router, usePathname } from 'expo-router';
 import React, { use, useCallback, useState } from 'react';
-import { Platform, Pressable, StyleSheet, type GestureResponderEvent, type PressableProps, type ViewStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, type GestureResponderEvent, type PressableProps, type PressableStateCallbackType, type ViewStyle } from 'react-native';
 
 const stripQueryAndHash = (url: string) => url.split('?')[0].split('#')[0];
 
@@ -78,7 +78,7 @@ export function PressableLink({
   const insideAnchor = use(NestedAnchorContext);
 
   if (Platform.OS === 'web') {
-    const resolved = typeof style === 'function' ? style({ pressed: false, hovered: false }) : style;
+    const resolved = typeof style === 'function' ? style({ pressed: false, hovered: false } as PressableStateCallbackType) : style;
     const flatStyle = StyleSheet.flatten(resolved);
 
     const handleWebClick = (e: { metaKey?: boolean; ctrlKey?: boolean; shiftKey?: boolean; preventDefault?: () => void; stopPropagation?: () => void }) => {
