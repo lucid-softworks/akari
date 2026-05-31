@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Paylaşım",
+  "statusDetailError": "Bu paylaşımı yükləmək alınmadı",
+  "statusDetailEmpty": "Bu paylaşım tapılmadı.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Bu profili yükləmək alınmadı",
+  "profileEmptyPosts": "Hələ paylaşım yoxdur.",
+  "profilePostsLabel": "Paylaşımlar",
+  "profileFollowingLabel": "İzlənilənlər",
+  "profileFollowersLabel": "İzləyicilər"
+}

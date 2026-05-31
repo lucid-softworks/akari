@@ -45,6 +45,32 @@ const DEFAULT_VISIBLE: TabKey[] = [
 ];
 const DEFAULT_CONFIG: TabConfig = { visibleTabs: DEFAULT_VISIBLE };
 
+/**
+ * Tabs that don't apply to Mastodon accounts and should be filtered from
+ * the rendered sidebar / bottom-bar. Persistence keeps them in
+ * `visibleTabs` (so toggling back to an atproto account restores them);
+ * filtering is purely display-side. Extend this list when you add a new
+ * atproto-specific tab.
+ *
+ * `messages` is hidden because Akari's atproto chat surface is wired to
+ * `chat.bsky.convo.*` (Bluesky-specific). Mastodon's DM equivalent is
+ * status-based and not yet implemented; until a Mastodon-aware messages
+ * surface lands, the tab would just crash on open for Mastodon accounts.
+ */
+export const MASTODON_HIDDEN_TABS: ReadonlySet<TabKey> = new Set(['community-notes', 'messages']);
+
+/**
+ * Apply provider-specific filtering on top of the user's persisted tab
+ * selection. Returns a new array; safe to call inside `useMemo`.
+ */
+export function filterTabsForProvider(
+  tabs: readonly TabKey[],
+  provider: 'atproto' | 'mastodon' | undefined,
+): TabKey[] {
+  if (provider !== 'mastodon') return [...tabs];
+  return tabs.filter((tab) => !MASTODON_HIDDEN_TABS.has(tab));
+}
+
 // Cached snapshot -- useSyncExternalStore compares by reference,
 // so we must return the same object when nothing changed.
 let cachedConfig: TabConfig | null = null;

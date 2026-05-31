@@ -1,5 +1,9 @@
 {
   "fabPost": "Публикувай",
   "fabReview": "Рецензия",
-  "fabPoll": "Анкета"
+  "fabPoll": "Анкета",
+  "announcementsTitle": "Съобщение",
+  "announcementDismiss": "Скрий съобщението",
+  "mastodonHomeTab": "Начало",
+  "mastodonTrendingTab": "Популярни"
 }

@@ -270,6 +270,41 @@ describe('useAuthStatus', () => {
     });
   });
 
+  it('treats a Mastodon account with a token as authenticated without any refresh', async () => {
+    const mastodonAccount = {
+      did: 'https://mastodon.social/@alice',
+      handle: 'alice@mastodon.social',
+      jwtToken: 'mastodon-access',
+      refreshToken: '',
+      provider: 'mastodon' as const,
+      mastodon: {
+        instanceUrl: 'https://mastodon.social',
+        accountId: '12345',
+        clientId: 'client',
+        clientSecret: 'secret',
+        scope: 'read write follow push',
+        tokenType: 'Bearer',
+      },
+    };
+    (useJwtToken as jest.Mock).mockReturnValue({ data: 'mastodon-access' });
+    (useRefreshToken as jest.Mock).mockReturnValue({ data: '' });
+    (useCurrentAccount as jest.Mock).mockReturnValue({ data: mastodonAccount });
+
+    const { wrapper } = createWrapper();
+    const { result } = renderHook(() => useAuthStatus(), { wrapper });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(mockRefreshSession).not.toHaveBeenCalled();
+    expect(mockRefreshOAuthSession).not.toHaveBeenCalled();
+    expect(mockReadJwtExpiry).not.toHaveBeenCalled();
+    expect(mockClearAuth.mutate).not.toHaveBeenCalled();
+    expect(result.current.data).toEqual({
+      isAuthenticated: true,
+      user: { did: mastodonAccount.did, handle: mastodonAccount.handle },
+    });
+  });
+
   it('clears auth when OAuth refresh rejects', async () => {
     const oauthAccount = {
       pdsUrl: 'https://pds',

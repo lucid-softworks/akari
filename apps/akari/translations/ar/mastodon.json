@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "المنشور",
+  "statusDetailError": "تعذّر تحميل هذا المنشور",
+  "statusDetailEmpty": "تعذّر العثور على هذا المنشور.",
+  "profileTitleFallback": "الملف الشخصي",
+  "profileError": "تعذّر تحميل هذا الملف الشخصي",
+  "profileEmptyPosts": "لا توجد منشورات بعد.",
+  "profilePostsLabel": "المنشورات",
+  "profileFollowingLabel": "المتابَعون",
+  "profileFollowersLabel": "المتابِعون"
+}

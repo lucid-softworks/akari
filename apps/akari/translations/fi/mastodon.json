@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Julkaisu",
+  "statusDetailError": "Julkaisun lataaminen epäonnistui",
+  "statusDetailEmpty": "Julkaisua ei löytynyt.",
+  "profileTitleFallback": "Profiili",
+  "profileError": "Profiilin lataaminen epäonnistui",
+  "profileEmptyPosts": "Ei vielä julkaisuja.",
+  "profilePostsLabel": "Julkaisut",
+  "profileFollowingLabel": "Seurattuja",
+  "profileFollowersLabel": "Seuraajia"
+}

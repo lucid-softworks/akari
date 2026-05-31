@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Публикация",
+  "statusDetailError": "Не удалось загрузить эту публикацию",
+  "statusDetailEmpty": "Эта публикация не найдена.",
+  "profileTitleFallback": "Профиль",
+  "profileError": "Не удалось загрузить этот профиль",
+  "profileEmptyPosts": "Публикаций пока нет.",
+  "profilePostsLabel": "Публикации",
+  "profileFollowingLabel": "Подписки",
+  "profileFollowersLabel": "Подписчики"
+}

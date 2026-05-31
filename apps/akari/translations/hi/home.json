@@ -1,5 +1,9 @@
 {
   "fabPost": "पोस्ट",
   "fabReview": "समीक्षा",
-  "fabPoll": "पोल"
+  "fabPoll": "पोल",
+  "announcementsTitle": "घोषणा",
+  "announcementDismiss": "घोषणा बंद करें",
+  "mastodonHomeTab": "होम",
+  "mastodonTrendingTab": "ट्रेंडिंग"
 }

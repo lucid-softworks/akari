@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Ανάρτηση",
+  "statusDetailError": "Δεν ήταν δυνατή η φόρτωση αυτής της ανάρτησης",
+  "statusDetailEmpty": "Αυτή η ανάρτηση δεν βρέθηκε.",
+  "profileTitleFallback": "Προφίλ",
+  "profileError": "Δεν ήταν δυνατή η φόρτωση αυτού του προφίλ",
+  "profileEmptyPosts": "Καμία ανάρτηση ακόμη.",
+  "profilePostsLabel": "Αναρτήσεις",
+  "profileFollowingLabel": "Ακολουθεί",
+  "profileFollowersLabel": "Ακόλουθοι"
+}

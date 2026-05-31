@@ -1,5 +1,9 @@
 {
   "fabPost": "פרסם",
   "fabReview": "ביקורת",
-  "fabPoll": "סקר"
+  "fabPoll": "סקר",
+  "announcementsTitle": "הודעה",
+  "announcementDismiss": "סגור הודעה",
+  "mastodonHomeTab": "בית",
+  "mastodonTrendingTab": "פופולרי"
 }

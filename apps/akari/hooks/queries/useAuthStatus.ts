@@ -31,7 +31,23 @@ export function useAuthStatus() {
   return useQuery({
     queryKey: queryKeys.auth.forDid(currentUserDid),
     queryFn: async () => {
-      if (!token || !refreshToken) {
+      if (!token) {
+        return { isAuthenticated: false };
+      }
+
+      // Mastodon's standard OAuth flow issues a long-lived access token and
+      // no refresh token, and the account has no PDS. The pdsUrl + refresh
+      // gates below are atproto-only, so short-circuit here: a Mastodon
+      // account with a token is authenticated. Revocation surfaces as 401s
+      // on individual API calls rather than a refresh failure.
+      if (currentAccount?.mastodon) {
+        return {
+          isAuthenticated: true,
+          user: { did: currentAccount.did, handle: currentAccount.handle },
+        };
+      }
+
+      if (!refreshToken) {
         return { isAuthenticated: false };
       }
 

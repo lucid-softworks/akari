@@ -1,5 +1,9 @@
 {
   "fabPost": "发帖",
   "fabReview": "影评",
-  "fabPoll": "投票"
+  "fabPoll": "投票",
+  "announcementsTitle": "公告",
+  "announcementDismiss": "关闭公告",
+  "mastodonHomeTab": "首页",
+  "mastodonTrendingTab": "热门"
 }

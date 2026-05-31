@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Bài đăng",
+  "statusDetailError": "Không thể tải bài đăng này",
+  "statusDetailEmpty": "Không tìm thấy bài đăng này.",
+  "profileTitleFallback": "Hồ sơ",
+  "profileError": "Không thể tải hồ sơ này",
+  "profileEmptyPosts": "Chưa có bài đăng nào.",
+  "profilePostsLabel": "Bài đăng",
+  "profileFollowingLabel": "Đang theo dõi",
+  "profileFollowersLabel": "Người theo dõi"
+}

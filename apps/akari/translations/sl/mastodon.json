@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Objava",
+  "statusDetailError": "Te objave ni bilo mogoče naložiti",
+  "statusDetailEmpty": "Te objave ni bilo mogoče najti.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Tega profila ni bilo mogoče naložiti",
+  "profileEmptyPosts": "Še ni objav.",
+  "profilePostsLabel": "Objave",
+  "profileFollowingLabel": "Sledi",
+  "profileFollowersLabel": "Sledilci"
+}

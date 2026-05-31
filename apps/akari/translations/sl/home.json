@@ -1,5 +1,9 @@
 {
   "fabPost": "Objava",
   "fabReview": "Ocena",
-  "fabPoll": "Anketa"
+  "fabPoll": "Anketa",
+  "announcementsTitle": "Obvestilo",
+  "announcementDismiss": "Zapri obvestilo",
+  "mastodonHomeTab": "Domov",
+  "mastodonTrendingTab": "V trendu"
 }

@@ -1,5 +1,9 @@
 {
   "fabPost": "Postio",
   "fabReview": "Adolygu",
-  "fabPoll": "Pleidlais"
+  "fabPoll": "Pleidlais",
+  "announcementsTitle": "Cyhoeddiad",
+  "announcementDismiss": "Diystyru'r cyhoeddiad",
+  "mastodonHomeTab": "Hafan",
+  "mastodonTrendingTab": "Poblogaidd"
 }

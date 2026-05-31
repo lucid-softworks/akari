@@ -1,5 +1,9 @@
 {
   "fabPost": "Post",
   "fabReview": "Review",
-  "fabPoll": "Poll"
+  "fabPoll": "Poll",
+  "announcementsTitle": "Announcement",
+  "announcementDismiss": "Dismiss announcement",
+  "mastodonHomeTab": "Home",
+  "mastodonTrendingTab": "Trending"
 }

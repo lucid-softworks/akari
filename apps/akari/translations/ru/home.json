@@ -1,5 +1,9 @@
 {
   "fabPost": "Пост",
   "fabReview": "Отзыв",
-  "fabPoll": "Опрос"
+  "fabPoll": "Опрос",
+  "announcementsTitle": "Объявление",
+  "announcementDismiss": "Закрыть объявление",
+  "mastodonHomeTab": "Главная",
+  "mastodonTrendingTab": "Популярное"
 }

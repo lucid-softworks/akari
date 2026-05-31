@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Indlæg",
+  "statusDetailError": "Kunne ikke indlæse dette indlæg",
+  "statusDetailEmpty": "Dette indlæg kunne ikke findes.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Kunne ikke indlæse denne profil",
+  "profileEmptyPosts": "Ingen indlæg endnu.",
+  "profilePostsLabel": "Indlæg",
+  "profileFollowingLabel": "Følger",
+  "profileFollowersLabel": "Følgere"
+}

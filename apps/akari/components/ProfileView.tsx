@@ -5,6 +5,7 @@ import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { webScreenContainer } from '@/constants/webStyles';
 
 import { ListPickerSheet } from '@/components/ListPickerSheet';
+import { MastodonProfileView } from '@/components/mastodon/MastodonProfileView';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { ProfileTabPane } from '@/components/ProfileView/ProfileTabPane';
 import { ProfileViewHeader } from '@/components/ProfileView/ProfileViewHeader';
@@ -49,6 +50,20 @@ const TAB_ORDER: ProfileTabType[] = [
 ];
 
 export default function ProfileView({ handle }: ProfileViewProps) {
+  // Mastodon dispatch. The home feed builds avatar URLs as the federated
+  // form (`alice@instance.com`), so an `@` in the handle reliably means
+  // "this is a Mastodon profile" — atproto handles are domain-style
+  // (`alice.bsky.social`) and never carry `@`. Routing through this one
+  // component (rather than a sibling dispatcher) keeps both protocols on
+  // the same `/profile/[handle]` URLs across every tab.
+  if (handle.includes('@')) {
+    return <MastodonProfileView acct={handle} />;
+  }
+
+  return <AtprotoProfileView handle={handle} />;
+}
+
+function AtprotoProfileView({ handle }: ProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabType>('posts');
   const [visitedTabs, setVisitedTabs] = useState<Set<ProfileTabType>>(() => new Set(['posts']));
   const dialogManager = useDialogManager();

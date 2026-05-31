@@ -1,5 +1,9 @@
 {
   "fabPost": "نشر",
   "fabReview": "مراجعة",
-  "fabPoll": "استطلاع"
+  "fabPoll": "استطلاع",
+  "announcementsTitle": "إعلان",
+  "announcementDismiss": "تجاهل الإعلان",
+  "mastodonHomeTab": "الرئيسية",
+  "mastodonTrendingTab": "الرائج"
 }

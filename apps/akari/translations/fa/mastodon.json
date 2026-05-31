@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "فرسته",
+  "statusDetailError": "بارگیری این فرسته ممکن نشد",
+  "statusDetailEmpty": "این فرسته پیدا نشد.",
+  "profileTitleFallback": "نمایه",
+  "profileError": "بارگیری این نمایه ممکن نشد",
+  "profileEmptyPosts": "هنوز فرسته‌ای وجود ندارد.",
+  "profilePostsLabel": "فرسته‌ها",
+  "profileFollowingLabel": "دنبال‌شدگان",
+  "profileFollowersLabel": "دنبال‌کنندگان"
+}

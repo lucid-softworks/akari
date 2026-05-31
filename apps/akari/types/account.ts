@@ -32,6 +32,40 @@ type OAuthAccountAuth = {
   scope: string;
 };
 
+/**
+ * Per-account material the Mastodon (and wider fediverse: Pleroma, Akkoma,
+ * GoToSocial, …) OAuth path needs. Stored alongside the account in
+ * `secureStorage` (encrypted). Mastodon registers our client dynamically
+ * per instance, so the `client_secret` issued at registration lives here —
+ * the token endpoint requires it on every exchange/refresh.
+ */
+type MastodonAccountAuth = {
+  /** Origin of the home instance, e.g. `https://mastodon.social`. */
+  instanceUrl: string;
+  /** The instance-local account id (Mastodon `id`), distinct from `did`. */
+  accountId: string;
+  /** Dynamically-registered OAuth client id for this instance. */
+  clientId: string;
+  /**
+   * Dynamically-registered OAuth client secret for this instance. Mastodon's
+   * documented native-app flow returns this on `POST /api/v1/apps` and the
+   * token endpoint requires it; it's generated fresh per install, not baked
+   * into the bundle.
+   */
+  clientSecret: string;
+  /** Space-delimited scope string the instance actually granted. */
+  scope: string;
+  /** Token type from the token endpoint — Mastodon issues `Bearer`. */
+  tokenType: string;
+};
+
+/**
+ * Which protocol an account speaks. Drives token style, refresh strategy,
+ * and (eventually) which data-layer adapter renders its feeds. Absent on
+ * legacy records, which are all atproto — treat `undefined` as `'atproto'`.
+ */
+export type AccountProvider = 'atproto' | 'mastodon';
+
 export type Account = {
   did: string;
   handle: string;
@@ -41,9 +75,16 @@ export type Account = {
   refreshToken: string;
   pdsUrl?: string;
   /**
+   * Protocol backing this account. Optional for backward compatibility:
+   * accounts persisted before multi-protocol support have no `provider` and
+   * are atproto by definition. New code should branch on
+   * `account.provider === 'mastodon'` (or the presence of `account.mastodon`).
+   */
+  provider?: AccountProvider;
+  /**
    * Per-account AppView override. When absent (or `preset === 'default'`)
    * the API client falls back to the app-wide AppView setting. See
-   * `utils/appView.ts` for the resolution logic.
+   * `utils/appView.ts` for the resolution logic. atproto-only.
    */
   appView?: import('@/utils/appView').AccountAppViewOverride;
   /**
@@ -53,4 +94,10 @@ export type Account = {
    * accounts — those keep working unchanged.
    */
   oauth?: OAuthAccountAuth;
+  /**
+   * Present when the account was created via Mastodon/fediverse OAuth.
+   * Mutually exclusive with `oauth`. `jwtToken` holds the Bearer access
+   * token; there is no DPoP and (by default) no refresh token.
+   */
+  mastodon?: MastodonAccountAuth;
 };

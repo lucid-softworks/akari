@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Postare",
+  "statusDetailError": "Nu s-a putut încărca această postare",
+  "statusDetailEmpty": "Această postare nu a fost găsită.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Nu s-a putut încărca acest profil",
+  "profileEmptyPosts": "Încă nu există postări.",
+  "profilePostsLabel": "Postări",
+  "profileFollowingLabel": "Urmărește",
+  "profileFollowersLabel": "Urmăritori"
+}

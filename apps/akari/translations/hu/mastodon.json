@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Bejegyzés",
+  "statusDetailError": "A bejegyzést nem sikerült betölteni",
+  "statusDetailEmpty": "A bejegyzés nem található.",
+  "profileTitleFallback": "Profil",
+  "profileError": "A profilt nem sikerült betölteni",
+  "profileEmptyPosts": "Még nincsenek bejegyzések.",
+  "profilePostsLabel": "Bejegyzések",
+  "profileFollowingLabel": "Követett",
+  "profileFollowersLabel": "Követők"
+}

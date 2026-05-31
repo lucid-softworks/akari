@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Postiad",
+  "statusDetailError": "Methwyd llwytho'r postiad hwn",
+  "statusDetailEmpty": "Methwyd canfod y postiad hwn.",
+  "profileTitleFallback": "Proffil",
+  "profileError": "Methwyd llwytho'r proffil hwn",
+  "profileEmptyPosts": "Dim postiadau eto.",
+  "profilePostsLabel": "Postiadau",
+  "profileFollowingLabel": "Yn dilyn",
+  "profileFollowersLabel": "Dilynwyr"
+}

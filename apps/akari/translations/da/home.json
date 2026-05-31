@@ -1,5 +1,9 @@
 {
   "fabPost": "Opslag",
   "fabReview": "Anmeldelse",
-  "fabPoll": "Afstemning"
+  "fabPoll": "Afstemning",
+  "announcementsTitle": "Meddelelse",
+  "announcementDismiss": "Afvis meddelelse",
+  "mastodonHomeTab": "Hjem",
+  "mastodonTrendingTab": "Populært"
 }

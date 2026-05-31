@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Gönderi",
+  "statusDetailError": "Bu gönderi yüklenemedi",
+  "statusDetailEmpty": "Bu gönderi bulunamadı.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Bu profil yüklenemedi",
+  "profileEmptyPosts": "Henüz gönderi yok.",
+  "profilePostsLabel": "Gönderiler",
+  "profileFollowingLabel": "Takip Edilen",
+  "profileFollowersLabel": "Takipçiler"
+}

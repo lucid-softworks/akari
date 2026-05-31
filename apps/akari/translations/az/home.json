@@ -1,5 +1,9 @@
 {
   "fabPost": "Paylaş",
   "fabReview": "Rəy",
-  "fabPoll": "Sorğu"
+  "fabPoll": "Sorğu",
+  "announcementsTitle": "Elan",
+  "announcementDismiss": "Elanı bağla",
+  "mastodonHomeTab": "Ana səhifə",
+  "mastodonTrendingTab": "Trend"
 }

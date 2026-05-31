@@ -110,6 +110,56 @@ export const queryKeys = {
     list: (limit: number, did: string | undefined, appViewEnabled?: boolean) =>
       ['timeline', limit, did, appViewEnabled] as const,
   },
+  mastodonHomeTimeline: {
+    all: ['mastodonHomeTimeline'] as const,
+    list: (instanceUrl: string | undefined, accountId: string | undefined, limit: number) =>
+      ['mastodonHomeTimeline', instanceUrl, accountId, limit] as const,
+  },
+  mastodonTrendingTimeline: {
+    all: ['mastodonTrendingTimeline'] as const,
+    list: (instanceUrl: string | undefined, limit: number) =>
+      ['mastodonTrendingTimeline', instanceUrl, limit] as const,
+  },
+  mastodonOwnAccount: {
+    all: ['mastodonOwnAccount'] as const,
+    forInstance: (instanceUrl: string | undefined, accountId: string | undefined) =>
+      ['mastodonOwnAccount', instanceUrl, accountId] as const,
+  },
+  mastodonSuggestions: {
+    all: ['mastodonSuggestions'] as const,
+    list: (instanceUrl: string | undefined, accountId: string | undefined, limit: number) =>
+      ['mastodonSuggestions', instanceUrl, accountId, limit] as const,
+  },
+  mastodonAnnouncements: {
+    all: ['mastodonAnnouncements'] as const,
+    list: (instanceUrl: string | undefined, accountId: string | undefined) =>
+      ['mastodonAnnouncements', instanceUrl, accountId] as const,
+  },
+  mastodonStatus: {
+    all: ['mastodonStatus'] as const,
+    detail: (instanceUrl: string | undefined, statusId: string | undefined) =>
+      ['mastodonStatus', instanceUrl, statusId] as const,
+  },
+  mastodonStatusContext: {
+    all: ['mastodonStatusContext'] as const,
+    detail: (instanceUrl: string | undefined, statusId: string | undefined) =>
+      ['mastodonStatusContext', instanceUrl, statusId] as const,
+  },
+  mastodonProfileAccount: {
+    all: ['mastodonProfileAccount'] as const,
+    detail: (instanceUrl: string | undefined, accountId: string | undefined) =>
+      ['mastodonProfileAccount', instanceUrl, accountId] as const,
+  },
+  mastodonAccountByAcct: {
+    all: ['mastodonAccountByAcct'] as const,
+    detail: (instanceUrl: string | undefined, acct: string | undefined) =>
+      ['mastodonAccountByAcct', instanceUrl, acct] as const,
+  },
+  mastodonAccountStatuses: {
+    all: ['mastodonAccountStatuses'] as const,
+    list: (instanceUrl: string | undefined, accountId: string | undefined, limit: number) =>
+      ['mastodonAccountStatuses', instanceUrl, accountId, limit] as const,
+  },
   poll: {
     all: ['poll'] as const,
     detail: (pollUri: Maybe<string>) => ['poll', pollUri] as const,

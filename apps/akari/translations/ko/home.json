@@ -1,5 +1,9 @@
 {
   "fabPost": "게시",
   "fabReview": "리뷰",
-  "fabPoll": "투표"
+  "fabPoll": "투표",
+  "announcementsTitle": "공지",
+  "announcementDismiss": "공지 닫기",
+  "mastodonHomeTab": "홈",
+  "mastodonTrendingTab": "트렌드"
 }

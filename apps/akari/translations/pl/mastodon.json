@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Wpis",
+  "statusDetailError": "Nie udało się wczytać tego wpisu",
+  "statusDetailEmpty": "Nie znaleziono tego wpisu.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Nie udało się wczytać tego profilu",
+  "profileEmptyPosts": "Brak wpisów.",
+  "profilePostsLabel": "Wpisy",
+  "profileFollowingLabel": "Obserwowani",
+  "profileFollowersLabel": "Obserwujący"
+}

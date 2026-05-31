@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, useWindowDimensions } from 'react-native';
 
+import { MastodonStatusDetailView } from '@/components/mastodon/MastodonStatusDetailView';
 import { spacing, fontSize, fontWeight, opacity } from '@/constants/tokens';
 import { webColumnSideBorders, webScreenContainer } from '@/constants/webStyles';
 import { BlueskyFeedItem, BlueskyPostView } from '@/bluesky-api';
@@ -333,6 +334,18 @@ type PostDetailViewProps = {
 };
 
 export default function PostDetailView({ actor, rKey }: PostDetailViewProps) {
+  // Mastodon dispatch. The feed builds permalink URLs as
+  // `/profile/<acct>/post/<status_id>` where `acct` always contains an
+  // `@` for federated handles, matching the same rule `ProfileView`
+  // uses. atproto handles never carry `@`, so the discriminator is
+  // unambiguous.
+  if (actor.includes('@')) {
+    return <MastodonStatusDetailView statusId={rKey} />;
+  }
+  return <AtprotoPostDetailView actor={actor} rKey={rKey} />;
+}
+
+function AtprotoPostDetailView({ actor, rKey }: PostDetailViewProps) {
   const { t } = useTranslation();
   const navigateToPost = useNavigateToPost();
   const scrollViewRef = useRef<ScrollView>(null);

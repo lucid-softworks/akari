@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "投稿",
+  "statusDetailError": "この投稿を読み込めませんでした",
+  "statusDetailEmpty": "この投稿は見つかりませんでした。",
+  "profileTitleFallback": "プロフィール",
+  "profileError": "このプロフィールを読み込めませんでした",
+  "profileEmptyPosts": "まだ投稿はありません。",
+  "profilePostsLabel": "投稿",
+  "profileFollowingLabel": "フォロー中",
+  "profileFollowersLabel": "フォロワー"
+}

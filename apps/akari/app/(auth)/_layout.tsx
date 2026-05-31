@@ -26,6 +26,13 @@ export default function AuthLayout() {
         }}
       />
       <Stack.Screen
+        name="mastodon"
+        options={{
+          title: "Sign in with Mastodon",
+          headerShown: Platform.OS !== 'web',
+        }}
+      />
+      <Stack.Screen
         name="signup"
         options={{
           title: "Create account",

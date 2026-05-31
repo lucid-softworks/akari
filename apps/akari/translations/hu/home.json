@@ -1,5 +1,9 @@
 {
   "fabPost": "Bejegyzés",
   "fabReview": "Értékelés",
-  "fabPoll": "Szavazás"
+  "fabPoll": "Szavazás",
+  "announcementsTitle": "Közlemény",
+  "announcementDismiss": "Közlemény elvetése",
+  "mastodonHomeTab": "Kezdőlap",
+  "mastodonTrendingTab": "Felkapott"
 }

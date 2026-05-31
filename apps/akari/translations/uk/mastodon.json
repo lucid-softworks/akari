@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Допис",
+  "statusDetailError": "Не вдалося завантажити цей допис",
+  "statusDetailEmpty": "Цей допис не знайдено.",
+  "profileTitleFallback": "Профіль",
+  "profileError": "Не вдалося завантажити цей профіль",
+  "profileEmptyPosts": "Дописів поки немає.",
+  "profilePostsLabel": "Дописи",
+  "profileFollowingLabel": "Стежить",
+  "profileFollowersLabel": "Стежать"
+}

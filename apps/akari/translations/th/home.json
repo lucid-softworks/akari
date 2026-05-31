@@ -1,5 +1,9 @@
 {
   "fabPost": "โพสต์",
   "fabReview": "รีวิว",
-  "fabPoll": "โพล"
+  "fabPoll": "โพล",
+  "announcementsTitle": "ประกาศ",
+  "announcementDismiss": "ปิดประกาศ",
+  "mastodonHomeTab": "หน้าแรก",
+  "mastodonTrendingTab": "กำลังมาแรง"
 }

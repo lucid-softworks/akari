@@ -39,6 +39,12 @@ export function installAuthRefreshHandler(qc: QueryClient): void {
         const account = findAccountByAccessToken(qc, oldAccessJwt);
         if (!account) return null;
 
+        // Mastodon access tokens don't expire and the standard flow issues no
+        // refresh token, so there's nothing to rotate — a 401 here means the
+        // token was revoked. Return null (no retry) without running the
+        // atproto OAuth/Bearer dance, which would misfire on these accounts.
+        if (account.mastodon) return null;
+
         if (account.oauth) {
           const refreshed = await refreshOAuthSession(account);
           persistRefreshedAccount(qc, refreshed);

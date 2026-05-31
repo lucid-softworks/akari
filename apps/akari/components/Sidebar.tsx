@@ -12,7 +12,7 @@ import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useOzoneMembership } from '@/hooks/queries/useOzoneMembership';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
-import { type TabKey, useTabConfig } from '@/hooks/useTabConfig';
+import { filterTabsForProvider, type TabKey, useTabConfig } from '@/hooks/useTabConfig';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -51,7 +51,15 @@ export function Sidebar({ onNavigate }: SidebarProps = {}) {
   const badgeBg = '#FF3B30';
   const activeAccount = currentAccount ?? accounts[0];
 
-  const { visibleTabs } = useTabConfig();
+  const { visibleTabs: persistedVisibleTabs } = useTabConfig();
+  // Provider-aware visible-tabs list. See `filterTabsForProvider` for
+  // which tabs get dropped on Mastodon (community-notes today). The
+  // persisted MMKV list stays untouched so switching accounts restores
+  // the user's choice on the atproto side.
+  const visibleTabs = useMemo(
+    () => filterTabsForProvider(persistedVisibleTabs, currentAccount?.provider),
+    [persistedVisibleTabs, currentAccount?.provider],
+  );
   // Only resolve Ozone membership when the moderation tab is on. Otherwise
   // we'd hit `tools.ozone.team.listMembers` for every signed-in user, even
   // those who aren't moderators and have hidden the tab.

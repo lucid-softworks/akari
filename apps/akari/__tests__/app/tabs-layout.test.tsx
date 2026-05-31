@@ -61,6 +61,11 @@ jest.mock('@/hooks/useTabConfig', () => ({
     setVisibleTabs: jest.fn(),
     resetToDefault: jest.fn(),
   }),
+  // Re-exported by the layout for Mastodon-specific filtering; the mocked
+  // visibleTabs above contain no atproto-only entries, so this passes
+  // them through unchanged. Match the real signature.
+  filterTabsForProvider: (tabs: string[]) => [...tabs],
+  MASTODON_HIDDEN_TABS: new Set<string>(),
 }));
 
 jest.mock('@/components/HapticTab', () => {

@@ -1,4 +1,4 @@
-import { Slot, Tabs, usePathname, useRouter, type Href } from 'expo-router';
+import { Redirect, Slot, Tabs, usePathname, useRouter, type Href } from 'expo-router';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import type { TabKey } from '@/hooks/useTabConfig';
 import type { LayoutChangeEvent } from 'react-native';
@@ -18,16 +18,19 @@ import { HardcodedTabBar } from '@/components/tabs/HardcodedTabBar';
 import { MobileTabHeader } from '@/components/tabs/MobileTabHeader';
 import { useAuthStatus } from '@/hooks/queries/useAuthStatus';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
+import { useIsMastodonOnboardingComplete } from '@/hooks/queries/useMastodonOnboardingComplete';
+import { useMastodonOwnAccount } from '@/hooks/queries/useMastodonOwnAccount';
 import { useUnreadMessagesCount } from '@/hooks/queries/useUnreadMessagesCount';
 import { useUnreadNotificationsCount } from '@/hooks/queries/useUnreadNotificationsCount';
 import { useBorderColor } from '@/hooks/useBorderColor';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useResponsive } from '@/hooks/useResponsive';
-import { useTabConfig } from '@/hooks/useTabConfig';
+import { filterTabsForProvider, useTabConfig } from '@/hooks/useTabConfig';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useConversations } from '@/hooks/queries/useConversations';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useDialogManager } from '@/contexts/DialogContext';
+import { isMastodonProfileIncomplete } from '@/utils/mastodon/profile';
 
 const ACCOUNT_SWITCHER = 'account-switcher';
 const LAYOUT_CHAT_ACTIONS = 'layout-chat-actions';
@@ -362,9 +365,24 @@ export default function TabLayout() {
   const { t } = useTranslation();
   const { isLargeScreen, isDesktop } = useResponsive();
   const showRightColumn = isDesktop && Platform.OS === 'web';
-  const { visibleTabs } = useTabConfig();
+  const { visibleTabs: persistedVisibleTabs } = useTabConfig();
   const { data: authStatus, isLoading } = useAuthStatus();
   const { data: currentAccount } = useCurrentAccount();
+  // Provider-aware visible-tabs list. The persisted MMKV value stays
+  // untouched (so switching back to atproto restores hidden entries);
+  // we just drop atproto-only tabs at display time for Mastodon. See
+  // `filterTabsForProvider` for the list.
+  const visibleTabs = useMemo(
+    () => filterTabsForProvider(persistedVisibleTabs, currentAccount?.provider),
+    [persistedVisibleTabs, currentAccount?.provider],
+  );
+  // Mastodon onboarding gate. We always run both hooks so hook order is
+  // stable across atproto/Mastodon account switches — they short-circuit
+  // (no fetch, no MMKV lookup) when the active account isn't a Mastodon
+  // account. The guard itself fires below the existing loading early
+  // return, alongside the renderTabBar hoist.
+  const ownMastodonAccount = useMastodonOwnAccount();
+  const mastodonOnboardingComplete = useIsMastodonOnboardingComplete();
   const { data: unreadMessagesCount = 0 } = useUnreadMessagesCount();
   const { data: unreadNotificationsCount = 0 } = useUnreadNotificationsCount();
   const dialogManager = useDialogManager();
@@ -507,6 +525,27 @@ export default function TabLayout() {
     [safeAreaInsets.bottom, safeAreaInsets.left, safeAreaInsets.right, safeAreaInsets.top, shouldShowMobileHeader],
   );
 
+  // Memoized at component scope (not inlined in the `tabBar` prop) so the
+  // navigator gets a stable render function and we don't define a
+  // component during render. Must stay above the loading-state early
+  // return below — otherwise its hook count differs between the loading
+  // render and the resolved render and React throws "Rendered more hooks
+  // than during the previous render." That mismatch fires reliably when
+  // the auth query is invalidated mid-session (e.g. account switch after
+  // Mastodon sign-in).
+  const renderTabBar = useCallback(
+    (props: BottomTabBarProps) => (
+      <HardcodedTabBar
+        {...props}
+        unreadMessagesCount={unreadMessagesCount}
+        unreadNotificationsCount={unreadNotificationsCount}
+        avatarUri={currentAccount?.avatar}
+        visibleTabs={visibleTabs}
+      />
+    ),
+    [unreadMessagesCount, unreadNotificationsCount, currentAccount?.avatar, visibleTabs],
+  );
+
   if (isLoading || !authStatus) {
     // Surface what's happening instead of a bare spinner. A slow
     // session refresh (or a backend hiccup like a 502 on the chat
@@ -530,27 +569,29 @@ export default function TabLayout() {
     );
   }
 
+  // Mastodon onboarding redirect. Two-step flow: profile setup, then
+  // follow-people-to-get-started. The per-account
+  // `mastodonOnboardingComplete` flag is set only at the END (the follow
+  // screen's Done / Skip), so closing the app mid-flow routes the user
+  // back to the right step on next launch:
+  //   - profile still looks incomplete → /onboarding/mastodon
+  //   - profile complete but flag still unset → /onboarding/mastodon-follow
+  // Holding for the credential fetch avoids the home-tab-flash-then-
+  // redirect ugliness — the existing `refreshingSession` spinner above
+  // covers the wait. Once the flag flips, this guard short-circuits.
+  const isMastodonAccount = currentAccount?.provider === 'mastodon';
+  if (isMastodonAccount && !mastodonOnboardingComplete && ownMastodonAccount.data) {
+    if (isMastodonProfileIncomplete(ownMastodonAccount.data)) {
+      return <Redirect href={'/onboarding/mastodon' as never} />;
+    }
+    return <Redirect href={'/onboarding/mastodon-follow' as never} />;
+  }
+
   // Unauthenticated users see the same tab shell as authenticated ones —
   // individual screens decide whether to render public reads or a "sign
   // in" empty state, and write actions are gated by `useIsGuest`. We no
   // longer redirect; the signin screen is reachable explicitly via the
   // sign-in CTAs surfaced inside the gated affordances.
-
-  // Memoized at component scope (not inlined in the `tabBar` prop) so the
-  // navigator gets a stable render function and we don't define a
-  // component during render.
-  const renderTabBar = useCallback(
-    (props: BottomTabBarProps) => (
-      <HardcodedTabBar
-        {...props}
-        unreadMessagesCount={unreadMessagesCount}
-        unreadNotificationsCount={unreadNotificationsCount}
-        avatarUri={currentAccount?.avatar}
-        visibleTabs={visibleTabs}
-      />
-    ),
-    [unreadMessagesCount, unreadNotificationsCount, currentAccount?.avatar, visibleTabs],
-  );
 
   // Mobile chrome (used by web tab layout's mobile branch AND by the
   // native mobile path below).

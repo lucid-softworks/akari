@@ -130,13 +130,22 @@ describe('RootLayout', () => {
     expect(queryByText('Devtools')).toBeNull();
     const { Stack } = require('expo-router');
     await waitFor(() => {
-      expect(Stack.Screen).toHaveBeenCalledTimes(5);
+      expect(Stack.Screen).toHaveBeenCalledTimes(8);
     });
     const names: string[] = [];
     for (const call of Stack.Screen.mock.calls) {
       names.push(call[0].name);
     }
-    expect(names).toEqual(['(auth)', '(tabs)', 'debug', 'oauth/callback', '+not-found']);
+    expect(names).toEqual([
+      '(auth)',
+      '(tabs)',
+      'debug',
+      'oauth/callback',
+      'oauth/mastodon',
+      'onboarding/mastodon',
+      'onboarding/mastodon-follow',
+      '+not-found',
+    ]);
     const themeProps = mockThemeProvider.mock.calls[0][0];
     expect(themeProps.value).toBe(DefaultTheme);
   });

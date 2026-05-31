@@ -1,5 +1,9 @@
 {
   "fabPost": "Ανάρτηση",
   "fabReview": "Κριτική",
-  "fabPoll": "Ψηφοφορία"
+  "fabPoll": "Ψηφοφορία",
+  "announcementsTitle": "Ανακοίνωση",
+  "announcementDismiss": "Απόρριψη ανακοίνωσης",
+  "mastodonHomeTab": "Αρχική",
+  "mastodonTrendingTab": "Δημοφιλή"
 }

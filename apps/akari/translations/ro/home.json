@@ -1,5 +1,9 @@
 {
   "fabPost": "Postare",
   "fabReview": "Recenzie",
-  "fabPoll": "Sondaj"
+  "fabPoll": "Sondaj",
+  "announcementsTitle": "Anunț",
+  "announcementDismiss": "Închide anunțul",
+  "mastodonHomeTab": "Acasă",
+  "mastodonTrendingTab": "Tendințe"
 }

@@ -15,6 +15,14 @@ const featureFlags = {
    * a single peer until this flips.
    */
   groupChats: false,
+  /**
+   * Mastodon / fediverse sign-in. Adds a "Sign in with Mastodon" choice to
+   * the auth landing screen and wires the full OAuth login + account
+   * persistence. Kept off until the data layer can render a Mastodon
+   * account's feeds — login alone would strand the user on an empty home
+   * tab. Flip on once the protocol-adapter / neutral view model lands.
+   */
+  mastodonLogin: true,
 } as const;
 
 export type FeatureFlag = keyof typeof featureFlags;

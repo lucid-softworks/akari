@@ -1,5 +1,6 @@
 import type { PersistedClient } from '@tanstack/react-query-persist-client';
 import { Account } from '@/types/account';
+import type { MastodonAppCredentials } from '@/utils/mastodon/app';
 import { Platform } from 'react-native';
 import { MMKV } from 'react-native-mmkv';
 
@@ -46,6 +47,23 @@ type Data = {
   refreshToken: string;
   selectedFeed: string;
   reactQueryCache: PersistedClient;
+  /**
+   * Cache of dynamically-registered Mastodon OAuth clients, keyed by
+   * instance origin. Mastodon issues a per-instance client_id/secret on
+   * `POST /api/v1/apps`; caching them avoids re-registering a fresh app
+   * record on every sign-in. See `utils/mastodon/app.ts`.
+   */
+  mastodonApps: Record<string, MastodonAppCredentials>;
+  /**
+   * Per-Mastodon-account flag: has the user been through the onboarding
+   * flow (profile setup + follow suggestions)? Keyed by the account's
+   * `did` (Mastodon's canonical profile URL). Set to `true` whether the
+   * user filled the forms or skipped them — the point of the flag is "we
+   * already showed this once," not "the profile is complete." Without it
+   * an incomplete profile would re-trigger the redirect on every cold
+   * start, which would feel like the app was stuck.
+   */
+  mastodonOnboardingComplete: Record<string, boolean>;
 };
 
 export const REACT_QUERY_CACHE_STORAGE_KEY = 'reactQueryCache' as const;

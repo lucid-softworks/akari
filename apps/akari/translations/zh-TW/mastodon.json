@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "嘟文",
+  "statusDetailError": "無法載入此嘟文",
+  "statusDetailEmpty": "找不到此嘟文。",
+  "profileTitleFallback": "個人檔案",
+  "profileError": "無法載入此個人檔案",
+  "profileEmptyPosts": "尚無嘟文。",
+  "profilePostsLabel": "嘟文",
+  "profileFollowingLabel": "正在追蹤",
+  "profileFollowersLabel": "追蹤者"
+}

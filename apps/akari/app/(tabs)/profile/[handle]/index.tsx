@@ -26,11 +26,9 @@ export default function ProfileScreen() {
         }}
       />
       {/* key={handle} forces a fresh ProfileView when the route param
-          changes. Without it, expo-router's `dangerouslySingular`
-          stack reuses the same [handle]/index instance across
-          profile-to-profile navigations, and on back from a child
-          route the inner hooks have been seen to read stale params,
-          rendering the previously-mounted user's profile. */}
+          changes — the inner dispatch picks atproto or Mastodon from the
+          handle's shape (`@` ⇒ Mastodon), so the same route + component
+          renders both. */}
       <ProfileView key={handle} handle={handle} />
     </>
   );

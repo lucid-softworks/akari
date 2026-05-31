@@ -1,5 +1,9 @@
 {
   "fabPost": "Julkaise",
   "fabReview": "Arvostelu",
-  "fabPoll": "Kysely"
+  "fabPoll": "Kysely",
+  "announcementsTitle": "Tiedote",
+  "announcementDismiss": "Hylkää tiedote",
+  "mastodonHomeTab": "Etusivu",
+  "mastodonTrendingTab": "Suosittua"
 }

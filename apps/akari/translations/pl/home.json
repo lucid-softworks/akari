@@ -1,5 +1,9 @@
 {
   "fabPost": "Post",
   "fabReview": "Recenzja",
-  "fabPoll": "Ankieta"
+  "fabPoll": "Ankieta",
+  "announcementsTitle": "Ogłoszenie",
+  "announcementDismiss": "Zamknij ogłoszenie",
+  "mastodonHomeTab": "Strona główna",
+  "mastodonTrendingTab": "Popularne"
 }

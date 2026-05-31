@@ -1,5 +1,9 @@
 {
   "fabPost": "ارسال",
   "fabReview": "نقد",
-  "fabPoll": "نظرسنجی"
+  "fabPoll": "نظرسنجی",
+  "announcementsTitle": "اعلان",
+  "announcementDismiss": "بستن اعلان",
+  "mastodonHomeTab": "خانه",
+  "mastodonTrendingTab": "پرطرفدار"
 }

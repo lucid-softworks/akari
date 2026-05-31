@@ -1,5 +1,9 @@
 {
   "fabPost": "Допис",
   "fabReview": "Огляд",
-  "fabPoll": "Опитування"
+  "fabPoll": "Опитування",
+  "announcementsTitle": "Оголошення",
+  "announcementDismiss": "Закрити оголошення",
+  "mastodonHomeTab": "Головна",
+  "mastodonTrendingTab": "Популярне"
 }

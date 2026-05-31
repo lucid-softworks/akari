@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "פוסט",
+  "statusDetailError": "טעינת הפוסט נכשלה",
+  "statusDetailEmpty": "הפוסט לא נמצא.",
+  "profileTitleFallback": "פרופיל",
+  "profileError": "טעינת הפרופיל נכשלה",
+  "profileEmptyPosts": "אין עדיין פוסטים.",
+  "profilePostsLabel": "פוסטים",
+  "profileFollowingLabel": "במעקב",
+  "profileFollowersLabel": "עוקבים"
+}

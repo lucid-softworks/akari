@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Kiriman",
+  "statusDetailError": "Tidak dapat memuat kiriman ini",
+  "statusDetailEmpty": "Kiriman ini tidak ditemukan.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Tidak dapat memuat profil ini",
+  "profileEmptyPosts": "Belum ada kiriman.",
+  "profilePostsLabel": "Kiriman",
+  "profileFollowingLabel": "Mengikuti",
+  "profileFollowersLabel": "Pengikut"
+}

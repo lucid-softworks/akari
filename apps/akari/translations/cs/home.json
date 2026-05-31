@@ -1,5 +1,9 @@
 {
   "fabPost": "Příspěvek",
   "fabReview": "Recenze",
-  "fabPoll": "Anketa"
+  "fabPoll": "Anketa",
+  "announcementsTitle": "Oznámení",
+  "announcementDismiss": "Zavřít oznámení",
+  "mastodonHomeTab": "Domů",
+  "mastodonTrendingTab": "Trendy"
 }

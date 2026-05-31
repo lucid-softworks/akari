@@ -1,5 +1,9 @@
 {
   "fabPost": "Đăng",
   "fabReview": "Đánh giá",
-  "fabPoll": "Cuộc thăm dò"
+  "fabPoll": "Cuộc thăm dò",
+  "announcementsTitle": "Thông báo",
+  "announcementDismiss": "Đóng thông báo",
+  "mastodonHomeTab": "Trang chủ",
+  "mastodonTrendingTab": "Thịnh hành"
 }

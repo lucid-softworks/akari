@@ -1,5 +1,9 @@
 {
   "fabPost": "投稿",
   "fabReview": "レビュー",
-  "fabPoll": "アンケート"
+  "fabPoll": "アンケート",
+  "announcementsTitle": "お知らせ",
+  "announcementDismiss": "お知らせを閉じる",
+  "mastodonHomeTab": "ホーム",
+  "mastodonTrendingTab": "トレンド"
 }

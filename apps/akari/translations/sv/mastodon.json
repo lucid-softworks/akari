@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Inlägg",
+  "statusDetailError": "Det gick inte att läsa in det här inlägget",
+  "statusDetailEmpty": "Inlägget kunde inte hittas.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Det gick inte att läsa in den här profilen",
+  "profileEmptyPosts": "Inga inlägg ännu.",
+  "profilePostsLabel": "Inlägg",
+  "profileFollowingLabel": "Följer",
+  "profileFollowersLabel": "Följare"
+}

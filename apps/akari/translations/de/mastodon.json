@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Beitrag",
+  "statusDetailError": "Dieser Beitrag konnte nicht geladen werden",
+  "statusDetailEmpty": "Dieser Beitrag konnte nicht gefunden werden.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Dieses Profil konnte nicht geladen werden",
+  "profileEmptyPosts": "Noch keine Beiträge.",
+  "profilePostsLabel": "Beiträge",
+  "profileFollowingLabel": "Folgt",
+  "profileFollowersLabel": "Follower"
+}

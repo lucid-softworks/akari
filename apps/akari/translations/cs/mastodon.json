@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Příspěvek",
+  "statusDetailError": "Tento příspěvek se nepodařilo načíst",
+  "statusDetailEmpty": "Tento příspěvek se nepodařilo najít.",
+  "profileTitleFallback": "Profil",
+  "profileError": "Tento profil se nepodařilo načíst",
+  "profileEmptyPosts": "Zatím žádné příspěvky.",
+  "profilePostsLabel": "Příspěvky",
+  "profileFollowingLabel": "Sleduje",
+  "profileFollowersLabel": "Sledující"
+}

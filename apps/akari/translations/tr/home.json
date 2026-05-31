@@ -1,5 +1,9 @@
 {
   "fabPost": "Gönderi",
   "fabReview": "İnceleme",
-  "fabPoll": "Anket"
+  "fabPoll": "Anket",
+  "announcementsTitle": "Duyuru",
+  "announcementDismiss": "Duyuruyu kapat",
+  "mastodonHomeTab": "Ana sayfa",
+  "mastodonTrendingTab": "Gündem"
 }

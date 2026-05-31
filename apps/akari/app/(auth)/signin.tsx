@@ -18,6 +18,7 @@ import {
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { isFeatureEnabled } from '@/utils/featureFlags';
 
 /**
  * Auth landing screen — picks between OAuth and app-password sign-in. Both
@@ -34,7 +35,12 @@ export default function SignInScreen() {
 
   const goToOauth = () => router.push('/(auth)/oauth');
   const goToPassword = () => router.push('/(auth)/password');
+  const goToMastodon = () => router.push('/(auth)/mastodon');
   const goToSignup = () => router.push('/(auth)/signup');
+  // Mastodon / fediverse login sits alongside the atproto choices, never
+  // replacing them. Gated until the data layer can render a fediverse
+  // account's feeds (see featureFlags.mastodonLogin).
+  const showMastodon = isFeatureEnabled('mastodonLogin');
   // Continue without authenticating. Lands on the home tab in guest
   // mode (discover feed, write affordances gated). Reachable via the
   // tertiary link below the OAuth + app-password choices.
@@ -89,6 +95,24 @@ export default function SignInScreen() {
               </View>
               <IconSymbol name="chevron.right" size={20} color={helperColor} />
             </Pressable>
+
+            {showMastodon ? (
+              <Pressable
+                style={({ pressed }) => [styles.choiceSecondary, { borderColor }, pressed && { opacity: activeOpacity.default }]}
+                onPress={goToMastodon}
+                accessibilityRole="button"
+              >
+                <View style={styles.choiceText}>
+                  <ThemedText style={styles.choiceSecondaryTitle}>
+                    {t('auth.mastodonChoiceTitle')}
+                  </ThemedText>
+                  <ThemedText style={[styles.choiceSecondarySubtitle, { color: helperColor }]}>
+                    {t('auth.mastodonChoiceSubtitle')}
+                  </ThemedText>
+                </View>
+                <IconSymbol name="chevron.right" size={20} color={helperColor} />
+              </Pressable>
+            ) : null}
 
             <Pressable
               style={({ pressed }) => [styles.choiceSecondary, { borderColor }, pressed && { opacity: activeOpacity.default }]}

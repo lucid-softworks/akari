@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Публикация",
+  "statusDetailError": "Публикацията не може да бъде заредена",
+  "statusDetailEmpty": "Публикацията не беше намерена.",
+  "profileTitleFallback": "Профил",
+  "profileError": "Профилът не може да бъде зареден",
+  "profileEmptyPosts": "Все още няма публикации.",
+  "profilePostsLabel": "Публикации",
+  "profileFollowingLabel": "Следвани",
+  "profileFollowersLabel": "Последователи"
+}

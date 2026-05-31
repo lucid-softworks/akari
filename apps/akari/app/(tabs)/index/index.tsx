@@ -14,9 +14,12 @@ import { FeedListEmpty } from '@/components/home/FeedListEmpty';
 import { FeedListHeader } from '@/components/home/FeedListHeader';
 import { FeedPostCard } from '@/components/home/FeedPostCard';
 import { HomeFab } from '@/components/home/HomeFab';
+import { MastodonAnnouncementsList } from '@/components/home/MastodonAnnouncementsList';
+import { MastodonFeedListHeader } from '@/components/home/MastodonFeedListHeader';
 import { VirtualizedList, type VirtualizedListHandle } from '@/components/ui/VirtualizedList';
 import { useDialogManager } from '@/contexts/DialogContext';
 import { useSetSelectedFeed } from '@/hooks/mutations/useSetSelectedFeed';
+import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { useFeedGenerators } from '@/hooks/queries/useFeedGenerators';
 import { useIsGuest } from '@/hooks/queries/useIsGuest';
 import { useSelectedFeed } from '@/hooks/queries/useSelectedFeed';
@@ -28,6 +31,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { tabScrollRegistry } from '@/utils/tabScrollRegistry';
 import { TabChromeContext } from '@/app/(tabs)/_layout';
 import { webScreenContainer } from '@/constants/webStyles';
+import { MASTODON_HOME_FEED, MASTODON_TRENDING_FEED } from '@/utils/mastodon/feed';
 
 // Mirrors the default in `useSelectedFeed` — the bsky discover feed.
 // Guests get this as their only feed entry (saved-feeds prefs require
@@ -72,6 +76,13 @@ export default function HomeScreen() {
 
   const { allFeedsWithCreated, savedFeedsLoading, feedsLoading, refetchFeeds } = useSavedFeedsList();
   const isGuest = useIsGuest();
+  const { data: currentAccount } = useCurrentAccount();
+  // Mastodon accounts have no saved-feeds / feed-generator concept — the
+  // home timeline is the only feed surface for v1. We still call the
+  // atproto preference hooks above (and feed-tabs strip below) so hook
+  // order stays stable across an account switch; this flag just hides
+  // the affordances and skips the saved-feeds loading gate.
+  const isMastodon = currentAccount?.provider === 'mastodon';
   // Resolve the discover feed's metadata via the public AppView so the
   // tab label shows the feed creator's real display name ("Discover")
   // instead of a hardcoded string we'd have to translate. The query is
@@ -151,7 +162,12 @@ export default function HomeScreen() {
       if (item.type === 'empty') {
         return <FeedListEmpty state={item.state} />;
       }
-      return <FeedPostCard entry={item.item} selectedFeed={selectedFeed ?? undefined} />;
+      if (item.type === 'post-mastodon') {
+        return <FeedPostCard kind="mastodon" status={item.status} />;
+      }
+      return (
+        <FeedPostCard kind="atproto" entry={item.item} selectedFeed={selectedFeed ?? undefined} />
+      );
     },
     [selectedFeed],
   );
@@ -160,7 +176,9 @@ export default function HomeScreen() {
     if (item.type === 'empty') {
       return `feed-empty-${item.state}`;
     }
-
+    if (item.type === 'post-mastodon') {
+      return `mastodon-${item.status.id}`;
+    }
     return `${item.item.post.cid ?? 'unknown'}-${item.item.post.uri}`;
   }, []);
 
@@ -170,7 +188,10 @@ export default function HomeScreen() {
     </ThemedView>
   ) : null;
 
-  if (savedFeedsLoading || feedsLoading) {
+  // Saved-feeds + feed-generators are atproto-only; for Mastodon they
+  // never resolve to anything useful (their queries gate on `pdsUrl`),
+  // so don't block the home tab on their loading state.
+  if (!isMastodon && (savedFeedsLoading || feedsLoading)) {
     return (
       <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
         <ThemedView style={styles.header}>
@@ -180,7 +201,32 @@ export default function HomeScreen() {
     );
   }
 
-  const feedListHeader = (
+  // Two different "headers" on the home tab depending on protocol:
+  //   - atproto: the feed-tabs strip + filter + trending bar. On web it
+  //     lives in a sticky wrapper above the list so it pins to the top;
+  //     on native it goes inside the list as the sticky list header.
+  //   - Mastodon: a slimmer tabs strip (Home / Trending) — no atproto
+  //     filter / TrendingBar plumbing applies. Sticky on web, in-list on
+  //     native, same as atproto.
+  // Announcements (Mastodon-only) sit BELOW the sticky strip and are
+  // intentionally NOT sticky — they should scroll out of the way once
+  // the user scrolls past, so they're in the `scrollingListHeader` slot.
+  const mastodonFeedTabs = useMemo(
+    () => [
+      { key: MASTODON_HOME_FEED, label: t('home.mastodonHomeTab') },
+      { key: MASTODON_TRENDING_FEED, label: t('home.mastodonTrendingTab') },
+    ],
+    [t],
+  );
+  const stickyTopHeader = isMastodon ? (
+    <MastodonFeedListHeader
+      isLargeScreen={isLargeScreen}
+      insetTop={insets.top}
+      feedTabs={mastodonFeedTabs}
+      selectedFeed={selectedFeed ?? undefined}
+      onTabChange={handleFeedSelection}
+    />
+  ) : (
     <FeedListHeader
       isLargeScreen={isLargeScreen}
       insetTop={insets.top}
@@ -192,10 +238,11 @@ export default function HomeScreen() {
       onShowFilters={handleShowFilters}
     />
   );
+  const scrollingListHeader = isMastodon ? <MastodonAnnouncementsList /> : null;
 
   return (
     <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-      {isWeb ? (
+      {isWeb && stickyTopHeader ? (
         <View
           style={
             ({
@@ -214,7 +261,7 @@ export default function HomeScreen() {
             } as object)
           }
         >
-          {feedListHeader}
+          {stickyTopHeader}
         </View>
       ) : null}
       <VirtualizedList
@@ -230,7 +277,12 @@ export default function HomeScreen() {
         // the virtualiser's scroll math. On native (and on mobile
         // web), keep it inside the list so FlashList's sticky-header
         // pinning still works.
-        ListHeaderComponent={isWeb ? undefined : feedListHeader}
+        ListHeaderComponent={
+          // Mastodon always uses the in-list header (announcements scroll
+          // with the feed). atproto uses it only on native — the web
+          // path renders the sticky feed-tabs strip above instead.
+          scrollingListHeader ?? (isWeb ? undefined : stickyTopHeader ?? undefined)
+        }
         ListFooterComponent={listFooterComponent ?? undefined}
         contentContainerStyle={styles.listContent}
         onEndReached={loadMorePosts}

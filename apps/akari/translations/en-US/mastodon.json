@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Status",
+  "statusDetailError": "Couldn't load this status",
+  "statusDetailEmpty": "This status couldn't be found.",
+  "profileTitleFallback": "Profile",
+  "profileError": "Couldn't load this profile",
+  "profileEmptyPosts": "No posts yet.",
+  "profilePostsLabel": "Posts",
+  "profileFollowingLabel": "Following",
+  "profileFollowersLabel": "Followers"
+}

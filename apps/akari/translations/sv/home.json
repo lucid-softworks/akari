@@ -1,5 +1,9 @@
 {
   "fabPost": "Inlägg",
   "fabReview": "Recension",
-  "fabPoll": "Omröstning"
+  "fabPoll": "Omröstning",
+  "announcementsTitle": "Meddelande",
+  "announcementDismiss": "Stäng meddelandet",
+  "mastodonHomeTab": "Hem",
+  "mastodonTrendingTab": "Trendigt"
 }

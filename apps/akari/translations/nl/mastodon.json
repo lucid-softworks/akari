@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Bericht",
+  "statusDetailError": "Kan dit bericht niet laden",
+  "statusDetailEmpty": "Dit bericht is niet gevonden.",
+  "profileTitleFallback": "Profiel",
+  "profileError": "Kan dit profiel niet laden",
+  "profileEmptyPosts": "Nog geen berichten.",
+  "profilePostsLabel": "Berichten",
+  "profileFollowingLabel": "Volgend",
+  "profileFollowersLabel": "Volgers"
+}

@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "पोस्ट",
+  "statusDetailError": "यह पोस्ट लोड नहीं हो सकी",
+  "statusDetailEmpty": "यह पोस्ट नहीं मिली.",
+  "profileTitleFallback": "प्रोफ़ाइल",
+  "profileError": "यह प्रोफ़ाइल लोड नहीं हो सकी",
+  "profileEmptyPosts": "अभी तक कोई पोस्ट नहीं.",
+  "profilePostsLabel": "पोस्ट",
+  "profileFollowingLabel": "फ़ॉलो किए गए",
+  "profileFollowersLabel": "फ़ॉलोअर्स"
+}

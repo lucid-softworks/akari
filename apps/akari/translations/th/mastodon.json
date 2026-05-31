@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "โพสต์",
+  "statusDetailError": "ไม่สามารถโหลดโพสต์นี้ได้",
+  "statusDetailEmpty": "ไม่พบโพสต์นี้",
+  "profileTitleFallback": "โปรไฟล์",
+  "profileError": "ไม่สามารถโหลดโปรไฟล์นี้ได้",
+  "profileEmptyPosts": "ยังไม่มีโพสต์",
+  "profilePostsLabel": "โพสต์",
+  "profileFollowingLabel": "กำลังติดตาม",
+  "profileFollowersLabel": "ผู้ติดตาม"
+}

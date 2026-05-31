@@ -1,5 +1,9 @@
 {
   "fabPost": "Postingan",
   "fabReview": "Ulasan",
-  "fabPoll": "Jajak pendapat"
+  "fabPoll": "Jajak pendapat",
+  "announcementsTitle": "Pengumuman",
+  "announcementDismiss": "Tutup pengumuman",
+  "mastodonHomeTab": "Beranda",
+  "mastodonTrendingTab": "Tren"
 }

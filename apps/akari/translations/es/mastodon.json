@@ -1,0 +1,11 @@
+{
+  "statusDetailTitle": "Publicación",
+  "statusDetailError": "No se pudo cargar esta publicación",
+  "statusDetailEmpty": "No se pudo encontrar esta publicación.",
+  "profileTitleFallback": "Perfil",
+  "profileError": "No se pudo cargar este perfil",
+  "profileEmptyPosts": "Aún no hay publicaciones.",
+  "profilePostsLabel": "Publicaciones",
+  "profileFollowingLabel": "Siguiendo",
+  "profileFollowersLabel": "Seguidores"
+}

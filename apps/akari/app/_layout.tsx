@@ -211,6 +211,9 @@ function AppProviders({ colorScheme }: ProvidersProps) {
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="debug" options={{ headerShown: false }} />
                 <Stack.Screen name="oauth/callback" options={{ headerShown: false }} />
+                <Stack.Screen name="oauth/mastodon" options={{ headerShown: false }} />
+                <Stack.Screen name="onboarding/mastodon" options={{ headerShown: false }} />
+                <Stack.Screen name="onboarding/mastodon-follow" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
               {/* oxlint-disable-next-line react/style-prop-object -- expo-status-bar's `style` prop is a string variant ("auto" | "light" | "dark"), not a React DOM style object */}

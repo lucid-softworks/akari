@@ -70,6 +70,84 @@ behaviour yet.
   pointing at the resolved DID so the link survives a handle
   change.
 
+## P1 — multi-protocol (Mastodon / fediverse)
+
+Akari is becoming a multi-protocol client (atproto plus Mastodon and the
+wider fediverse: Pleroma, Akkoma, GoToSocial). Login plumbing has landed
+behind the `mastodonLogin` feature flag (off by default): the OAuth flow
+(`utils/mastodon/*`), the instance-input screen (`app/(auth)/mastodon.tsx`),
+the web callback (`app/oauth/mastodon.tsx`), a `provider` discriminator plus
+`mastodon` auth blob on `Account`, and a no-op refresh branch. A signed-in
+Mastodon account persists and switches correctly but has nowhere to render
+yet, which is why the flag stays off. Remaining work, roughly in order:
+
+- **Dispatch at the leaf, not a neutral type.** Rather than coerce two
+  shapes through one Post type, the home feed tags each entry with its
+  protocol and `FeedPostCard` dispatches to a protocol-native card
+  (`AtprotoFeedPostCard` / `MastodonPostCard`). Keeps Mastodon-only fields
+  (boosts, CW, custom emoji, instance-relative ids) from polluting the
+  atproto types and vice versa. The MVP card landed render-only — extend
+  this pattern for threads + profiles next instead of refactoring to a
+  neutral view model.
+- **Mastodon home + trending timelines.** Home via
+  `useMastodonHomeTimeline` (`GET /api/v1/timelines/home`, `max_id`).
+  Trending via `useMastodonTrendingTimeline` (`GET /api/v1/trends/statuses`,
+  offset-paginated, 404→empty). Switcher between them lives in the home
+  tab's Mastodon-specific `MastodonFeedListHeader` (Home / Trending
+  tabs). `useHomeFeed` branches on the `mastodon-home` / `mastodon-trending`
+  sentinel from `utils/mastodon/feed.ts`; `useSelectedFeed` defaults +
+  normalises the persisted value across account switches.
+- **Mastodon post card.** Layout mirrors the atproto PostCard (header row
+  at top with squircle avatar, body + actions in a contentColumn indented
+  past the avatar). Actions bar wires reply (placeholder, disabled until
+  the Mastodon composer lands), boost / favourite / bookmark — all
+  toggle via `useMastodonStatusAction` (optimistic patch + reconcile from
+  server response across home + trending caches). Still owed: media
+  attachments, polls, content warnings (`spoiler_text` is dropped, not
+  hidden), custom emoji, mention/hashtag/url facet linking.
+- **In-app status detail + profile screens.** `/mastodon/status/[id]`
+  renders a status with its `context` (ancestors → focused → descendants)
+  stacked through `MastodonPostCard`, with a coloured side stripe on the
+  focused entry. Profiles share the `/profile/[handle]` URL space with
+  atproto — `ProfileScreenDispatcher` picks `MastodonProfileView` vs
+  `ProfileView` from the handle's shape (`@` ⇒ Mastodon). Mastodon
+  avatars in the feed route through `useNavigateToProfile` so the
+  back-stack stays inside the originating tab on native. URLs use the
+  full federated acct (`alice@instance.com`) so they're shareable
+  across instances; `toFullAcct` appends the viewer host for locals.
+  Still owed: Follow button on profile (needs `useMastodonRelationship`
+  query), highlighted-focus styling on the status detail's focused row,
+  edge handling for cross-instance status URLs (currently we assume the
+  id is local to the viewer's instance — true for anything that appeared
+  in their home / trending feed, breaks for hand-typed federated URLs).
+- **atproto-only tabs hidden for Mastodon.** `filterTabsForProvider` in
+  `useTabConfig` drops `community-notes` from the bottom-bar + sidebar
+  when the active account is Mastodon. Persisted MMKV config stays
+  untouched so switching back to an atproto account restores it. Add
+  more atproto-only tabs to `MASTODON_HIDDEN_TABS` as we identify them
+  (moderation likely next; messages / bookmarks once we've verified
+  they can read Mastodon equivalents).
+- **Onboarding (forced).** Two-step post-signin flow lives at
+  `app/onboarding/mastodon.tsx` (profile setup: avatar / banner / display
+  name / bio / discoverable opt-in) and `app/onboarding/mastodon-follow.tsx`
+  (suggested follows via `/api/v2/suggestions` with `/api/v1` fallback).
+  Per-account `mastodonOnboardingComplete` MMKV flag is set only at the
+  end so closing the app mid-flow routes back to the right step. Guard
+  in `(tabs)/_layout.tsx` enforces it. Skips count as "shown."
+- **Announcements above the home feed.** Mastodon-only banner above the
+  feed (`MastodonAnnouncementsList`) fetches `/api/v1/announcements`,
+  dismissable via `/announcements/:id/dismiss` with optimistic cache
+  removal. Renders as the in-list `ListHeaderComponent` (scrolls with
+  content) rather than in the web sticky wrapper. Still owed: ends_at /
+  starts_at badges, reactions, mention/tag link rendering.
+- **Write path.** Posting, replies, boosts, favourites, follows beyond
+  onboarding, and bookmarks mapped onto the Mastodon API.
+- **Notifications + DMs.** `/api/v1/notifications` and direct-message
+  timelines through the neutral notification model.
+- **Refresh / revocation.** Revisit the `authRefreshHandler` Mastodon
+  branch once we confirm which target servers issue refresh tokens.
+- **Flip the flag.** Enable `mastodonLogin` once the read path is usable.
+
 ## P2 — polish
 
 - **Lightbox transition polish.** Image-tap → fullscreen lightbox
