@@ -9,6 +9,7 @@ import { useAddAccount } from '@/hooks/mutations/useAddAccount';
 import { useSwitchAccount } from '@/hooks/mutations/useSwitchAccount';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useTranslation } from '@/hooks/useTranslation';
+import { storage } from '@/utils/secureStorage';
 import { buildMastodonAccount } from '@/utils/mastodon/account';
 import { exchangeMastodonCode, verifyMastodonCredentials } from '@/utils/mastodon/token';
 import { clearMastodonFlow, readMastodonFlow } from '@/utils/mastodon/webStash';
@@ -75,8 +76,26 @@ export default function MastodonCallbackScreen() {
 
       const stash = readMastodonFlow();
       if (!stash) {
-        // No in-flight flow — stale tab or a direct navigation. Bounce to start.
-        if (!cancelled) dispatchResult({ kind: 'redirect', href: '/(auth)/mastodon' });
+        // No in-flight flow. Two cases:
+        //   1. We just finished the flow successfully on the previous run
+        //      and Fast Refresh re-ran this effect — the URL still carries
+        //      ?code=…&state=…, but the stash was cleared after the
+        //      successful exchange. The user IS signed in. Sending them
+        //      back to (auth)/mastodon would re-prompt for the instance
+        //      and look like the app forgot them.
+        //   2. Genuine stale tab / direct navigation — no signed-in
+        //      account exists either. Bounce to the signin start so the
+        //      flow can begin again.
+        // Read auth state straight from MMKV rather than via the
+        // react-query hook so we get a synchronous answer here (the hook
+        // would briefly return `undefined` during Fast Refresh and miss
+        // the case-1 path).
+        const persistedAccount = storage.getItem('currentAccount');
+        const persistedToken = storage.getItem('jwtToken');
+        const isAuthed = Boolean(persistedAccount && persistedToken);
+        if (!cancelled) {
+          dispatchResult({ kind: 'redirect', href: isAuthed ? '/' : '/(auth)/mastodon' });
+        }
         return;
       }
       if (stash.state !== stateParam) {

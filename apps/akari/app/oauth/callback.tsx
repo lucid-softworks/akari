@@ -28,6 +28,7 @@ import { bindOAuthAccount } from '@/utils/oauth/clientBinding';
 import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI } from '@/utils/oauth/config';
 import { exchangeCodeForTokens } from '@/utils/oauth/token';
 import { clearOAuthFlow, readOAuthFlow } from '@/utils/oauth/webStash';
+import { storage } from '@/utils/secureStorage';
 
 /**
  * Web OAuth callback handler. The auth server redirects the browser to
@@ -75,9 +76,26 @@ export default function OAuthCallbackScreen() {
 
       const stash = readOAuthFlow();
       if (!stash) {
-        // No in-flight flow — likely a stale tab or the user navigated
-        // directly to /oauth/callback. Bounce to sign-in start.
-        if (!cancelled) dispatchResult({ kind: 'redirect', href: '/(auth)/oauth' });
+        // No in-flight flow. Two cases:
+        //   1. The flow already completed successfully on a prior run
+        //      and Fast Refresh re-ran this effect — the URL still
+        //      carries ?code=…&state=…, but the stash was cleared after
+        //      the successful exchange. The user IS signed in; sending
+        //      them back to (auth)/oauth would re-prompt for the handle
+        //      and look like the app forgot them.
+        //   2. Genuine stale tab / direct navigation — no signed-in
+        //      account exists either. Bounce to the signin start so the
+        //      flow can begin again.
+        // Read auth state straight from MMKV rather than via the
+        // react-query hook so we get a synchronous answer here (the hook
+        // would briefly return `undefined` during Fast Refresh and miss
+        // the case-1 path).
+        const persistedAccount = storage.getItem('currentAccount');
+        const persistedToken = storage.getItem('jwtToken');
+        const isAuthed = Boolean(persistedAccount && persistedToken);
+        if (!cancelled) {
+          dispatchResult({ kind: 'redirect', href: isAuthed ? '/' : '/(auth)/oauth' });
+        }
         return;
       }
       if (stash.state !== stateParam) {
