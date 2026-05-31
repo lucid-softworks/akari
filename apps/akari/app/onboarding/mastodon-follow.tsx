@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MastodonSuggestionRow } from '@/components/onboarding/MastodonSuggestionRow';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { fontSize, fontWeight, opacity, radius, semanticColors, spacing } from '@/constants/tokens';
+import { fontSize, fontWeight, radius, semanticColors, spacing } from '@/constants/tokens';
 import { useCurrentAccount } from '@/hooks/queries/useCurrentAccount';
 import { markMastodonOnboardingComplete } from '@/hooks/queries/useMastodonOnboardingComplete';
 import { useMastodonSuggestions } from '@/hooks/queries/useMastodonSuggestions';

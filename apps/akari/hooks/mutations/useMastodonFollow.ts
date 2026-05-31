@@ -30,6 +30,7 @@ export function useMastodonFollow() {
   const { data: currentAccount } = useCurrentAccount();
   const { data: token } = useJwtToken();
 
+  // oxlint-disable-next-line react-doctor/query-mutation-missing-invalidation -- only caller is the onboarding follow row, which tracks its own state from the mutation result. No cached relationships query exists yet; once useMastodonRelationship lands (for the profile-screen follow button), the onSuccess here will write through to that key.
   return useMutation<MastodonRelationship, Error, FollowInput>({
     mutationFn: async ({ accountId, follow }) => {
       const instanceUrl = currentAccount?.mastodon?.instanceUrl;

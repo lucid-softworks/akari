@@ -361,6 +361,7 @@ const headerTitles: Record<string, string> = {
   development: 'Development',
 };
 
+// oxlint-disable-next-line react-doctor/no-giant-component -- TabLayout is the central orchestrator (hooks for auth/account, tab config, push notifications, dialog managers, web vs native layout selection, plus the Mastodon onboarding redirect). Splitting requires extracting both the per-route logic and the layout variants together; tracked as a follow-up in the multi-protocol P1 work.
 export default function TabLayout() {
   const { t } = useTranslation();
   const { isLargeScreen, isDesktop } = useResponsive();

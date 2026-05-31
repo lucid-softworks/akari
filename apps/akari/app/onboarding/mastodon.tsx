@@ -1,8 +1,7 @@
 import { Redirect } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -15,6 +14,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AvatarOrInitial } from '@/components/AvatarOrInitial';
+import { Image } from '@/components/Image';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { fontSize, fontWeight, opacity, radius, semanticColors, spacing } from '@/constants/tokens';
@@ -32,6 +32,12 @@ import type { MastodonProfileImage } from '@/utils/mastodon/profile';
  * a real `Blob` / `File` — we resolve the picker's `blob:` URI through fetch
  * to get one. Either way the caller hands a single object to the mutation.
  */
+type FormState = {
+  displayName: string;
+  bio: string;
+  discoverable: boolean;
+};
+
 async function toMastodonProfileImage(
   asset: ImagePicker.ImagePickerAsset,
   fallbackName: string,
@@ -68,12 +74,21 @@ export default function MastodonOnboardingScreen() {
   const profileUpdate = useMastodonProfileUpdate();
 
   const [redirectTo, setRedirectTo] = useState<string | null>(null);
-  const [displayName, setDisplayName] = useState('');
-  const [bio, setBio] = useState('');
-  const [discoverable, setDiscoverable] = useState(false);
+  // Bundle the three editable fields under one reducer so the prefill
+  // effect can hydrate them all with a single dispatch — the lint rule
+  // flags cascading setStates inside a useEffect.
+  const [form, dispatchForm] = useReducer(
+    (state: FormState, partial: Partial<FormState>): FormState => ({ ...state, ...partial }),
+    { displayName: '', bio: '', discoverable: false },
+  );
+  const setDisplayName = useCallback((value: string) => dispatchForm({ displayName: value }), []);
+  const setBio = useCallback((value: string) => dispatchForm({ bio: value }), []);
+  const setDiscoverable = useCallback((value: boolean) => dispatchForm({ discoverable: value }), []);
   const [pickedAvatar, setPickedAvatar] = useState<ImagePicker.ImagePickerAsset | null>(null);
   const [pickedHeader, setPickedHeader] = useState<ImagePicker.ImagePickerAsset | null>(null);
-  const [prefilled, setPrefilled] = useState(false);
+  // Ref rather than state — only the effect reads / sets it, the render
+  // doesn't care, so updating doesn't need to trigger a re-render.
+  const prefilledRef = useRef(false);
 
   const labelColor = useThemeColor({ light: '#374151', dark: '#E2E8F0' }, 'text');
   const helperColor = useThemeColor({ light: '#6B7280', dark: '#9CA3AF' }, 'text');
@@ -86,13 +101,15 @@ export default function MastodonOnboardingScreen() {
   // subsequent fetches so the user's in-progress edits aren't clobbered
   // if the query refetches in the background.
   useEffect(() => {
-    if (prefilled || !ownAccount.data) return;
+    if (prefilledRef.current || !ownAccount.data) return;
     const a = ownAccount.data;
-    setDisplayName(a.display_name && a.display_name !== a.username ? a.display_name : '');
-    setBio(a.source?.note ?? '');
-    setDiscoverable(a.discoverable === true);
-    setPrefilled(true);
-  }, [ownAccount.data, prefilled]);
+    dispatchForm({
+      displayName: a.display_name && a.display_name !== a.username ? a.display_name : '',
+      bio: a.source?.note ?? '',
+      discoverable: a.discoverable === true,
+    });
+    prefilledRef.current = true;
+  }, [ownAccount.data]);
 
   const pickAvatar = useCallback(async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -143,9 +160,9 @@ export default function MastodonOnboardingScreen() {
         : undefined;
 
       await profileUpdate.mutateAsync({
-        displayName,
-        note: bio,
-        discoverable,
+        displayName: form.displayName,
+        note: form.bio,
+        discoverable: form.discoverable,
         avatar: avatarImage,
         header: headerImage,
       });
@@ -162,7 +179,7 @@ export default function MastodonOnboardingScreen() {
         buttons: [{ text: t('common.ok') }],
       });
     }
-  }, [bio, confirm, discoverable, displayName, pickedAvatar, pickedHeader, profileUpdate, t]);
+  }, [form, confirm, pickedAvatar, pickedHeader, profileUpdate, t]);
 
   const handleSkip = useCallback(() => {
     // Skip the profile step but keep the follow step. Onboarding flag is
@@ -248,7 +265,7 @@ export default function MastodonOnboardingScreen() {
             </ThemedText>
             <TextInput
               style={[styles.input, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
-              value={displayName}
+              value={form.displayName}
               onChangeText={setDisplayName}
               placeholder={t('auth.onboardingProfileDisplayNamePlaceholder')}
               placeholderTextColor="#9CA3AF"
@@ -264,7 +281,7 @@ export default function MastodonOnboardingScreen() {
             </ThemedText>
             <TextInput
               style={[styles.input, styles.bioInput, { borderColor, backgroundColor: inputBackground, color: labelColor }]}
-              value={bio}
+              value={form.bio}
               onChangeText={setBio}
               placeholder={t('auth.onboardingProfileBioPlaceholder')}
               placeholderTextColor="#9CA3AF"
@@ -284,7 +301,7 @@ export default function MastodonOnboardingScreen() {
                 {t('auth.onboardingProfileDiscoverableHelp')}
               </ThemedText>
             </View>
-            <Switch value={discoverable} onValueChange={setDiscoverable} />
+            <Switch value={form.discoverable} onValueChange={setDiscoverable} />
           </View>
 
           <Pressable
