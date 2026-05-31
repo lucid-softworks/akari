@@ -130,5 +130,11 @@
   "unbookmarkFailed": "ไม่สามารถลบบุ๊กมาร์กได้ กรุณาลองอีกครั้ง",
   "postedToast": "โพสต์แล้ว",
   "replyPostedToast": "โพสต์ตอบกลับแล้ว",
-  "threadPostedToast": "โพสต์เธรดแล้ว"
+  "threadPostedToast": "โพสต์เธรดแล้ว",
+  "standardReadingTime": "{{count}} นาที",
+  "standardOpenDocument": "เปิด “{{title}}”",
+  "standardOpenPublication": "เปิด {{name}}",
+  "standardOpenAuthor": "เปิดโปรไฟล์ของ @{{handle}}",
+  "standardByline": "โดย @{{handle}}",
+  "standardViewPublication": "ดูสิ่งพิมพ์"
 }

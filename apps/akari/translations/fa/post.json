@@ -130,5 +130,11 @@
   "unbookmarkFailed": "نتوانستیم نشان را حذف کنیم. دوباره تلاش کنید.",
   "postedToast": "منتشر شد",
   "replyPostedToast": "پاسخ منتشر شد",
-  "threadPostedToast": "رشته منتشر شد"
+  "threadPostedToast": "رشته منتشر شد",
+  "standardReadingTime": "{{count}} دق",
+  "standardOpenDocument": "باز کردن «{{title}}»",
+  "standardOpenPublication": "باز کردن {{name}}",
+  "standardOpenAuthor": "باز کردن نمایه ‎@{{handle}}",
+  "standardByline": "نوشتهٔ ‎@{{handle}}",
+  "standardViewPublication": "مشاهدهٔ نشریه"
 }

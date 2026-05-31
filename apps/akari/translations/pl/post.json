@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Nie udało się usunąć zakładki. Spróbuj ponownie.",
   "postedToast": "Opublikowano",
   "replyPostedToast": "Odpowiedź opublikowana",
-  "threadPostedToast": "Wątek opublikowany"
+  "threadPostedToast": "Wątek opublikowany",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Otwórz „{{title}}”",
+  "standardOpenPublication": "Otwórz {{name}}",
+  "standardOpenAuthor": "Otwórz profil @{{handle}}",
+  "standardByline": "autor: @{{handle}}",
+  "standardViewPublication": "Zobacz publikację"
 }

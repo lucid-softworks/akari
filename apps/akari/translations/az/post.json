@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Yer əlamətini silmək alınmadı. Yenidən cəhd et.",
   "postedToast": "Paylaşıldı",
   "replyPostedToast": "Cavab paylaşıldı",
-  "threadPostedToast": "Mövzu paylaşıldı"
+  "threadPostedToast": "Mövzu paylaşıldı",
+  "standardReadingTime": "{{count}} dəq",
+  "standardOpenDocument": "“{{title}}” sənədini aç",
+  "standardOpenPublication": "{{name}} nəşrini aç",
+  "standardOpenAuthor": "@{{handle}} profilini aç",
+  "standardByline": "müəllif @{{handle}}",
+  "standardViewPublication": "Nəşrə bax"
 }

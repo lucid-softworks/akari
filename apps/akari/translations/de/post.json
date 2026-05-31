@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Lesezeichen konnte nicht entfernt werden. Versuche es erneut.",
   "postedToast": "Veröffentlicht",
   "replyPostedToast": "Antwort veröffentlicht",
-  "threadPostedToast": "Thread veröffentlicht"
+  "threadPostedToast": "Thread veröffentlicht",
+  "standardReadingTime": "{{count}} Min.",
+  "standardOpenDocument": "„{{title}}“ öffnen",
+  "standardOpenPublication": "{{name}} öffnen",
+  "standardOpenAuthor": "Profil von @{{handle}} öffnen",
+  "standardByline": "von @{{handle}}",
+  "standardViewPublication": "Publikation ansehen"
 }

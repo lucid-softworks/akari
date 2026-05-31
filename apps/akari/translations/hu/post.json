@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Nem sikerült eltávolítani a könyvjelzőt. Próbáld újra.",
   "postedToast": "Közzétéve",
   "replyPostedToast": "Válasz közzétéve",
-  "threadPostedToast": "Szál közzétéve"
+  "threadPostedToast": "Szál közzétéve",
+  "standardReadingTime": "{{count}} p",
+  "standardOpenDocument": "„{{title}}” megnyitása",
+  "standardOpenPublication": "{{name}} megnyitása",
+  "standardOpenAuthor": "@{{handle}} profiljának megnyitása",
+  "standardByline": "szerző: @{{handle}}",
+  "standardViewPublication": "Kiadvány megtekintése"
 }

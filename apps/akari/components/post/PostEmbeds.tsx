@@ -6,6 +6,7 @@ import type { BlueskyEmbed, BlueskyImage } from '@/bluesky-api';
 import { ExternalEmbed } from '@/components/ExternalEmbed';
 import { GifEmbed } from '@/components/GifEmbed';
 import { PollEmbed } from '@/components/post/PollEmbed';
+import { isStandardSiteExternal, StandardDocumentEmbed } from '@/components/post/StandardDocumentEmbed';
 import { useAccessibilitySettings } from '@/hooks/useAccessibilitySettings';
 import { useLightbox } from '@/hooks/useLightbox';
 import { isGifEmbedUri } from '@/utils/gifEmbed';
@@ -180,6 +181,14 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
         uri.includes('.webm');
       if (isVideoLink) return 'externalVideo';
       if (isTokimekiPollUrl(uri)) return 'poll';
+      // Standard.site publications (pckt.blog, augment.ink, etc.). The
+      // AppView resolves the underlying `site.standard.document` +
+      // `site.standard.publication` records and attaches them to the
+      // external view via a `source` field; we render a richer card in
+      // that case. Falls through to the regular external card otherwise.
+      if (embedData.external && isStandardSiteExternal(embedData.external)) {
+        return 'standardDocument';
+      }
       return 'external';
     }
 
@@ -218,6 +227,19 @@ export const PostEmbeds = React.memo(function PostEmbeds({ postId, embed, embeds
 
       {embedClassification === 'external' && embedData && (
         <ExternalEmbed embed={embedData as ExternalEmbedData} translatedTitle={translatedEmbed?.title} translatedDescription={translatedEmbed?.description} />
+      )}
+
+      {embedClassification === 'standardDocument' && embedData?.external && (
+        <StandardDocumentEmbed
+          uri={embedData.external.uri}
+          title={translatedEmbed?.title ?? embedData.external.title}
+          description={translatedEmbed?.description ?? embedData.external.description}
+          thumb={embedData.external.thumb}
+          publishedAt={embedData.external.createdAt}
+          readingTime={embedData.external.readingTime}
+          source={embedData.external.source!}
+          associatedProfiles={embedData.external.associatedProfiles}
+        />
       )}
 
       {imageData.urls.length > 0 && (

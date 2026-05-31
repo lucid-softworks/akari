@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Tidak dapat menghapus penanda. Coba lagi.",
   "postedToast": "Diposting",
   "replyPostedToast": "Balasan diposting",
-  "threadPostedToast": "Utas diposting"
+  "threadPostedToast": "Utas diposting",
+  "standardReadingTime": "{{count}} mnt",
+  "standardOpenDocument": "Buka “{{title}}”",
+  "standardOpenPublication": "Buka {{name}}",
+  "standardOpenAuthor": "Buka profil @{{handle}}",
+  "standardByline": "oleh @{{handle}}",
+  "standardViewPublication": "Lihat publikasi"
 }

@@ -130,5 +130,11 @@
   "unbookmarkFailed": "बुकमार्क हटाया नहीं जा सका। पुनः प्रयास करें।",
   "postedToast": "पोस्ट हो गया",
   "replyPostedToast": "जवाब पोस्ट हो गया",
-  "threadPostedToast": "थ्रेड पोस्ट हो गया"
+  "threadPostedToast": "थ्रेड पोस्ट हो गया",
+  "standardReadingTime": "{{count}} मि",
+  "standardOpenDocument": "“{{title}}” खोलें",
+  "standardOpenPublication": "{{name}} खोलें",
+  "standardOpenAuthor": "@{{handle}} की प्रोफ़ाइल खोलें",
+  "standardByline": "द्वारा @{{handle}}",
+  "standardViewPublication": "प्रकाशन देखें"
 }

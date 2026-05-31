@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Impossibile rimuovere il segnalibro. Riprova.",
   "postedToast": "Pubblicato",
   "replyPostedToast": "Risposta pubblicata",
-  "threadPostedToast": "Thread pubblicato"
+  "threadPostedToast": "Thread pubblicato",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Apri «{{title}}»",
+  "standardOpenPublication": "Apri {{name}}",
+  "standardOpenAuthor": "Apri il profilo di @{{handle}}",
+  "standardByline": "di @{{handle}}",
+  "standardViewPublication": "Vedi pubblicazione"
 }

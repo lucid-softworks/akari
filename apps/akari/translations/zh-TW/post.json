@@ -130,5 +130,11 @@
   "unbookmarkFailed": "無法取消收藏。請重試。",
   "postedToast": "已發布",
   "replyPostedToast": "回覆已發布",
-  "threadPostedToast": "主題已發布"
+  "threadPostedToast": "主題已發布",
+  "standardReadingTime": "{{count}} 分鐘",
+  "standardOpenDocument": "開啟「{{title}}」",
+  "standardOpenPublication": "開啟 {{name}}",
+  "standardOpenAuthor": "開啟 @{{handle}} 的個人檔案",
+  "standardByline": "作者 @{{handle}}",
+  "standardViewPublication": "檢視出版物"
 }

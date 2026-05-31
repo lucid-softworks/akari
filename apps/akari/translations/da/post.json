@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Kunne ikke fjerne bogmærke. Prøv igen.",
   "postedToast": "Indlæg sendt",
   "replyPostedToast": "Svar sendt",
-  "threadPostedToast": "Tråd sendt"
+  "threadPostedToast": "Tråd sendt",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Åbn “{{title}}”",
+  "standardOpenPublication": "Åbn {{name}}",
+  "standardOpenAuthor": "Åbn profil for @{{handle}}",
+  "standardByline": "af @{{handle}}",
+  "standardViewPublication": "Vis publikation"
 }

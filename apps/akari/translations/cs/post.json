@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Nepodařilo se odebrat záložku. Zkuste to znovu.",
   "postedToast": "Publikováno",
   "replyPostedToast": "Odpověď publikována",
-  "threadPostedToast": "Vlákno publikováno"
+  "threadPostedToast": "Vlákno publikováno",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Otevřít „{{title}}“",
+  "standardOpenPublication": "Otevřít {{name}}",
+  "standardOpenAuthor": "Otevřít profil @{{handle}}",
+  "standardByline": "od @{{handle}}",
+  "standardViewPublication": "Zobrazit publikaci"
 }

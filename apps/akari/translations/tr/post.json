@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Yer imi kaldırılamadı. Tekrar dene.",
   "postedToast": "Paylaşıldı",
   "replyPostedToast": "Yanıt paylaşıldı",
-  "threadPostedToast": "Zincir paylaşıldı"
+  "threadPostedToast": "Zincir paylaşıldı",
+  "standardReadingTime": "{{count}} dk",
+  "standardOpenDocument": "“{{title}}” belgesini aç",
+  "standardOpenPublication": "{{name}} yayınını aç",
+  "standardOpenAuthor": "@{{handle}} profilini aç",
+  "standardByline": "yazan @{{handle}}",
+  "standardViewPublication": "Yayını gör"
 }

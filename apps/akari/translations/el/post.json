@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Δεν ήταν δυνατή η αφαίρεση του σελιδοδείκτη. Δοκιμάστε ξανά.",
   "postedToast": "Δημοσιεύτηκε",
   "replyPostedToast": "Η απάντηση δημοσιεύτηκε",
-  "threadPostedToast": "Το νήμα δημοσιεύτηκε"
+  "threadPostedToast": "Το νήμα δημοσιεύτηκε",
+  "standardReadingTime": "{{count}} λεπ.",
+  "standardOpenDocument": "Άνοιγμα «{{title}}»",
+  "standardOpenPublication": "Άνοιγμα {{name}}",
+  "standardOpenAuthor": "Άνοιγμα προφίλ του @{{handle}}",
+  "standardByline": "από τον/την @{{handle}}",
+  "standardViewPublication": "Προβολή έκδοσης"
 }

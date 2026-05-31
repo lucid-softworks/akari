@@ -130,5 +130,11 @@
     "processing": "Processing… {{percent}}%",
     "processingIndeterminate": "Processing…",
     "ready": "Ready to post"
-  }
+  },
+  "standardReadingTime": "{{count}}m",
+  "standardOpenDocument": "Open “{{title}}”",
+  "standardOpenPublication": "Open {{name}}",
+  "standardOpenAuthor": "Open profile for @{{handle}}",
+  "standardByline": "by @{{handle}}",
+  "standardViewPublication": "View publication"
 }

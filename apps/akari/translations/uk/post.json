@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Не вдалося видалити закладку. Спробуйте ще раз.",
   "postedToast": "Опубліковано",
   "replyPostedToast": "Відповідь опубліковано",
-  "threadPostedToast": "Гілку опубліковано"
+  "threadPostedToast": "Гілку опубліковано",
+  "standardReadingTime": "{{count}} хв",
+  "standardOpenDocument": "Відкрити «{{title}}»",
+  "standardOpenPublication": "Відкрити {{name}}",
+  "standardOpenAuthor": "Відкрити профіль @{{handle}}",
+  "standardByline": "автор @{{handle}}",
+  "standardViewPublication": "Переглянути публікацію"
 }

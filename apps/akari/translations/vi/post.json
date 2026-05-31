@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Không thể bỏ đánh dấu bài viết. Vui lòng thử lại.",
   "postedToast": "Đã đăng",
   "replyPostedToast": "Đã đăng phản hồi",
-  "threadPostedToast": "Đã đăng chuỗi bài"
+  "threadPostedToast": "Đã đăng chuỗi bài",
+  "standardReadingTime": "{{count}} ph",
+  "standardOpenDocument": "Mở “{{title}}”",
+  "standardOpenPublication": "Mở {{name}}",
+  "standardOpenAuthor": "Mở hồ sơ của @{{handle}}",
+  "standardByline": "bởi @{{handle}}",
+  "standardViewPublication": "Xem ấn phẩm"
 }

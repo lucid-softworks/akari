@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Zaznamka ni bilo mogoče odstraniti. Poskusite znova.",
   "postedToast": "Objavljeno",
   "replyPostedToast": "Odgovor objavljen",
-  "threadPostedToast": "Nit objavljena"
+  "threadPostedToast": "Nit objavljena",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Odpri »{{title}}«",
+  "standardOpenPublication": "Odpri {{name}}",
+  "standardOpenAuthor": "Odpri profil @{{handle}}",
+  "standardByline": "avtor @{{handle}}",
+  "standardViewPublication": "Poglej publikacijo"
 }

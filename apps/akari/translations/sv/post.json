@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Det gick inte att ta bort bokmärket. Försök igen.",
   "postedToast": "Publicerat",
   "replyPostedToast": "Svar publicerat",
-  "threadPostedToast": "Tråd publicerad"
+  "threadPostedToast": "Tråd publicerad",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Öppna ”{{title}}”",
+  "standardOpenPublication": "Öppna {{name}}",
+  "standardOpenAuthor": "Öppna profil för @{{handle}}",
+  "standardByline": "av @{{handle}}",
+  "standardViewPublication": "Visa publikation"
 }

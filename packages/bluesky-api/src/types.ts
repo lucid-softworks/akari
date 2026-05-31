@@ -116,6 +116,49 @@ export type BlueskyExternal = {
     mimeType: string;
     size: number;
   };
+  /**
+   * AppView-enriched fields. Present only when the bsky AppView
+   * recognises the link as a Standard.site publication (sites built on
+   * `site.standard.*` lexicons — pckt.blog, augment.ink, standard.site).
+   * The AppView resolves the URL → `site.standard.document` +
+   * `site.standard.publication` records and folds the rendered metadata
+   * back into the external view so clients paint a richer card without
+   * doing the lookup themselves.
+   *
+   * Detect via `source?.$type === 'app.bsky.embed.external#viewExternalSource'`
+   * before reaching for the Standard.site card; absence means render the
+   * regular link card.
+   */
+  /** Document's `publishedAt` ISO timestamp. */
+  createdAt?: string;
+  /** Estimated reading time in minutes. AppView computes from `textContent`. */
+  readingTime?: number;
+  /** Publication metadata — name + icon CDN URL + canonical site URL +
+   *  description. Mirrors `site.standard.publication`. */
+  source?: {
+    $type?: string;
+    uri: string;
+    icon?: string;
+    title?: string;
+    description?: string;
+  };
+  /** Author / contributor profiles. First entry is the byline author —
+   *  AppView pulls from the document's `contributors` + publication owner.
+   *  Shape is the standard bsky author view; can't reference BlueskyAuthor
+   *  here without a forward-declared circular import, so the structural
+   *  type below is kept narrow to what the card actually reads. */
+  associatedProfiles?: {
+    did: string;
+    handle: string;
+    displayName?: string;
+    avatar?: string;
+  }[];
+  /** Strong refs to the underlying records (document + publication). */
+  associatedRefs?: {
+    $type?: string;
+    uri: string;
+    cid?: string;
+  }[];
 };
 
 export type BlueskyRecordAuthor = {

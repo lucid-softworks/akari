@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Kon bladwijzer niet verwijderen. Probeer het opnieuw.",
   "postedToast": "Geplaatst",
   "replyPostedToast": "Reactie geplaatst",
-  "threadPostedToast": "Thread geplaatst"
+  "threadPostedToast": "Thread geplaatst",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "“{{title}}” openen",
+  "standardOpenPublication": "{{name}} openen",
+  "standardOpenAuthor": "Profiel van @{{handle}} openen",
+  "standardByline": "door @{{handle}}",
+  "standardViewPublication": "Publicatie bekijken"
 }

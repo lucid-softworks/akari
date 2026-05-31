@@ -130,5 +130,11 @@
   "unbookmarkFailed": "לא ניתן היה להסיר את הסימנייה. נסה שוב.",
   "postedToast": "פורסם",
   "replyPostedToast": "התגובה פורסמה",
-  "threadPostedToast": "השרשור פורסם"
+  "threadPostedToast": "השרשור פורסם",
+  "standardReadingTime": "{{count}} ד׳",
+  "standardOpenDocument": "פתח את ״{{title}}״",
+  "standardOpenPublication": "פתח את {{name}}",
+  "standardOpenAuthor": "פתח את הפרופיל של ‎@{{handle}}",
+  "standardByline": "מאת ‎@{{handle}}",
+  "standardViewPublication": "צפה בפרסום"
 }

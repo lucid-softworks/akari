@@ -130,5 +130,11 @@
   "unbookmarkFailed": "تعذّر إلغاء حفظ المنشور. حاول مرة أخرى.",
   "postedToast": "تم النشر",
   "replyPostedToast": "تم نشر الرد",
-  "threadPostedToast": "تم نشر السلسلة"
+  "threadPostedToast": "تم نشر السلسلة",
+  "standardReadingTime": "{{count}} د",
+  "standardOpenDocument": "فتح «{{title}}»",
+  "standardOpenPublication": "فتح {{name}}",
+  "standardOpenAuthor": "فتح الملف الشخصي لـ ‎@{{handle}}",
+  "standardByline": "بقلم ‎@{{handle}}",
+  "standardViewPublication": "عرض النشرة"
 }

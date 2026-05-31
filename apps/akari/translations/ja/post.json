@@ -130,5 +130,11 @@
   "unbookmarkFailed": "ブックマークを解除できませんでした。もう一度お試しください。",
   "postedToast": "投稿しました",
   "replyPostedToast": "返信を投稿しました",
-  "threadPostedToast": "スレッドを投稿しました"
+  "threadPostedToast": "スレッドを投稿しました",
+  "standardReadingTime": "{{count}}分",
+  "standardOpenDocument": "「{{title}}」を開く",
+  "standardOpenPublication": "{{name}} を開く",
+  "standardOpenAuthor": "@{{handle}} のプロフィールを開く",
+  "standardByline": "@{{handle}} 著",
+  "standardViewPublication": "出版物を見る"
 }

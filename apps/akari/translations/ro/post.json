@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Nu s-a putut elimina marcajul. Încearcă din nou.",
   "postedToast": "Publicat",
   "replyPostedToast": "Răspuns publicat",
-  "threadPostedToast": "Fir publicat"
+  "threadPostedToast": "Fir publicat",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Deschide „{{title}}”",
+  "standardOpenPublication": "Deschide {{name}}",
+  "standardOpenAuthor": "Deschide profilul @{{handle}}",
+  "standardByline": "de @{{handle}}",
+  "standardViewPublication": "Vezi publicația"
 }

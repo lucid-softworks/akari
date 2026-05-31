@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Не удалось удалить закладку. Попробуйте ещё раз.",
   "postedToast": "Опубликовано",
   "replyPostedToast": "Ответ опубликован",
-  "threadPostedToast": "Тред опубликован"
+  "threadPostedToast": "Тред опубликован",
+  "standardReadingTime": "{{count}} мин",
+  "standardOpenDocument": "Открыть «{{title}}»",
+  "standardOpenPublication": "Открыть {{name}}",
+  "standardOpenAuthor": "Открыть профиль @{{handle}}",
+  "standardByline": "автор @{{handle}}",
+  "standardViewPublication": "Посмотреть публикацию"
 }

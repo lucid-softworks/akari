@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Methwyd dileu'r nod tudalen. Ceisiwch eto.",
   "postedToast": "Wedi cyhoeddi",
   "replyPostedToast": "Ymateb wedi cyhoeddi",
-  "threadPostedToast": "Edefyn wedi cyhoeddi"
+  "threadPostedToast": "Edefyn wedi cyhoeddi",
+  "standardReadingTime": "{{count}} mun",
+  "standardOpenDocument": "Agor ‘{{title}}’",
+  "standardOpenPublication": "Agor {{name}}",
+  "standardOpenAuthor": "Agor proffil @{{handle}}",
+  "standardByline": "gan @{{handle}}",
+  "standardViewPublication": "Gweld y cyhoeddiad"
 }

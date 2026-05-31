@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Não foi possível remover o favorito. Tente novamente.",
   "postedToast": "Publicado",
   "replyPostedToast": "Resposta publicada",
-  "threadPostedToast": "Tópico publicado"
+  "threadPostedToast": "Tópico publicado",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Abrir “{{title}}”",
+  "standardOpenPublication": "Abrir {{name}}",
+  "standardOpenAuthor": "Abrir perfil de @{{handle}}",
+  "standardByline": "por @{{handle}}",
+  "standardViewPublication": "Ver publicação"
 }

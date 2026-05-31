@@ -130,5 +130,11 @@
   "unbookmarkFailed": "无法取消收藏。请重试。",
   "postedToast": "已发布",
   "replyPostedToast": "回复已发布",
-  "threadPostedToast": "主题已发布"
+  "threadPostedToast": "主题已发布",
+  "standardReadingTime": "{{count}} 分钟",
+  "standardOpenDocument": "打开“{{title}}”",
+  "standardOpenPublication": "打开 {{name}}",
+  "standardOpenAuthor": "打开 @{{handle}} 的个人资料",
+  "standardByline": "作者 @{{handle}}",
+  "standardViewPublication": "查看出版物"
 }

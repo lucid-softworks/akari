@@ -130,5 +130,11 @@
   "unbookmarkFailed": "No se pudo quitar el marcador. Inténtalo de nuevo.",
   "postedToast": "Publicado",
   "replyPostedToast": "Respuesta publicada",
-  "threadPostedToast": "Hilo publicado"
+  "threadPostedToast": "Hilo publicado",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Abrir «{{title}}»",
+  "standardOpenPublication": "Abrir {{name}}",
+  "standardOpenAuthor": "Abrir el perfil de @{{handle}}",
+  "standardByline": "por @{{handle}}",
+  "standardViewPublication": "Ver publicación"
 }

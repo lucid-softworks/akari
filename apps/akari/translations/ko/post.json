@@ -130,5 +130,11 @@
   "unbookmarkFailed": "북마크를 해제할 수 없습니다. 다시 시도해 주세요.",
   "postedToast": "게시됨",
   "replyPostedToast": "답글이 게시됨",
-  "threadPostedToast": "스레드가 게시됨"
+  "threadPostedToast": "스레드가 게시됨",
+  "standardReadingTime": "{{count}}분",
+  "standardOpenDocument": "“{{title}}” 열기",
+  "standardOpenPublication": "{{name}} 열기",
+  "standardOpenAuthor": "@{{handle}} 프로필 열기",
+  "standardByline": "@{{handle}} 글",
+  "standardViewPublication": "발행물 보기"
 }

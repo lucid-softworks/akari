@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Неуспешно премахване на отметката. Опитайте отново.",
   "postedToast": "Публикувано",
   "replyPostedToast": "Отговорът е публикуван",
-  "threadPostedToast": "Темата е публикувана"
+  "threadPostedToast": "Темата е публикувана",
+  "standardReadingTime": "{{count}} мин",
+  "standardOpenDocument": "Отвори „{{title}}“",
+  "standardOpenPublication": "Отвори {{name}}",
+  "standardOpenAuthor": "Отвори профила на @{{handle}}",
+  "standardByline": "от @{{handle}}",
+  "standardViewPublication": "Виж публикацията"
 }

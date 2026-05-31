@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Kirjanmerkkiä ei voitu poistaa. Yritä uudelleen.",
   "postedToast": "Julkaistu",
   "replyPostedToast": "Vastaus julkaistu",
-  "threadPostedToast": "Ketju julkaistu"
+  "threadPostedToast": "Ketju julkaistu",
+  "standardReadingTime": "{{count}} min",
+  "standardOpenDocument": "Avaa ”{{title}}”",
+  "standardOpenPublication": "Avaa {{name}}",
+  "standardOpenAuthor": "Avaa profiili @{{handle}}",
+  "standardByline": "kirjoittaja @{{handle}}",
+  "standardViewPublication": "Näytä julkaisu"
 }

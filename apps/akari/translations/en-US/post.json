@@ -130,5 +130,11 @@
   "unbookmarkFailed": "Couldn’t remove bookmark. Try again.",
   "postedToast": "Posted",
   "replyPostedToast": "Reply posted",
-  "threadPostedToast": "Thread posted"
+  "threadPostedToast": "Thread posted",
+  "standardReadingTime": "{{count}}m",
+  "standardOpenDocument": "Open “{{title}}”",
+  "standardOpenPublication": "Open {{name}}",
+  "standardOpenAuthor": "Open profile for @{{handle}}",
+  "standardByline": "by @{{handle}}",
+  "standardViewPublication": "View publication"
 }
