@@ -19,6 +19,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      release_sha: ${{ steps.release.outputs.sha }}
     steps:
       - name: Run release-please
         id: release
@@ -35,4 +36,12 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       release_tag: ${{ needs.release-please.outputs.tag_name }}
+      # `release-please-config.json` opens releases as drafts (so the
+      # deploy workflow can upload assets while the release is still
+      # mutable). Drafts don't push the git tag yet — that happens when
+      # `finalize-release` flips draft→published. Pass the release
+      # commit SHA so the deploy workflow can check it out by SHA for
+      # the build steps; the tag exists by the time `gh release upload`
+      # runs because finalize is the last step.
+      release_sha: ${{ needs.release-please.outputs.release_sha }}
     secrets: inherit

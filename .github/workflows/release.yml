@@ -9,6 +9,17 @@ on:
       release_tag:
         required: true
         type: string
+      release_sha:
+        # Optional. Passed by `release-please.yml` because that flow opens
+        # releases as drafts (per `release-please-config.json`) — the git
+        # tag isn't created until `finalize-release` publishes the draft
+        # at the end of this workflow. Without a SHA we can't check out
+        # the release commit because the tag doesn't exist yet. For the
+        # `push: tags` trigger and `workflow_dispatch` we don't need it
+        # (the tag already exists by then).
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       release_tag:
@@ -23,8 +34,10 @@ jobs:
       contents: read
     env:
       RELEASE_TAG: ${{ (startsWith(github.ref, 'refs/tags/') && github.ref_name) || github.event.inputs.release_tag || inputs.release_tag || '' }}
+      RELEASE_SHA: ${{ inputs.release_sha || '' }}
     outputs:
       release_tag: ${{ steps.resolve_tag.outputs.release_tag }}
+      checkout_ref: ${{ steps.resolve_tag.outputs.checkout_ref }}
       sha: ${{ steps.deploy_commit.outputs.sha }}
     steps:
       - name: Check for EXPO_TOKEN
@@ -43,23 +56,38 @@ jobs:
             exit 1
           fi
           echo "release_tag=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
+          # Prefer the SHA when release-please-action passed it (draft
+          # release — tag not yet created); fall back to the tag ref for
+          # the push-tag trigger and workflow_dispatch where the tag is
+          # already published.
+          if [ -n "$RELEASE_SHA" ]; then
+            echo "checkout_ref=${RELEASE_SHA}" >> "$GITHUB_OUTPUT"
+          else
+            echo "checkout_ref=refs/tags/${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ env.RELEASE_TAG }}
+          ref: ${{ steps.resolve_tag.outputs.checkout_ref }}
 
       - name: Determine deploy commit
         id: deploy_commit
         run: |
-          tag_commit=$(git rev-parse "${RELEASE_TAG}^{commit}")
           head_commit=$(git rev-parse HEAD)
-          if [ "$tag_commit" != "$head_commit" ]; then
-            echo "Checked out commit $head_commit does not match release tag $RELEASE_TAG ($tag_commit)" >&2
-            exit 1
+          # When we checked out by tag, verify the tag points at the
+          # checked-out commit. When we checked out by SHA (draft-mode
+          # path from release-please), the tag doesn't exist yet — skip
+          # the cross-check and trust the SHA we were handed.
+          if [ -z "$RELEASE_SHA" ]; then
+            tag_commit=$(git rev-parse "${RELEASE_TAG}^{commit}")
+            if [ "$tag_commit" != "$head_commit" ]; then
+              echo "Checked out commit $head_commit does not match release tag $RELEASE_TAG ($tag_commit)" >&2
+              exit 1
+            fi
           fi
-          echo "sha=$tag_commit" >> "$GITHUB_OUTPUT"
+          echo "sha=${head_commit}" >> "$GITHUB_OUTPUT"
 
   native-build:
     name: EAS Production Build (${{ matrix.label }})
@@ -90,7 +118,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ needs.prepare.outputs.release_tag }}
+          ref: ${{ needs.prepare.outputs.checkout_ref }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -175,7 +203,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: refs/tags/${{ needs.prepare.outputs.release_tag }}
+          ref: ${{ needs.prepare.outputs.checkout_ref }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
