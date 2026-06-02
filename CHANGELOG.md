@@ -1,5 +1,59 @@
 # Changelog
 
+## [1.12.0](https://github.com/lucid-softworks/akari/compare/v1.11.0...v1.12.0) (2026-05-31)
+
+
+### Features
+
+* **akari:** member badge + thanks modal on member profiles ([c77c9ce](https://github.com/lucid-softworks/akari/commit/c77c9ced0669acc1a1089659db34ebbe795b6f1f))
+* **auth:** in-app signup against bsky.social, Blacksky, selfhosted.social, eurosky.social, or a custom PDS ([536fe9b](https://github.com/lucid-softworks/akari/commit/536fe9b8f4aa661286c20e9ddef24ed902e1b26c))
+* **composer:** toast on successful post / reply / thread publish ([08fd9e0](https://github.com/lucid-softworks/akari/commit/08fd9e049c33dbe43457902bb30a2bb2759c317e))
+* **feed:** render reply parents inline with avatar-column thread line ([0ef8a35](https://github.com/lucid-softworks/akari/commit/0ef8a35458d03b1421bc895be3a538a90d3587b8))
+* **gallery:** open photos in the Lightbox ([bce4098](https://github.com/lucid-softworks/akari/commit/bce4098f64cd6c303befef3a9088ba8c1e069951))
+* **guest:** browse the app without signing in ([0d9e305](https://github.com/lucid-softworks/akari/commit/0d9e305cf4daaca916d21b7699b62fc87228aca0))
+* **lightbox:** darkroom EXIF + alt-text info panel, open from feed images ([803d7b9](https://github.com/lucid-softworks/akari/commit/803d7b96ff5420b9ea891bee640579a91b285b00))
+* **live:** go live with a YouTube, Substack, or beehiiv link ([#398](https://github.com/lucid-softworks/akari/issues/398)) ([1e6387a](https://github.com/lucid-softworks/akari/commit/1e6387aad514f2d90af9c542d71a0297039068a7))
+* **mastodon:** home feed, profile, status detail, onboarding, announcements ([6426767](https://github.com/lucid-softworks/akari/commit/6426767682775ae47aa3b3f3f078c056335dba43))
+* **messages-settings:** "hide deleted accounts" toggle with new Messages sub-page ([523e0c7](https://github.com/lucid-softworks/akari/commit/523e0c7f6887c7eb7d85310a7460f9480e48d45a))
+* **messages:** sticky chat header on web with actions menu ([211962e](https://github.com/lucid-softworks/akari/commit/211962e664a0a88358d653a866915a9f10291d7d))
+* **poll:** attach a poll to a post from the main composer ([3c3f3dd](https://github.com/lucid-softworks/akari/commit/3c3f3dd279bcabd0a1367edef34d3c43a07d859e))
+* **poll:** native Tokimeki polls (create, render, vote) ([12b1892](https://github.com/lucid-softworks/akari/commit/12b18922e50136809510db0dcf7711a1b8e1b895))
+* **post:** render Standard.site publication links as rich embed cards ([22fa4ff](https://github.com/lucid-softworks/akari/commit/22fa4ffafa2986f2e236b52c21a02abf89c5f5d5))
+* **post:** use portaled menu for the repost button on web ([7b6578f](https://github.com/lucid-softworks/akari/commit/7b6578fe131aa93cb4f7631def595b0566c14370))
+* **profile:** portaled web `…` menu, dismisses on page scroll ([2645189](https://github.com/lucid-softworks/akari/commit/2645189db6536a1b5937a0457759dd0cd7abfa61))
+* **profile:** story ring on the avatar for Flashes + Spark, tap to view ([43622dd](https://github.com/lucid-softworks/akari/commit/43622dd2306fa0940ce4fca9e949c8a9bc6f2b8b))
+* **settings,auth:** 2FA enrolment screen + sign-in token prompt ([e79e721](https://github.com/lucid-softworks/akari/commit/e79e7210758b6c6b4593bbd8b3c28e96fbaea31c))
+* **settings:** per-count toggles for like / repost / reply ([a9a7c0d](https://github.com/lucid-softworks/akari/commit/a9a7c0d27b69f4f6b4c229fd6661a416e975201d))
+* **settings:** wire 'Who can reply: Lists' list picker ([516aa52](https://github.com/lucid-softworks/akari/commit/516aa520d4def67fd2e8d282ddf96ced0ccaa594))
+* **settings:** wire External media screen ([d9e8e53](https://github.com/lucid-softworks/akari/commit/d9e8e53b866659e1e7c1a1b5dfd1089a2a4dc887))
+* **settings:** wire Following feed preferences screen ([e51de6f](https://github.com/lucid-softworks/akari/commit/e51de6f3f89198b8a55da3d31fccef74b4092e16))
+* **settings:** wire Manage saved feeds screen ([5c1e7d0](https://github.com/lucid-softworks/akari/commit/5c1e7d0c401209eb045a67ef8213fd1abf2ec03d))
+* **settings:** wire Notify others audience picker ([ca47c0a](https://github.com/lucid-softworks/akari/commit/ca47c0a1592ff9068141b7ede83a3ad493d7efde))
+* **settings:** wire Primary language picker ([8b1d1a8](https://github.com/lucid-softworks/akari/commit/8b1d1a8a49b01ff1ba9466a57b44a7287ad016b2))
+* **settings:** wire System log screen + console capture ([4f55d69](https://github.com/lucid-softworks/akari/commit/4f55d695ff42076b1791be54dbd07f813c0f9a0f))
+* **tabs:** customise community-notes + moderation, sidebar follows config ([48614fa](https://github.com/lucid-softworks/akari/commit/48614fae9f89eec2fba8219640134344990758ae))
+* **ui:** add web prev/next chevrons to the Lightbox ([72643c8](https://github.com/lucid-softworks/akari/commit/72643c877689ed3ad9c822a73f4fa3915a370d61))
+* **ui:** polish the Lightbox ([e9a5d58](https://github.com/lucid-softworks/akari/commit/e9a5d58abc036fab0c8645560165cfd2fa6a72f0))
+* **ui:** split Textarea out of Input, fix Input half-width regression ([e41dc84](https://github.com/lucid-softworks/akari/commit/e41dc846fe15ea0763da5fe377253826023e2e7f))
+* **verifiers:** render the verifiers sheet as a centered modal on web ([a9e025a](https://github.com/lucid-softworks/akari/commit/a9e025afcb99ff69765fea26ff421af695477034))
+* **web-scroll:** page-level scroll, sticky header, column borders on inboxes and threads ([bb6b52e](https://github.com/lucid-softworks/akari/commit/bb6b52ec69e06aa5a8bfe9f1a5d2ab8f29efe1d2))
+
+
+### Bug Fixes
+
+* **auth:** keep the session on transient refresh failures ([92f6807](https://github.com/lucid-softworks/akari/commit/92f68074509dba422038076ac3c5ef98795fa93f))
+* **feed:** keep engaged posts visible until refresh under hide-engaged ([3ac3cb7](https://github.com/lucid-softworks/akari/commit/3ac3cb7417c21cd1018c6ad6867d611f807dfe1c))
+* **home:** land at the page top, not under the tabs, on feed switch ([6fae599](https://github.com/lucid-softworks/akari/commit/6fae5991c1f1b5c16a38c8307908f7a52ff2efab))
+* **home:** restore feed-tab switching dropped by guest-mode keying ([50b2262](https://github.com/lucid-softworks/akari/commit/50b22629807eac0eaa14b6a016405849f062b1bb))
+* **messages:** pass subjectDid to ConversationRow's VerificationBadge ([a25b7fb](https://github.com/lucid-softworks/akari/commit/a25b7fb27dfb7b713a4d6ca08e7270147a8f7976))
+* **oauth:** don't bounce signed-in users to signin on HMR-replayed callback ([e417d5a](https://github.com/lucid-softworks/akari/commit/e417d5a48b9559b4722d49391426edab65d0ab72))
+* **ozone:** skip the membership lookup when the moderation tab is hidden ([12c3b7b](https://github.com/lucid-softworks/akari/commit/12c3b7b3e7a8bbf5919c3c4219e802665500942e))
+* **post:** view posts while logged out ([60640cb](https://github.com/lucid-softworks/akari/commit/60640cb93f9407effb69738f209594f774bd33f6))
+* **query-cache:** trim infinite pages before write, recover from QuotaExceededError ([921dc2a](https://github.com/lucid-softworks/akari/commit/921dc2a3cf99a42e08042926721c614222da875f))
+* **selected-feed:** actually read the persisted choice from MMKV on mount ([1232f25](https://github.com/lucid-softworks/akari/commit/1232f25da26c5ae5777ff8a94f9a98a95581080f))
+* **types:** resolve pre-existing type errors ([0caca90](https://github.com/lucid-softworks/akari/commit/0caca907584e7d809168d97d1a50234bf713185f))
+* **video:** start playback on web right after the thumbnail tap ([0348f22](https://github.com/lucid-softworks/akari/commit/0348f227def60bcf369163afef6227cb0e30161f))
+
 ## [1.11.0](https://github.com/lucid-softworks/akari/compare/v1.10.0...v1.11.0) (2026-05-21)
 
 
