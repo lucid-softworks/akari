@@ -188,19 +188,6 @@ export default function HomeScreen() {
     </ThemedView>
   ) : null;
 
-  // Saved-feeds + feed-generators are atproto-only; for Mastodon they
-  // never resolve to anything useful (their queries gate on `pdsUrl`),
-  // so don't block the home tab on their loading state.
-  if (!isMastodon && (savedFeedsLoading || feedsLoading)) {
-    return (
-      <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
-        <ThemedView style={styles.header}>
-          <ThemedText style={styles.subtitle}>{t('feed.loadingFeeds')}</ThemedText>
-        </ThemedView>
-      </ThemedView>
-    );
-  }
-
   // Two different "headers" on the home tab depending on protocol:
   //   - atproto: the feed-tabs strip + filter + trending bar. On web it
   //     lives in a sticky wrapper above the list so it pins to the top;
@@ -218,6 +205,19 @@ export default function HomeScreen() {
     ],
     [t],
   );
+
+  // Saved-feeds + feed-generators are atproto-only; for Mastodon they
+  // never resolve to anything useful (their queries gate on `pdsUrl`),
+  // so don't block the home tab on their loading state.
+  if (!isMastodon && (savedFeedsLoading || feedsLoading)) {
+    return (
+      <ThemedView style={Platform.OS === 'web' ? webScreenContainer : styles.container}>
+        <ThemedView style={styles.header}>
+          <ThemedText style={styles.subtitle}>{t('feed.loadingFeeds')}</ThemedText>
+        </ThemedView>
+      </ThemedView>
+    );
+  }
   const stickyTopHeader = isMastodon ? (
     <MastodonFeedListHeader
       isLargeScreen={isLargeScreen}
