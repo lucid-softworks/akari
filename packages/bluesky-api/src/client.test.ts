@@ -289,6 +289,49 @@ describe('BlueskyApiClient', () => {
       });
     });
 
+    it('refreshes on 401 invalid_token (OAuth RFC 6750 shape, e.g. expired DPoP JWT)', async () => {
+      let callCount = 0;
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () => {
+          callCount += 1;
+          if (callCount === 1) {
+            return HttpResponse.json(
+              { error: 'invalid_token', message: '"exp" claim timestamp check failed' },
+              { status: 401 },
+            );
+          }
+          return HttpResponse.json({ ok: true });
+        }),
+      );
+
+      setAuthRefreshHandler(jest.fn().mockResolvedValue('rotated'));
+      const client = new TestClient();
+
+      await expect(client.callMakeAuthenticatedRequest('/secure', 'old')).resolves.toEqual({
+        ok: true,
+      });
+    });
+
+    it('refreshes on 401 expired_token (OAuth Bearer error variant)', async () => {
+      let callCount = 0;
+      server.use(
+        http.get('https://pds.example/xrpc/secure', async () => {
+          callCount += 1;
+          if (callCount === 1) {
+            return HttpResponse.json({ error: 'expired_token' }, { status: 401 });
+          }
+          return HttpResponse.json({ ok: true });
+        }),
+      );
+
+      setAuthRefreshHandler(jest.fn().mockResolvedValue('rotated'));
+      const client = new TestClient();
+
+      await expect(client.callMakeAuthenticatedRequest('/secure', 'old')).resolves.toEqual({
+        ok: true,
+      });
+    });
+
     it('refreshes on 401 with no errorCode at all (PDS shape variants)', async () => {
       let callCount = 0;
       server.use(

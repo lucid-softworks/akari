@@ -45,9 +45,11 @@ let authRefreshHandler: AuthRefreshHandler | null = null;
 /**
  * Install a global handler that the API client invokes when an authenticated
  * request returns 401 with `ExpiredToken` / `InvalidToken` /
- * `AuthenticationRequired`. The client retries the request once with the
- * returned access JWT; if the handler returns `null` the original 401 is
- * thrown.
+ * `AuthenticationRequired` (atproto XRPC shape) or `invalid_token` (the
+ * RFC 6750 OAuth Bearer-token shape — what the atproto OAuth resource server
+ * sends back when a DPoP access JWT's `exp` has lapsed). The client retries
+ * the request once with the returned access JWT; if the handler returns
+ * `null` the original 401 is thrown.
  *
  * Pass `null` to remove the handler.
  */
@@ -91,9 +93,17 @@ function isExpiredTokenError(err: unknown): boolean {
   const e = err as { status?: number; errorCode?: string } | null | undefined;
   if (!e || e.status !== 401) return false;
   return (
+    // atproto XRPC error codes
     e.errorCode === 'ExpiredToken' ||
     e.errorCode === 'InvalidToken' ||
     e.errorCode === 'AuthenticationRequired' ||
+    // OAuth 2.0 Bearer-token error codes (RFC 6750). The atproto OAuth
+    // resource server returns these when the DPoP access JWT's `exp`
+    // has lapsed; without matching them here the refresh path never
+    // fires for OAuth sessions and Sentry sees raw "\"exp\" claim
+    // timestamp check failed" errors out of makeAuthenticatedRequest.
+    e.errorCode === 'invalid_token' ||
+    e.errorCode === 'expired_token' ||
     e.errorCode === undefined
   );
 }
