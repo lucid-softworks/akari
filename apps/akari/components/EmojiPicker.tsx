@@ -1,4 +1,4 @@
-import { useColorScheme } from 'react-native';
+import { useColorScheme } from '@/hooks/useColorScheme';
 // The library's default export is named `EmojiPicker` (a modal wrapper with
 // open/onClose); rename on import to avoid shadowing our own component.
 import EmojiPickerLib from 'rn-emoji-keyboard';

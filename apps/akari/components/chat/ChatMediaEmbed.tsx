@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   youtubePlayOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.xs,

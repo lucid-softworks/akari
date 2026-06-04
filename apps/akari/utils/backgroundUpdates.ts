@@ -29,7 +29,7 @@ function loadBackgroundUpdateModules(): BackgroundUpdateModules | null {
 
     cachedModules = { BackgroundTask, TaskManager, Updates };
   } catch (error) {
-    if (__DEV__ && typeof jest === 'undefined') {
+    if (__DEV__ && typeof (globalThis as { jest?: unknown }).jest === 'undefined') {
       console.warn('Background updates unavailable: failed to load native modules.', error);
     }
 

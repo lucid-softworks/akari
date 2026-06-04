@@ -47,7 +47,6 @@ export function VideoThumbnail({ uri, style, badgeColor = '#ffffff' }: VideoThum
         style={styles.video}
         contentFit="cover"
         nativeControls={false}
-        allowsFullscreen={false}
         allowsPictureInPicture={false}
       />
       <View style={styles.badge}>
