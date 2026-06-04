@@ -73,11 +73,17 @@ jest.mock('@sentry/react-native', () => ({
   setUser: jest.fn(),
   setTag: jest.fn(),
   setContext: jest.fn(),
+  reactNavigationIntegration: jest.fn(() => ({
+    name: 'ReactNavigation',
+    setupOnce: jest.fn(),
+    registerNavigationContainer: jest.fn(),
+  })),
 }));
 
 // Global mock for expo-router usePathname
 jest.mock('expo-router', () => ({
   usePathname: jest.fn(() => '/index'),
+  useNavigationContainerRef: jest.fn(() => ({ current: null })),
   router: {
     push: jest.fn(),
     replace: jest.fn(),

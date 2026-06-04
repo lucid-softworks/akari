@@ -85,6 +85,9 @@ jest.mock('expo-router', () => {
     // current route via these hooks; stub them so the layout renders.
     useSegments: jest.fn(() => []),
     usePathname: jest.fn(() => '/'),
+    // Sentry navigation breadcrumb wiring asks for this ref; stub it as a
+    // null-pointing ref so the registration effect is a no-op in tests.
+    useNavigationContainerRef: jest.fn(() => ({ current: null })),
   };
 });
 
