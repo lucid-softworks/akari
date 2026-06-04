@@ -14,7 +14,7 @@ import {
 } from '@tanstack/react-query-persist-client';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useNavigationContainerRef } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -48,6 +48,13 @@ import type { Query } from '@tanstack/query-core';
 import type { CrashProviderProps } from '@/axiom-crash-reporter';
 import * as Sentry from '@sentry/react-native';
 
+// React Navigation integration emits a `navigation` breadcrumb on every
+// route change (from -> to). Crash events that follow get a route trail
+// attached, which lets us pinpoint the screen a user was on when an
+// untyped Hermes EXC_BAD_ACCESS or TurboModule fault fired. The bare
+// native stack alone doesn't include any JS frames.
+const navigationIntegration = Sentry.reactNavigationIntegration();
+
 Sentry.init({
   dsn: 'https://e8e7d85f238d070cde159aeed82d53b2@o4511173978619904.ingest.de.sentry.io/4511173979930704',
 
@@ -57,6 +64,8 @@ Sentry.init({
 
   // Enable Logs
   enableLogs: true,
+
+  integrations: [navigationIntegration],
 
   // uncomment the line below to enable Spotlight (https://spotlightjs.com)
   // spotlight: __DEV__,
@@ -232,6 +241,15 @@ export default Sentry.wrap(function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
   const [secureStorageReady, setSecureStorageReady] = useState(false);
+
+  // Hand expo-router's NavigationContainer ref to the Sentry integration so
+  // it can subscribe to route changes and emit `navigation` breadcrumbs.
+  const navigationContainerRef = useNavigationContainerRef();
+  useEffect(() => {
+    if (navigationContainerRef) {
+      navigationIntegration.registerNavigationContainer(navigationContainerRef);
+    }
+  }, [navigationContainerRef]);
 
   useEffect(() => {
     setupBackgroundUpdates().catch((error) => {
