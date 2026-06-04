@@ -8,6 +8,14 @@ import {
 
 jest.mock('react-native', () => ({
   Linking: { openURL: jest.fn().mockResolvedValue(undefined) },
+  // expo-modules-core@2.x reads Platform.select at module init through
+  // the react-native barrel; under SDK 56 it crashes if the mocked
+  // module omits Platform. Provide the minimum surface it needs.
+  Platform: {
+    OS: 'ios',
+    select: <T>(map: { ios?: T; android?: T; web?: T; default?: T }) =>
+      map.ios ?? map.default,
+  },
 }));
 
 const openURL = Linking.openURL as jest.Mock;
