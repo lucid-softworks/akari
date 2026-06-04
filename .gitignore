@@ -48,3 +48,6 @@ apps/docs/src/data/docs.json
 # Jest JUnit reports (CI)
 junit.xml
 **/junit.xml
+
+# Claude Code per-user local settings (skills directory is committed)
+.claude/settings.local.json
