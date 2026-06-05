@@ -24,11 +24,7 @@ jest.mock('@/utils/secureStorage', () => ({
 const mockRecrypt = jest.fn();
 const mockMMKV = jest.fn((_config: unknown) => ({ recrypt: mockRecrypt }));
 jest.mock('react-native-mmkv', () => ({
-  // Source uses `new MMKV(...)`; arrow functions can't be invoked with `new`,
-  // so wrap the spy in a real function expression that forwards to it.
-  MMKV: function MMKV(config: unknown) {
-    return mockMMKV(config);
-  },
+  MMKV: (config: unknown) => mockMMKV(config),
 }));
 
 const KEYCHAIN_ENTRY = 'akari.secureStorage.encryptionKey.v1';

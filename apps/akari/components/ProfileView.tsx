@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabPane: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
   },
   tabPaneHidden: {
     opacity: 0,

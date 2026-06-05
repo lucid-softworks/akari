@@ -5,10 +5,6 @@ type Bridge = {
 };
 
 function loadModule(os: string, bridge: Bridge | null) {
-  // resetModules before mocking so the module-under-test gets a fresh require
-  // after the doMock takes effect. Without this the per-test mock can race
-  // against a stale cached `react-native` from a prior test in the same file.
-  jest.resetModules();
   jest.doMock('react-native', () => ({
     Platform: { OS: os },
     NativeModules: bridge ? { AppLogoIconBridge: bridge } : {},

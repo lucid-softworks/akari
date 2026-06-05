@@ -127,10 +127,8 @@ export default ({ config }: ConfigContext): Partial<ExpoConfig> => {
         : Array.isArray(config.plugins)
         ? config.plugins
         : []),
-      '@sentry/react-native',
       'expo-background-task',
       'expo-font',
-      'expo-image',
       'expo-localization',
       'expo-router',
       'expo-secure-store',

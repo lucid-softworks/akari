@@ -595,7 +595,7 @@ function ZoomableImage({
 const styles = StyleSheet.create({
   container: { flex: 1 },
   backdrop: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: '#000000',
   },
   scene: {
@@ -631,7 +631,7 @@ const styles = StyleSheet.create({
   },
   chromeIcon: {},
   infoOverlay: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: '#0b0b0d',
     zIndex: 3,
   },
@@ -646,7 +646,7 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   navOverlay: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -679,7 +679,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   centerOverlay: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
   },

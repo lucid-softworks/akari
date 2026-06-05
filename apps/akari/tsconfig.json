@@ -4,7 +4,6 @@
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["jest", "node"],
     "paths": {
       "@/*": ["./*"],
       "@/axiom-crash-reporter": ["../../packages/axiom-crash-reporter"],

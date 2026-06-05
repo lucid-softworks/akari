@@ -1,9 +1,5 @@
 import { Redirect, Slot, Tabs, usePathname, useRouter, type Href } from 'expo-router';
-// expo-router 56 ships its own bundled copy of @react-navigation; importing
-// BottomTabBarProps from the top-level package gives a structurally
-// equivalent but TS-distinct type from what `<Tabs>` expects internally.
-// Read it from expo-router's bundled types so the tabBar prop assignment lines up.
-import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import type { TabKey } from '@/hooks/useTabConfig';
 import type { LayoutChangeEvent } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -538,8 +534,8 @@ export default function TabLayout() {
   // than during the previous render." That mismatch fires reliably when
   // the auth query is invalidated mid-session (e.g. account switch after
   // Mastodon sign-in).
-  const renderTabBar = useCallback<(props: BottomTabBarProps) => React.ReactNode>(
-    (props) => (
+  const renderTabBar = useCallback(
+    (props: BottomTabBarProps) => (
       <HardcodedTabBar
         {...props}
         unreadMessagesCount={unreadMessagesCount}

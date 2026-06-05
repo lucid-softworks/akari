@@ -165,7 +165,7 @@ function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
   }
 
   return (
-    <View pointerEvents="box-none" style={[StyleSheet.absoluteFill, styles.viewportOverlay]}>
+    <View pointerEvents="box-none" style={[StyleSheet.absoluteFillObject, styles.viewportOverlay]}>
       <View
         pointerEvents="box-none"
         style={[styles.viewport, { paddingBottom: Math.max(insets.bottom, 24) }]}
