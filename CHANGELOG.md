@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.13.0](https://github.com/lucid-softworks/akari/compare/v1.12.0...v1.13.0) (2026-06-05)
+
+
+### Features
+
+* **observability:** add Sentry navigation breadcrumbs ([e144027](https://github.com/lucid-softworks/akari/commit/e14402720cfac46b68e7dc9df0f2db3441734e5b))
+
+
+### Bug Fixes
+
+* **home:** hoist mastodonFeedTabs useMemo above the loading early-return ([551ded1](https://github.com/lucid-softworks/akari/commit/551ded1a29d48458d28fb9baabfd7f7fc9ee9573))
+* **oauth:** refresh DPoP JWTs on RFC 6750 invalid_token / expired_token ([77e812c](https://github.com/lucid-softworks/akari/commit/77e812ca7a920250c4ee63939321ffe72a874ff7))
+
+
+### Reverts
+
+* react-native-screens bump (7ff641aa) — breaks expo-router 6.0.23 ([69ee7c2](https://github.com/lucid-softworks/akari/commit/69ee7c2cf3cc462ddd7fd806839858ec15fcd53c))
+* roll back Expo SDK 56 upgrade (ac8ab48f + f3a4e6fc) ([c64ead9](https://github.com/lucid-softworks/akari/commit/c64ead97d849357ee55aaec0fb852bdd31b5ea96))
+
 ## [1.12.0](https://github.com/lucid-softworks/akari/compare/v1.11.0...v1.12.0) (2026-05-31)
 
 
